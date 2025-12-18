@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบค้นหาข้อมูลลูกค้า</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bright-blue': '#0EA5E9',
+            'bright-orange': '#FB923C',
+            'light-blue': '#E0F2FE',
+            'light-orange': '#FED7AA'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Sarabun', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #0EA5E9 0%, #FB923C 100%); }
+    .table-scroll { max-height: 500px; overflow-y: auto; }
+    .table-scroll::-webkit-scrollbar { width: 8px; }
+    .table-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+    .table-scroll::-webkit-scrollbar-thumb { background: #0EA5E9; border-radius: 4px; }
+    .table-scroll::-webkit-scrollbar-thumb:hover { background: #0284C7; }
+  </style>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- XLSX -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-light-blue to-light-orange min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white gradient-bg bg-clip-text text-transparent mb-2">DATABASE</h1>
+    </div>
+
+    <!-- Search Form -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-bright-blue/20">
+      <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+        🔍 ค้นหาข้อมูลลูกค้า
+        <span class="text-sm font-normal text-gray-500 ml-2">(สามารถค้นหาได้หลายเงื่อนไขพร้อมกัน)</span>
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div>
+          <label for="contractNumber" class="block text-sm font-semibold text-gray-700 mb-2"> 📋 ลำดับสัญญา </label>
+          <input type="text" id="contractNumber" placeholder="เช่น 123" class="w-full px-4 py-3 border-2 border-bright-blue/30 rounded-xl focus:border-bright-blue focus:outline-none transition-colors">
+        </div>
+        <div>
+          <label for="houseNumber" class="block text-sm font-semibold text-gray-700 mb-2"> 🏠 House Number </label>
+          <input type="text" id="houseNumber" placeholder="เช่น 123/45" class="w-full px-4 py-3 border-2 border-bright-orange/30 rounded-xl focus:border-bright-orange focus:outline-none transition-colors">
+        </div>
+        <div>
+          <label for="circuitNumber" class="block text-sm font-semibold text-gray-700 mb-2"> ⚡ Circuit Number </label>
+          <input type="text" id="circuitNumber" placeholder="เช่น 880XXXXX" class="w-full px-4 py-3 border-2 border-bright-blue/30 rounded-xl focus:border-bright-blue focus:outline-none transition-colors">
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button onclick="searchContract()" class="gradient-bg text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-lg">
+          🔎 ค้นหาข้อมูล
+        </button>
+        <button onclick="clearSearch()" class="bg-gray-100 text-gray-700 px-8 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 text-lg border-2 border-gray-200">
+          🗑️ ล้างข้อมูล
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="bg-white rounded-2xl shadow-xl border border-bright-orange/20 hidden">
+      <!-- Results Header -->
+      <div class="gradient-bg text-white p-6 rounded-t-2xl">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-2xl font-bold">📊 ผลการค้นหา</h2>
+            <p id="resultCount" class="text-white/90 mt-1"></p>
+          </div>
+          <button onclick="downloadExcel()" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 backdrop-blur-sm">
+            📥 ดาวน์โหลด Excel
+          </button>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="p-6">
+        <div class="table-scroll border border-gray-200 rounded-xl">
+          <table class="w-full text-sm">
+            <!-- ตั้งความกว้างคอลัมน์ที่ต้องการด้วย colgroup -->
+            <colgroup>
+              <col> <!-- No. -->
+              <col> <!-- Year -->
+              <col> <!-- Month -->
+              <col style="width:96px; min-width:96px;"> <!-- Key ~1" -->
+              <col> <!-- Number of installations -->
+              <col> <!-- Contract No. -->
+              <col style="width:288px; min-width:288px;"> <!-- Building Name ~3" -->
+              <col> <!-- BLDG_ID -->
+              <col style="width:288px; min-width:288px;"> <!-- Operator Building Name ~3" -->
+              <col> <!-- Building -->
+              <col> <!-- Floor -->
+              <col> <!-- House number -->
+              <col style="width:192px; min-width:192px;"> <!-- Circuit number ~2" -->
+              <col> <!-- Start Date -->
+              <col> <!-- End Date -->
+              <col> <!-- Customer Status -->
+              <col> <!-- Operator -->
+              <col> <!-- Project type -->
+              <col> <!-- Plug Status -->
+              <col style="width:150px; min-width:150px;"><!-- Data Status -->
+              <col> <!-- Cancel Reward -->
+              <col> <!-- Technicians -->
+              <col> <!-- ZONE -->
+              <col style="width:288px; min-width:288px;"> <!-- Note ~3" -->
+            </colgroup>
+
+            <thead class="bg-gradient-to-r from-bright-blue to-bright-orange text-white sticky top-0">
+              <tr>
+                <th class="px-4 py-3 text-left font-semibold">No.</th>
+                <th class="px-4 py-3 text-left font-semibold">Year</th>
+                <th class="px-4 py-3 text-left font-semibold">Month</th>
+                <th class="px-4 py-3 text-left font-semibold">Key</th>
+                <th class="px-4 py-3 text-left font-semibold">Number of installations</th>
+                <th class="px-4 py-3 text-left font-semibold">Contract No.</th>
+                <th class="px-4 py-3 text-left font-semibold">Building Name</th>
+                <th class="px-4 py-3 text-left font-semibold">BLDG_ID</th>
+                <th class="px-4 py-3 text-left font-semibold">Operator Building Name</th>
+                <th class="px-4 py-3 text-left font-semibold">Building</th>
+                <th class="px-4 py-3 text-left font-semibold">Floor</th>
+                <th class="px-4 py-3 text-left font-semibold">House number</th>
+                <th class="px-4 py-3 text-left font-semibold">Circuit number</th>
+                <th class="px-4 py-3 text-left font-semibold">Start Date</th>
+                <th class="px-4 py-3 text-left font-semibold">End Date</th>
+                <th class="px-4 py-3 text-left font-semibold">Customer Status</th>
+                <th class="px-4 py-3 text-left font-semibold">Operator</th>
+                <th class="px-4 py-3 text-left font-semibold">Project type</th>
+                <th class="px-4 py-3 text-left font-semibold">Plug Status</th>
+                <th class="px-4 py-3 text-left font-semibold">Data Status</th>
+                <th class="px-4 py-3 text-left font-semibold">Cancel Reward</th>
+                <th class="px-4 py-3 text-left font-semibold">Technicians</th>
+                <th class="px-4 py-3 text-left font-semibold">ZONE</th>
+                <th class="px-4 py-3 text-left font-semibold">Note</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results Message -->
+    <div id="noResults" class="bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-200 hidden">
+      <div class="text-6xl mb-4">🔍</div>
+      <h3 class="text-xl font-semibold text-gray-700 mb-2">ไม่พบข้อมูลที่ค้นหา</h3>
+      <p class="text-gray-500">กรุณาตรวจสอบข้อมูลและลองค้นหาใหม่อีกครั้ง</p>
+    </div>
+  </div>
+
+  <script>
+    // Supabase init
+    const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentResults = [];
+
+    async function searchContract() {
+      const contractNumber = document.getElementById('contractNumber').value.trim();
+      const houseNumber = document.getElementById('houseNumber').value.trim();
+      const circuitNumber = document.getElementById('circuitNumber').value.trim();
+      const resultsSection = document.getElementById('resultsSection');
+      const noResults = document.getElementById('noResults');
+      const tableBody = document.getElementById('tableBody');
+      const resultCount = document.getElementById('resultCount');
+
+      resultsSection.classList.add('hidden');
+      noResults.classList.add('hidden');
+
+      if (!contractNumber && !houseNumber && !circuitNumber) {
+        alert('กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง เพื่อทำการค้นหา');
+        return;
+      }
+
+      let query = supabase.from("DemoDATA").select("*");
+
+      // ✅ exact match สำหรับเลขที่สัญญา
+      if (contractNumber) query = query.eq("contractNumber", contractNumber);
+      // ✅ ค้นหาแบบ contains (ไม่สนตัวพิมพ์) สำหรับ house/circuit
+      if (houseNumber) query = query.ilike("houseNumber", `%${houseNumber}%`);
+      if (circuitNumber) query = query.ilike("circuitNumber", `%${circuitNumber}%`);
+
+      let { data, error } = await query;
+
+      if (error) {
+        console.error(error);
+        alert("เกิดข้อผิดพลาด: " + error.message);
+        return;
+      }
+
+      if (data.length > 0) {
+        currentResults = data;
+        tableBody.innerHTML = "";
+        data.forEach((row, idx) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="px-4 py-2">${idx+1}</td>
+            <td class="px-4 py-2">${row.year || ''}</td>
+            <td class="px-4 py-2">${row.month || ''}</td>
+            <td class="px-4 py-2">${row.key || ''}</td>
+            <td class="px-4 py-2">${row.numberOfInstallations || ''}</td>
+            <td class="px-4 py-2">${row.contractNumber || ''}</td>
+            <td class="px-4 py-2">${row.buildingName || ''}</td>
+            <td class="px-4 py-2">${row.bldg_id || ''}</td>
+            <td class="px-4 py-2">${row.operatorBuildingName || ''}</td>
+            <td class="px-4 py-2">${row.building || ''}</td>
+            <td class="px-4 py-2">${row.floor || ''}</td>
+            <td class="px-4 py-2">${row.houseNumber || ''}</td>
+            <td class="px-4 py-2">${row.circuitNumber || ''}</td>
+            <td class="px-4 py-2">${row.startDate || ''}</td>
+            <td class="px-4 py-2">${row.endDate || ''}</td>
+            <td class="px-4 py-2">${row.customerStatus || ''}</td>
+            <td class="px-4 py-2">${row.operator || ''}</td>
+            <td class="px-4 py-2">${row.projectType || ''}</td>
+            <td class="px-4 py-2">${row.plugStatus || ''}</td>
+            <td class="px-4 py-2">${row.dataStatus || ''}</td>
+            <td class="px-4 py-2">${row.cancelReward || ''}</td>
+            <td class="px-4 py-2">${row.technicians || ''}</td>
+            <td class="px-4 py-2">${row.zone || ''}</td>
+            <td class="px-4 py-2">${row.note || ''}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
+        resultCount.textContent = `พบทั้งหมด ${data.length} รายการ`;
+        resultsSection.classList.remove('hidden');
+      } else {
+        currentResults = [];
+        noResults.classList.remove('hidden');
+      }
+    }
+
+    function clearSearch() {
+      document.getElementById('contractNumber').value = '';
+      document.getElementById('houseNumber').value = '';
+      document.getElementById('circuitNumber').value = '';
+      document.getElementById('resultsSection').classList.add('hidden');
+      document.getElementById('noResults').classList.add('hidden');
+      currentResults = [];
+    }
+
+    function downloadExcel() {
+      if (currentResults.length === 0) {
+        alert("ไม่มีข้อมูลสำหรับดาวน์โหลด");
+        return;
+      }
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(currentResults);
+      XLSX.utils.book_append_sheet(wb, ws, "DemoDATA");
+      XLSX.writeFile(wb, "contract_data.xlsx");
+    }
+
+    // Enter เพื่อค้นหาได้ทันที
+    ['contractNumber','houseNumber','circuitNumber'].forEach(id => {
+      document.getElementById(id).addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') searchContract();
+      });
+    });
+  </script>
+</body>
+</html>
