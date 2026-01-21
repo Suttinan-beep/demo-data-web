@@ -170,6 +170,7 @@ const FIELDS = [
 
 const $ = id => document.getElementById(id);
 let currentResults = [];
+let lastSearchOrders = null; // ⭐ เพิ่ม
 
 /******** INIT ********/
 $('tableHead').innerHTML = ['No.', ...FIELDS].map(h => `<th class="px-4 py-3 text-left font-semibold">${h}</th>`).join('');
@@ -180,6 +181,13 @@ function nowStr() {
   const p = n => String(n).padStart(2,'0');
   return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
 }
+
+function fileDateStr() {   // ⭐ เพิ่มอันนี้
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
+}
+
 
 function getUserId() {
   return ['currentUserID','currentUserId','userId','userid']
@@ -201,15 +209,22 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function logStory(type, orders) {
-  try {
-    await supabaseClient.from('Storyline').insert([{
-      created_at: nowStr(),
-      User_ID_FK: getUserId(),
-      Story: type,
-      Orders: orders
-    }]);
-  } catch(e) { console.warn(type,'story failed'); }
+  const payload = {
+    created_at: nowStr(),
+    User_ID_FK: getUserId(),
+    Story: type,
+    Orders: orders
+  };
+
+  const { data, error } = await supabaseClient
+    .from('Storyline')
+    .insert([payload]);
+
+  console.log('Story payload:', payload);
+  console.log('Story data:', data);
+  console.log('Story error:', error);
 }
+
 
 /******** CORE ********/
 async function searchContract() {
@@ -224,6 +239,7 @@ async function searchContract() {
     return;
   }
 
+  lastSearchOrders = orders;           // ⭐ จำเงื่อนไขไว้
   await logStory('Search', orders);
 
   let q = supabaseClient.from('DemoDATA').select('*');
@@ -236,6 +252,7 @@ async function searchContract() {
 
   renderTable(data || []);
 }
+
 
 function renderTable(data) {
   currentResults = data;
@@ -268,7 +285,11 @@ function clearSearch() {
 
 async function downloadExcel() {
   if (!currentResults.length) return alert('ไม่มีข้อมูลสำหรับดาวน์โหลด');
-  await logStory('Download', {});
+
+  await logStory(
+    'Download',
+    lastSearchOrders ?? { note: 'download_without_search' }
+  );
 
   const plain = currentResults.map(r => {
     const o = {};
@@ -279,7 +300,13 @@ async function downloadExcel() {
   const ws = XLSX.utils.json_to_sheet(plain);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'DemoDATA');
-  XLSX.writeFile(wb, `contract_data_${nowStr()}.xlsx`);
+
+  // ⭐ ดึงลำดับสัญญาจากเงื่อนไขค้นหา
+  const contractNo = lastSearchOrders?.contractNumber || 'ALL';
+
+  const fileName = `Contract_data_${contractNo} ${fileDateStr()}.xlsx`;
+
+  XLSX.writeFile(wb, fileName);
 }
 
 ['contractNumber','houseNumber','circuitNumber'].forEach(id => {
