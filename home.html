@@ -150,7 +150,16 @@
 /******** CONFIG ********/
 const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = supabase.createClient(
+      SUPABASE_URL,SUPABASE_ANON_KEY,
+  {
+    global: {
+      headers: {
+        'x-user-id': getUserId()
+      }
+    }
+  }
+);
 
 /******** 🔐 CHECK LOGIN (LOCAL STORAGE VERSION) ********/
 const uid = localStorage.getItem("userId");
