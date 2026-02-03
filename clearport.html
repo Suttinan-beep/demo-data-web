@@ -394,7 +394,7 @@
       </div> <!-- Progress -->
       <div id="upload-progress" class="hidden mb-3">
        <div class="flex items-center justify-between text-xs font-medium text-gray-600 mb-2"><span class="flex items-center gap-2">
-         <div class="spinner"></div> กำลังอั�����โหลด... </span> <span id="progress-text" class="text-blue-600 font-bold">0%</span>
+         <div class="spinner"></div> กำลังอัพโหลด... </span> <span id="progress-text" class="text-blue-600 font-bold">0%</span>
        </div>
        <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
         <div id="progress-bar" class="progress-bar bg-gradient-to-r from-blue-400 to-blue-600 h-full rounded-full" style="width: 0%"></div>
@@ -797,7 +797,7 @@ async function logStory(type, payload) {
         parsedData = parseExcelData(text);
         
         if (parsedData.length === 0) {
-          showToast('ไม่พบข้อมูล ��รุณาตรวจ��อบรูปแบบ', 'error');
+          showToast('ไม่พบข้อมูล กรุณาตรวจสอบรูปแบบ', 'error');
           return;
         }
         
