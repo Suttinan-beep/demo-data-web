@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update ClearPort</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+    }
+    
+    .gradient-bg {
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(186, 230, 253, 0.9) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(254, 243, 199, 0.7) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(253, 225, 211, 0.6) 0%, transparent 50%),
+        linear-gradient(135deg, #bae6fd 0%, #fef3c7 50%, #fde1d3 100%);
+      min-height: 100%;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    .gradient-bg::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle, rgba(147, 197, 253, 0.15) 1px, transparent 1px),
+        radial-gradient(circle, rgba(147, 197, 253, 0.15) 1px, transparent 1px);
+      background-size: 50px 50px;
+      background-position: 0 0, 25px 25px;
+      pointer-events: none;
+      opacity: 0.4;
+      animation: bgMove 20s linear infinite;
+    }
+    
+    .gradient-bg::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 15% 20%, rgba(96, 165, 250, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(251, 146, 60, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      animation: pulse 8s ease-in-out infinite;
+    }
+    
+    @keyframes bgMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .floating-stats {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 50;
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .stat-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      padding: 10px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 140px;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .stat-card:hover .stat-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .stat-icon {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glass-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .glass-panel:hover::before {
+      left: 100%;
+    }
+    
+    .glass-panel:hover {
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+      border-color: rgba(96, 165, 250, 0.3);
+    }
+    
+    .paste-area {
+      background: rgba(248, 250, 252, 0.8);
+      border: 2px dashed #cbd5e1;
+      transition: all 0.3s ease;
+    }
+    
+    .paste-area:focus {
+      outline: none;
+      border-color: #60a5fa;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn-primary:hover:not(:disabled)::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+    
+    .table-container {
+      max-height: 450px;
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f1f5f9;
+    }
+    
+    .table-container::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    .table-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+    
+    .table-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+    
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    
+    .row-success {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+      animation: fadeInRow 0.5s ease;
+    }
+    
+    @keyframes fadeInRow {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .spinner {
+      border: 2.5px solid rgba(96, 165, 250, 0.2);
+      border-top-color: #60a5fa;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .toast {
+      animation: slideIn 0.4s ease, fadeOut 0.3s ease 2.7s;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateX(20px); }
+    }
+    
+    .progress-bar {
+      transition: width 0.4s ease;
+    }
+    
+    .icon-box {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-panel:hover .icon-box {
+      transform: scale(1.05) rotate(-3deg);
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    .header-icon {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .table-container tr {
+      transition: all 0.2s ease;
+    }
+    
+    .table-container tr:hover {
+      background: rgba(96, 165, 250, 0.05);
+      transform: translateX(2px);
+    }
+    
+    @media (max-width: 1280px) {
+      .floating-stats {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        width: 100%;
+        margin-bottom: 20px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full gradient-bg">
+  <div class="min-h-full w-full p-6"><!-- Floating Stats -->
+   <div class="floating-stats">
+    <div class="stat-card">
+     <div class="stat-icon w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200/50">
+      <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+     </div>
+     <div>
+      <p class="text-xs font-medium text-gray-500">วางแล้ว</p>
+      <p id="paste-count" class="text-lg font-bold text-blue-600">0</p>
+     </div>
+    </div>
+    <div class="stat-card">
+     <div class="stat-icon w-8 h-8 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-orange-200/50">
+      <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+      </svg>
+     </div>
+     <div>
+      <p class="text-xs font-medium text-gray-500">กำลังอัพโหลด</p>
+      <p id="uploading-count" class="text-lg font-bold text-orange-600">0</p>
+     </div>
+    </div>
+    <div class="stat-card">
+     <div class="stat-icon w-8 h-8 bg-gradient-to-br from-green-100 to-green-200 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-200/50">
+      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+     </div>
+     <div>
+      <p class="text-xs font-medium text-gray-500">สำเร็จแล้ว</p>
+      <p id="success-count" class="text-lg font-bold text-green-600">0</p>
+     </div>
+    </div>
+   </div><!-- Toast Container -->
+   <div id="toast-container" class="fixed top-6 right-6 z-50 space-y-3"></div><!-- Main Content -->
+   <div class="max-w-[1550px] mx-auto"><!-- Header -->
+    <div class="glass-panel p-6 mb-5">
+     <div class="flex items-center gap-4">
+      <div class="header-icon w-14 h-14 rounded-xl bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center shadow-lg">
+       <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+       </svg>
+      </div>
+      <div>
+       <h1 id="page-title" class="text-4xl font-bold text-gray-800">Update ClearPort</h1>
+       <p id="userInfo" class="mt-2 text-sm sm:text-base text-gray-600"></p>
+      </div>
+     </div>
+    </div><!-- Paste Section -->
+    <div class="glass-panel p-6 mb-5">
+     <div class="flex items-center gap-3 mb-4">
+      <div class="icon-box w-11 h-11 bg-gradient-to-br from-indigo-400 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+       </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800">วางข้อมูลจาก Excel</h2>
+     </div>
+     <div class="bg-blue-50 border-l-4 border-blue-500 p-3 mb-4 rounded-lg">
+      <p class="text-xm text-blue-900"><span class="font-semibold">วิธีใช้:</span> คัดลอกข้อมูลจาก Excel (รวมหัวคอลัมน์) แล้ววางในช่องด้านล่าง</p>
+     </div><textarea id="paste-area" class="paste-area w-full h-36 rounded-xl p-4 text-sm font-mono resize-none" placeholder="กด Ctrl+V เพื่อวางข้อมูลที่คัดลอกจาก Excel มาที่นี้..."></textarea>
+     <div class="flex gap-3 mt-4"><button id="preview-btn" class="btn-primary flex-1 px-5 py-2.5 text-white rounded-xl flex items-center justify-center gap-2 text-xm relative">
+       <svg class="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+       </svg><span class="relative z-10">ดูตัวอย่าง</span> </button> <button id="clear-btn" class="btn-secondary px-5 py-2.5 text-gray-700 font-semibold rounded-xl flex items-center justify-center gap-2 text-xm">
+       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg> ล้างข้อมูล </button>
+     </div>
+    </div><!-- Tables Grid -->
+    <div id="tables-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-5"><!-- Preview Table -->
+     <div id="preview-panel" class="glass-panel p-5 overflow-hidden">
+      <div class="mb-4">
+       <div class="flex items-center gap-3 mb-2">
+        <div class="icon-box w-10 h-10 bg-gradient-to-br from-violet-400 to-violet-500 rounded-xl flex items-center justify-center shadow-lg">
+         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+         </svg>
+        </div>
+        <div>
+         <h2 class="text-lg font-bold text-gray-800">ตัวอย่างก่อนอัพโหลด</h2>
+         <p id="preview-count" class="text-xs text-gray-500">0 รายการ</p>
+        </div>
+        <button
+  id="upload-btn"
+  class="btn-primary w-[12cm] max-w-full py-2 text-white rounded-xl flex items-center justify-center gap-2 mb-3 text-xm relative overflow-hidden ml-auto">
+       <svg class="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+       </svg><span id="upload-btn-text" class="relative z-10">อัพโหลดข้อมูล</span> </button>
+       </div>
+      </div> <!-- Progress -->
+      <div id="upload-progress" class="hidden mb-3">
+       <div class="flex items-center justify-between text-xs font-medium text-gray-600 mb-2"><span class="flex items-center gap-2">
+         <div class="spinner"></div> กำลังอั�����โหลด... </span> <span id="progress-text" class="text-blue-600 font-bold">0%</span>
+       </div>
+       <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+        <div id="progress-bar" class="progress-bar bg-gradient-to-r from-blue-400 to-blue-600 h-full rounded-full" style="width: 0%"></div>
+       </div>
+      </div>
+      <div class="table-container rounded-xl border border-gray-200 overflow-x-auto ">
+       <table class="w-full text-xs">
+        <thead class="sticky top-0 bg-white z-10">
+         <tr class="bg-gradient-to-r from-blue-50 to-sky-50">
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">Status</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">No_ID</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">contractNumber</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">buildingName</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">building</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">floor</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">houseNumber</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">circuitNumber</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">clearing_date</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">startDate</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">operator</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">Remark</th>
+          <th class="px-3 py-3 text-center text-gray-700 border-b border-gray-200">Check</th>
+         </tr>
+        </thead>
+        <tbody class="text-center" id="preview-tbody"></tbody>
+       </table>
+      </div>
+     </div><!-- Success Table -->
+     <div id="success-panel" class="glass-panel p-5 overflow-hidden">
+      <div class="mb-4">
+       <div class="flex items-center gap-3 mb-2">
+        <div class="icon-box w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>
+        </div>
+        <div>
+         <h2 class="text-lg font-bold text-gray-800 py-1.5 ">อัพโหลดสำเร็จแล้ว</h2>
+         <p id="success-count-text" class="text-xs text-gray-500">0 รายการ</p>
+        </div>
+       </div>
+      </div>
+      <div class="table-container rounded-2xl border border-gray-200 overflow-x-auto">
+       <table class="w-full text-xs">
+        <thead class="sticky top-0 bg-white z-10">
+         <tr class="bg-gradient-to-r from-green-50 to-emerald-50">
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">No_ID</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">contractNumber</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">buildingName</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">building</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">floor</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">houseNumber</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">circuitNumber</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">clearing_date</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">startDate</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">operator</th>
+          <th class="px-3 py-3 text-left text-gray-700 border-b border-gray-200">Remark</th>
+         </tr>
+        </thead>
+        <tbody id="success-tbody"></tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
+    const supabaseClient = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+  /******** 🔐 CHECK LOGIN (เหมือน home.html) ********/
+  const uid = localStorage.getItem("userId");
+  const alive = sessionStorage.getItem("alive");
+
+  if (!uid || !alive) {
+    localStorage.clear();
+    window.location.href = "index.html";
+  }
+
+  /******** 🔐 CHECK CLEARPORT PIN ********/
+const pinOk = sessionStorage.getItem('CLEARPORT_OK');
+
+if (pinOk !== 'true') {
+  alert('กรุณาใส่รหัสผ่านก่อนเข้าใช้งานเมนู ClearPort');
+  window.location.href = 'menu.html';
+}
+
+
+    const defaultConfig = {
+      page_title: 'ระบบอัพโหลดข้อมูล Excel',
+      upload_button_text: 'อัพโหลดข้อมูล'
+    };
+    
+    let parsedData = [];
+    let sessionData = [];
+    let currentSessionId = Date.now().toString();
+    let isUploading = false;
+    
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const colors = {
+        success: 'from-green-500 to-green-600',
+        error: 'from-red-500 to-red-600',
+        info: 'from-blue-500 to-blue-600'
+      };
+      
+      const toast = document.createElement('div');
+      toast.className = `toast bg-gradient-to-r ${colors[type]} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3`;
+      toast.innerHTML = `
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span class="font-semibold">${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+    
+    // Parse Excel data
+    function parseExcelData(text) {
+      const lines = text.trim().split('\n');
+      if (lines.length < 2) return [];
+      
+      const data = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split('\t');
+        if (cols.length >= 11) {
+  data.push({
+    id: `temp_${Date.now()}_${i}`,
+    no_id: cols[0]?.trim() || '',
+    contractNumber: cols[1]?.trim() || '',
+    buildingName: cols[2]?.trim() || '',
+    building: cols[3]?.trim() || '',
+    floor: cols[4]?.trim() || '',
+    houseNumber: cols[5]?.trim() || '',
+    circuitNumber: cols[6]?.trim() || '',
+    portClearingDate: cols[7]?.trim() || '',
+    startDate: cols[8]?.trim() || '',
+    operator: cols[9]?.trim() || '',
+    remark: cols[10]?.trim() || '',   // ✅ เพิ่ม
+    status: 'pending'
+  });
+}
+
+      }
+      return data;
+    }
+    function getUserId() {
+      return ['currentUserID','currentUserId','userId','userid']
+        .map(k => localStorage.getItem(k))
+        .find(Boolean);
+    }
+
+    // Update preview table
+    function updatePreviewTable() {
+      const tbody = document.getElementById('preview-tbody');
+      const count = document.getElementById('preview-count');
+      const pasteCount = document.getElementById('paste-count');
+      
+      pasteCount.textContent = parsedData.length;
+      count.textContent = `${parsedData.length} รายการ`;
+      
+      if (parsedData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="12" class="px-2.5 py-8 text-left text-gray-400 text-sm">ยังไม่มีข้อมูล</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = parsedData.map(item => {
+        let statusIcon;
+        let rowClass = '';
+        
+        if (item.status === 'uploaded') {
+          statusIcon = `
+            <div class="flex items-center justify-center w-7 h-7 bg-green-100 rounded-lg">
+              <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          `;
+          rowClass = 'row-success';
+        } else if (item.status === 'uploading') {
+          statusIcon = `<div class="flex items-center justify-center w-7 h-7"><div class="spinner" style="width: 14px; height: 14px; border-width: 2px;"></div></div>`;
+        } else if (item.status === 'duplicate') {
+          statusIcon = `
+            <div class="flex items-center justify-center w-7 h-7 bg-red-100 rounded-lg">
+              <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+            </div>
+          `;
+          rowClass = 'bg-red-50';
+        } else {
+          statusIcon = `
+            <div class="flex items-center justify-center w-7 h-7 bg-gray-100 rounded-lg">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          `;
+        }
+        
+        return `
+          <tr class="border-b border-gray-100 ${rowClass}" data-id="${item.id}">
+            <td class="px-3 py-3">${statusIcon}</td>
+            <td class="px-3 py-3 text-gray-700">${item.no_id}</td>
+            <td class="px-3 py-3 text-gray-700">${item.contractNumber}</td>
+            <td class="px-3 py-3 text-gray-700">${item.buildingName}</td>
+            <td class="px-3 py-3 text-gray-700">${item.building}</td>
+            <td class="px-3 py-3 text-gray-700">${item.floor}</td>
+            <td class="px-3 py-3 text-gray-700">${item.houseNumber}</td>
+            <td class="px-3 py-3 text-gray-700">${item.circuitNumber}</td>
+            <td class="px-3 py-3 text-gray-700">${item.portClearingDate}</td>
+            <td class="px-3 py-3 text-gray-700">${item.startDate}</td>
+            <td class="px-3 py-3 text-gray-700">${item.operator}</td>
+            <td class="px-3 py-3 text-gray-700">${item.remark}</td>
+            <td class="px-3 py-3 text-center">
+              ${item.status === 'pending' || item.status === 'duplicate' ? `
+                <button class="delete-btn text-red-500 hover:text-red-700 p-1.5 rounded-lg hover:bg-red-50" data-id="${item.id}">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              ` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+    
+    // Update success table
+    function updateSuccessTable() {
+      const tbody = document.getElementById('success-tbody');
+      const count = document.getElementById('success-count-text');
+      const successCount = document.getElementById('success-count');
+      
+      successCount.textContent = sessionData.length;
+      count.textContent = `${sessionData.length} รายการ`;
+      
+      if (sessionData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="px-2.5 py-8 text-left text-gray-400 text-sm">ยังไม่มีข้อมูล</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = sessionData.map(item => `
+        <tr class="border-b border-gray-100">
+          <td class="px-3 py-3 text-gray-700">${item.no_id}</td>
+          <td class="px-3 py-3 text-gray-700">${item.contractNumber}</td>
+          <td class="px-3 py-3 text-gray-700">${item.buildingName}</td>
+          <td class="px-3 py-3 text-gray-700">${item.building}</td>
+          <td class="px-3 py-3 text-gray-700">${item.floor}</td>
+          <td class="px-3 py-3 text-gray-700">${item.houseNumber}</td>
+          <td class="px-3 py-3 text-gray-700">${item.circuitNumber}</td>
+          <td class="px-3 py-3 text-gray-700">${item.portClearingDate}</td>
+          <td class="px-3 py-3 text-gray-700">${item.startDate}</td>
+          <td class="px-3 py-3 text-gray-700">${item.operator}</td>
+          <td class="px-3 py-3 text-gray-700">${item.remark}</td>
+
+        </tr>
+      `).join('');
+    }
+    
+    // Store all uploaded data
+    let allUploadedData = [];
+    
+    // Data handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allUploadedData = data;
+      }
+    };
+
+  function getUserId() {
+    return ['currentUserID','currentUserId','userId','userid']
+      .map(k => localStorage.getItem(k))
+      .find(Boolean);
+  }
+
+  function getNickname() {
+    return ['currentNickname','nickname','NickName','nick','Nick']
+      .map(k => localStorage.getItem(k))
+      .find(Boolean);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const uid = getUserId();
+    const nick = getNickname();
+
+    if (uid) {
+      document.getElementById('userInfo').textContent =
+        `👤 ${nick || 'ผู้ใช้'} (User ID: ${uid})`;
+    }
+  });
+
+    // Initialize
+    async function init() {
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            document.getElementById('page-title').textContent = config.page_title || defaultConfig.page_title;
+            document.getElementById('upload-btn-text').textContent = config.upload_button_text || defaultConfig.upload_button_text;
+          },
+          mapToCapabilities: () => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ['page_title', config.page_title || defaultConfig.page_title],
+            ['upload_button_text', config.upload_button_text || defaultConfig.upload_button_text]
+          ])
+        });
+      }
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          showToast('ไม่สามารถเชื่อมต่อฐานข้อมูลได้', 'error');
+        }
+      }
+      
+      setupEvents();
+      updatePreviewTable();
+      updateSuccessTable();
+    }
+
+    function normalizeDate(value) {
+        if (!value) return null;
+
+      // กรณี YYYY-MM-DD (ผ่านได้เลย)
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return value;
+      }
+
+      // กรณี DD/MM/YYYY หรือ D/M/YYYY
+      const m = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (m) {
+      const [_, d, mo, y] = m;
+        return `${y}-${mo.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    }
+
+  // รูปแบบอื่น → ไม่ส่ง
+  return null;
+}
+
+    async function getExistingNoIds(noIds) {
+      if (!noIds.length) return new Set();
+
+      const { data, error } = await supabaseClient
+        .from('clearport')
+        .select('no_id')
+        .in('no_id', noIds);
+
+      if (error) {
+        console.error(error);
+        showToast('เช็ค No_ID ในฐานข้อมูลไม่สำเร็จ', 'error');
+        return new Set();
+      }
+
+      return new Set(data.map(d => String(d.no_id)));
+    }
+    
+    function nowStr() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} `
+       + `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
+async function logStory(type, payload) {
+  const { error } = await supabaseClient
+    .from('Storyline')
+    .insert([{
+      created_at: nowStr(),
+      User_ID_FK: getUserId(),
+      Story: type,
+      Orders: payload
+    }]);
+
+  if (error) {
+    console.error('Storyline error:', error);
+  }
+}
+
+
+    
+    // Setup events
+    function setupEvents() {
+      const previewBtn = document.getElementById('preview-btn');
+      const clearBtn = document.getElementById('clear-btn');
+      const uploadBtn = document.getElementById('upload-btn');
+      const pasteArea = document.getElementById('paste-area');
+      const previewTbody = document.getElementById('preview-tbody');
+      
+      previewBtn.addEventListener('click', () => {
+        const text = pasteArea.value;
+        parsedData = parseExcelData(text);
+        
+        if (parsedData.length === 0) {
+          showToast('ไม่พบข้อมูล ��รุณาตรวจ��อบรูปแบบ', 'error');
+          return;
+        }
+        
+        updatePreviewTable();
+        showToast(`พบข้อมูล ${parsedData.length} รายการ`, 'success');
+      });
+      
+      clearBtn.addEventListener('click', () => {
+        pasteArea.value = '';
+        parsedData = [];
+        updatePreviewTable();
+        document.getElementById('paste-count').textContent = '0';
+        showToast('ล้างข้อมูลเรียบร้อย', 'info');
+      });
+      
+      
+      uploadBtn.addEventListener('click', async () => {
+        if (isUploading) return;
+        
+        const pendingData = parsedData.filter(d => d.status === 'pending');
+        
+        if (pendingData.length === 0) {
+          showToast('ไม่มีข้อมูลที่ต้องอัพโหลด', 'info');
+          return;
+        }
+        
+        // Check for duplicate No IDs
+    const noIds = pendingData.map(i => String(i.no_id));
+    const existingNoIds = await getExistingNoIds(noIds);
+
+    const duplicates = pendingData.filter(item =>
+      existingNoIds.has(String(item.no_id))
+    );
+
+    if (duplicates.length > 0) {
+      const dupIds = duplicates.map(d => d.no_id).join(', ');
+      showToast(`พบ No_ID ซ้ำใน ClearPort: ${dupIds}`, 'error');
+
+      duplicates.forEach(dup => {
+        const row = parsedData.find(p => p.id === dup.id);
+        if (row) row.status = 'duplicate';
+      });
+
+      updatePreviewTable();
+      return; // ❌ หยุด upload
+    }
+        
+        if (pendingData.length > 999) {
+          showToast('ข้อมูลเกิน 999 รายการ', 'error');
+          return;
+        }
+        
+        isUploading = true;
+        uploadBtn.disabled = true;
+        
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const uploadProgress = document.getElementById('upload-progress');
+        const uploadingCount = document.getElementById('uploading-count');
+        
+        uploadProgress.classList.remove('hidden');
+        uploadingCount.textContent = pendingData.length;
+        
+let uploaded = 0;
+
+for (const item of pendingData) {
+  item.status = 'uploading';
+  updatePreviewTable();
+
+  const { error } = await supabaseClient
+    .from('clearport')
+    .insert([{
+      User_ID_FK: getUserId(),
+      no_id: Number(item.no_id),
+      contractNumber: Number(item.contractNumber),
+      buildingName: item.buildingName || null,
+      building: item.building || null,
+      floor: item.floor || null,
+      houseNumber: item.houseNumber || null,
+      circuitNumber: item.circuitNumber || null,
+      "Port clearing date": normalizeDate(item.portClearingDate),
+      startDate: normalizeDate(item.startDate),
+      operator: item.operator || null,
+      remark: item.remark || null      // ✅ เพิ่ม
+  }]);
+
+  if (!error) {
+    item.status = 'uploaded';
+    uploaded++;
+
+    sessionData.push({
+      no_id: item.no_id,
+      contractNumber: item.contractNumber,
+      buildingName: item.buildingName,
+      building: item.building,
+      floor: item.floor,
+      houseNumber: item.houseNumber,
+      circuitNumber: item.circuitNumber,
+      portClearingDate: item.portClearingDate,
+      startDate: item.startDate,
+      operator: item.operator,
+      remark: item.remark            // ✅ เพิ่ม
+    });
+
+  } else {
+    item.status = 'duplicate';
+    console.error(error);
+  }
+
+  const progress = (uploaded / pendingData.length) * 100;
+  progressBar.style.width = `${progress}%`;
+  progressText.textContent = `${Math.round(progress)}%`;
+
+  updatePreviewTable();
+  updateSuccessTable();
+}
+    isUploading = false;
+    uploadBtn.disabled = false;
+    uploadingCount.textContent = '0';
+
+setTimeout(() => {
+  uploadProgress.classList.add('hidden');
+}, 2000);
+
+// 🟢 มีรายการใหม่จริง
+if (uploaded > 0) {
+  showToast(`อัพโหลดสำเร็จ ${uploaded} รายการ`, 'success');
+
+  // 🧾 Log เฉพาะกรณีมีรายการเข้า DB
+  await logStory('ClearPort Upload Success', {
+    uploaded,
+    total: pendingData.length
+  });
+
+} 
+// 🔴 ไม่มีรายการใหม่เลย (ซ้ำทั้งหมด)
+else {
+  showToast(
+    'ไม่สามารถอัพโหลดได้ เนื่องจากข้อมูลซ้ำทั้งหมดในระบบ',
+    'error'
+  );
+}
+
+      });
+      
+      previewTbody.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('.delete-btn');
+        if (!deleteBtn) return;
+        
+        const id = deleteBtn.dataset.id;
+        parsedData = parsedData.filter(item => item.id !== id);
+        updatePreviewTable();
+        showToast('ลบรายการเรียบร้อย', 'success');
+      });
+    }
+    
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c1db273610ff4cf',t:'MTc2OTA3MDcwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
