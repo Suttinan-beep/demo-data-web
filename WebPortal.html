@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Enterprise Web Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
@@ -88,40 +87,99 @@
  <body class="h-full gradient-bg">
   <div id="app" class="h-full overflow-auto scrollbar-thin"><!-- Header -->
    <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-     <div class="flex items-center justify-between h-16"><!-- Logo & Title -->
-      <div class="flex items-center gap-3">
-       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center shadow-lg">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-        </svg>
-       </div>
-       <h1 id="portal-title" class="text-xl font-semibold text-gray-800">Enterprise Web Portal</h1>
-      </div><!-- Search Bar -->
-      <div class="flex-1 max-w-xl mx-8">
-       <div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span> <input type="text" id="search-input" placeholder="ค้นหาบริษัท, แผนก, หรือคีย์เวิร์ด..." class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm input-focus btn-transition">
-       </div>
-      </div><!-- Add Button --> <button id="add-btn" class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-sky-400 to-blue-400 text-white rounded-full font-medium text-sm card-shadow btn-transition hover:shadow-lg hover:scale-105"> <span class="text-lg">+</span> <span>เพิ่มข้อมูล</span> </button>
-     </div>
-    </div>
-   </header><!-- Main Content -->
-   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><!-- Stats Bar -->
-    <div class="flex items-center gap-6 mb-8">
-     <div class="flex items-center gap-2 text-sm text-gray-500"><span class="w-2 h-2 rounded-full bg-green-400"></span> <span>ทั้งหมด <span id="total-count" class="font-semibold text-gray-700">0</span> รายการ</span>
-     </div>
-     <div class="flex items-center gap-2 text-sm text-gray-500"><span class="w-2 h-2 rounded-full bg-blue-400"></span> <span><span id="dept-count" class="font-semibold text-gray-700">0</span> แผนก</span>
-     </div>
-    </div><!-- Cards Container -->
-    <div id="cards-container" class="grid gap-6"><!-- Cards will be rendered here -->
-    </div><!-- Empty State -->
-    <div id="empty-state" class="hidden text-center py-20">
-     <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-sky-100 to-blue-100 flex items-center justify-center">
-      <svg class="w-12 h-12 text-sky-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+    <div class="w-full px-8">
+     <div class="flex items-center h-16 gap-6">
+
+  <!-- LEFT -->
+  <div class="flex items-center gap-3 shrink-0">
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center shadow-lg">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+        </path>
       </svg>
-     </div>
-     <h3 class="text-xl font-medium text-gray-700 mb-2">ยังไม่มีข้อมูล</h3>
-     <p class="text-gray-400 mb-6">เริ่มต้นเพิ่มข้อมูลบริษัทและลิงก์ระบบของคุณ</p><button id="empty-add-btn" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-sky-400 to-blue-400 text-white rounded-full font-medium card-shadow btn-transition hover:shadow-lg hover:scale-105"> <span class="text-lg">+</span> <span>เพิ่มข้อมูลแรก</span> </button>
     </div>
-   </main>
+
+    <h1 class="text-xl font-semibold text-gray-800">
+      Enterprise Web Portal
+    </h1>
+  </div>
+
+  <!-- CENTER GROUP -->
+  <div class="flex-1 flex items-center justify-center gap-4">
+
+    <!-- SEARCH -->
+    <div class="w-full max-w-xl relative">
+      <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="ค้นหาแผนก, หรือคีย์เวิร์ด..."
+        class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm"
+      >
+    </div>
+
+    <!-- ADD BUTTON -->
+    <button id="add-btn"
+      class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-sky-400 to-blue-400 text-white rounded-full text-sm shadow-md hover:scale-105 transition whitespace-nowrap">
+      <span>+</span>
+      <span>เพิ่มข้อมูล</span>
+    </button>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="flex items-center pr-4 shrink-0">
+    <div id="userInfo"
+      class="text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded-full whitespace-nowrap shadow-sm">
+    </div>
+  </div>
+
+</div>
+</header>
+
+<!-- Main Content -->
+<main class="w-full px-6 py-8">
+  <div class="flex gap-8">
+
+    <!-- Sidebar -->
+    <div class="w-64 fixed top-16 left-0 h-[calc(100vh-64px)] bg-white p-4 card-shadow overflow-auto">
+      <h3 class="font-semibold text-gray-700 mb-3">แผนก</h3>
+      <div id="dept-filter" class="space-y-2"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1" style="margin-left: 280px;">
+
+      <!-- Stats -->
+      <div class="flex items-center gap-6 mb-8">
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          <span class="w-2 h-2 rounded-full bg-green-400"></span>
+          <span>ทั้งหมด <span id="total-count" class="font-semibold text-gray-700">0</span> รายการ</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+          <span><span id="dept-count" class="font-semibold text-gray-700">0</span> แผนก</span>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div id="cards-container" class="flex flex-wrap gap-6"></div>
+
+      <!-- Empty -->
+      <div id="empty-state" class="hidden text-center py-20">
+        <p class="text-gray-400 mb-4">ยังไม่มีข้อมูล</p>
+
+        <button 
+          id="empty-add-btn"
+          class="px-5 py-2 bg-sky-400 text-white rounded-lg hover:bg-sky-500">
+          + เพิ่มข้อมูล
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
   </div><!-- Modal -->
   <div id="modal" class="fixed inset-0 z-50 hidden">
    <div class="modal-overlay absolute inset-0" id="modal-backdrop"></div>
@@ -147,10 +205,105 @@
   </div><!-- Toast Container -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
   <script>
+    const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
+/******** 🔐 CHECK LOGIN  ********/
+function getUserId() {
+  return ['currentUserID','currentUserId','userId','userid']
+    .map(k => localStorage.getItem(k))
+    .find(Boolean);
+}
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  {
+    global: {
+      headers: {
+        'x-user-id': getUserId()
+      }
+    }
+  }
+);
+
+function getUserId() {
+  return ['currentUserID','currentUserId','userId','userid']
+    .map(k => localStorage.getItem(k))
+    .find(Boolean);
+}
+
+function getNickname() {
+  return ['currentNickname','nickname','NickName','nick','Nick']
+    .map(k => localStorage.getItem(k))
+    .find(Boolean);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const uid = getUserId();
+  const nick = getNickname();
+
+  if (uid) {
+    document.getElementById('userInfo').textContent =
+      `👤 ${nick || 'User'} (User ID: ${uid})`;
+  }
+});
+
+function nowStr() {
+  const d = new Date();
+  const p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
+async function logStory(action, detail) {
+  const payload = {
+    created_at: nowStr(),
+    User_ID_FK: getUserId(),
+    Story: action,
+    Orders: detail
+  };
+
+  const { error } = await supabaseClient
+    .from('Storyline')
+    .insert([payload]);
+
+  if (error) {
+    console.error('StoryLine error:', error);
+  }
+}
+
+const uid = getUserId();
+const alive = sessionStorage.getItem("alive");
+
+if (!uid || !alive) {
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+        async function loadWebPortal() {
+    const { data, error } = await supabaseClient
+        .from('webportal')
+        .select('*')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+        console.log('DATA:', data); // 👈 เพิ่ม
+        console.log('ERROR:', error); // 👈 เพิ่ม
+
+        if (error) {
+        console.error('INSERT ERROR:', error?.message, error);
+        showToast('โหลดข้อมูลไม่สำเร็จ', 'error');
+        return;
+    }
+
+      allData = data;
+      renderDeptFilter(); // ✅ เพิ่มตรงนี้
+      renderCards();
+    }
+    
+
+
     // Default configuration
     const defaultConfig = {
       portal_title: 'Enterprise Web Portal',
-      search_placeholder: 'ค้นหาบริษัท, แผนก, หรือคีย์เวิร์ด...',
+      search_placeholder: 'ค้นหาแผนก, หรือคีย์เวิร์ด...',
       background_color: '#e8f4fc',
       surface_color: '#ffffff',
       text_color: '#1f2937',
@@ -162,46 +315,42 @@
     let allData = [];
     let searchQuery = '';
     let isSubmitting = false;
+    let selectedDept = ''; // ✅ เพิ่มตรงนี้
 
-    // Initialize Element SDK
-    window.elementSdk.init({
-      defaultConfig,
-      onConfigChange: async (newConfig) => {
-        config = { ...defaultConfig, ...newConfig };
-        applyConfig();
-      },
-      mapToCapabilities: (cfg) => ({
-        recolorables: [
-          {
-            get: () => cfg.background_color || defaultConfig.background_color,
-            set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
-          },
-          {
-            get: () => cfg.surface_color || defaultConfig.surface_color,
-            set: (v) => { cfg.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
-          },
-          {
-            get: () => cfg.text_color || defaultConfig.text_color,
-            set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
-          },
-          {
-            get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
-            set: (v) => { cfg.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
-          },
-          {
-            get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
-            set: (v) => { cfg.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
-          }
-        ],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      }),
-      mapToEditPanelValues: (cfg) => new Map([
-        ['portal_title', cfg.portal_title || defaultConfig.portal_title],
-        ['search_placeholder', cfg.search_placeholder || defaultConfig.search_placeholder]
-      ])
-    });
+    function renderDeptFilter() {
+  const container = document.getElementById('dept-filter');
+
+  const depts = [...new Set(allData.map(item => item.department || 'ไม่ระบุ'))];
+
+  let html = `
+    <div 
+      class="cursor-pointer px-3 py-2 rounded-lg ${!selectedDept ? 'bg-sky-100 text-sky-600' : 'hover:bg-gray-100'}"
+      onclick="selectDept('')"
+    >
+      ทั้งหมด
+    </div>
+  `;
+
+  depts.forEach(dept => {
+    html += `
+      <div 
+        class="cursor-pointer px-3 py-2 rounded-lg ${selectedDept === dept ? 'bg-sky-100 text-sky-600' : 'hover:bg-gray-100'}"
+        onclick="selectDept('${dept}')"
+      >
+        ${dept}
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function selectDept(dept) {
+  selectedDept = dept;
+  renderDeptFilter();
+  renderCards();
+}
+    
 
     function applyConfig() {
       const title = config.portal_title || defaultConfig.portal_title;
@@ -267,14 +416,18 @@
       
       // Filter by search query
       const filteredData = allData.filter(item => {
-        if (!searchQuery) return true;
-        const query = searchQuery.toLowerCase();
-        return (
-          item.department?.toLowerCase().includes(query) ||
-          item.link_name?.toLowerCase().includes(query) ||
-          item.description?.toLowerCase().includes(query)
-        );
-      });
+  const query = searchQuery.toLowerCase();
+
+  const matchSearch = !searchQuery || (
+    item.department?.toLowerCase().includes(query) ||
+    item.link_name?.toLowerCase().includes(query) ||
+    item.description?.toLowerCase().includes(query)
+  );
+
+  const matchDept = !selectedDept || item.department === selectedDept;
+
+  return matchSearch && matchDept;
+});
 
       // Update stats
       document.getElementById('total-count').textContent = filteredData.length;
@@ -313,7 +466,7 @@
               <h2 class="text-lg font-semibold text-gray-700">${dept}</h2>
               <span class="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full">${items.length} รายการ</span>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               ${items.map(item => createCardHTML(item)).join('')}
             </div>
           </div>
@@ -329,7 +482,7 @@
       const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
       
       return `
-        <div class="bg-white rounded-xl card-shadow card-hover btn-transition p-5 card-surface" data-id="${item.__backendId}">
+        <div class="w-[300px] bg-white rounded-xl card-shadow card-hover btn-transition p-5" data-id="${item.id}">
           <div class="flex items-start justify-between mb-3">
             <div class="flex-1 min-w-0">
               <p class="text-sm text-gray-400 mb-1">${item.department || ''}</p>
@@ -339,7 +492,7 @@
               <button 
                 class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center btn-transition hover:scale-110 btn-edit"
                 style="background-color: ${secondaryColor}20; color: ${secondaryColor}"
-                data-id="${item.__backendId}"
+                data-id="${item.id}"
                 title="แก้ไข"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -347,9 +500,9 @@
                 </svg>
               </button>
               <button 
-                class="delete-btn w-8 h-8 rounded-lg bg-red-50 text-red-400 flex items-center justify-center btn-transition hover:bg-red-100 hover:scale-110"
-                data-id="${item.__backendId}"
-                title="ลบ"
+                    class="delete-btn w-8 h-8 rounded-lg bg-red-50 text-red-400 flex items-center justify-center btn-transition hover:bg-red-100 hover:scale-110"
+                    data-id="${item.id}"
+                    title="ลบ"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -391,13 +544,14 @@
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const id = btn.dataset.id;
-          const item = allData.find(d => d.__backendId === id);
+          const item = allData.find(d => d.id === id);
           if (item) openEditModal(item);
         });
       });
 
       // Delete buttons
       document.querySelectorAll('.delete-btn').forEach(btn => {
+        console.log('BTN ID:', btn.dataset.id); // 👈 เพิ่มบรรทัดนี้
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const id = btn.dataset.id;
@@ -444,18 +598,32 @@
       }, 3000);
     }
 
-    async function deleteItem(id) {
-      const item = allData.find(d => d.__backendId === id);
-      if (!item) return;
+async function deleteItem(id) {
+  console.log('Deleting ID:', id);
+  console.log('TYPE OF ID:', typeof id);
 
-      const result = await window.dataSdk.delete(item);
-      if (result.isOk) {
-        showToast('ลบข้อมูลเรียบร้อยแล้ว', 'success');
-      } else {
-        showToast('เกิดข้อผิดพลาดในการลบข้อมูล', 'error');
-      }
-    }
+  const { data, error } = await supabaseClient
+    .from('webportal')
+    .update({
+      status: 'inactive',
+      updated_by: getUserId(),
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id); // ✅ ใช้ id ตรง ๆ
 
+  if (error) {
+    console.error('DELETE ERROR FULL:', JSON.stringify(error, null, 2));
+    showToast('ลบข้อมูลไม่สำเร็จ', 'error');
+    return;
+  }
+
+  console.log('DELETE RESULT:', data);
+
+  await logStory('WebPortal-Delete', { id });
+
+  showToast('ลบข้อมูลเรียบร้อยแล้ว', 'success');
+  loadWebPortal();
+}
     // Modal functions
     function openModal(mode = 'add') {
       const modal = document.getElementById('modal');
@@ -478,7 +646,7 @@
 
     function openEditModal(item) {
       openModal('edit');
-      document.getElementById('edit-id').value = item.__backendId;
+      document.getElementById('edit-id').value = item.id;
       document.getElementById('department').value = item.department || '';
       document.getElementById('link-name').value = item.link_name || '';
       document.getElementById('link-url').value = item.url || '';
@@ -490,57 +658,103 @@
       modal.classList.add('hidden');
       document.body.style.overflow = '';
     }
-
     // Form submission
-    async function handleSubmit(e) {
-      e.preventDefault();
-      if (isSubmitting) return;
+   async function handleSubmit(e) {
+  e.preventDefault();
+  if (isSubmitting) return;
 
-      const submitBtn = document.getElementById('submit-btn');
-      const submitText = document.getElementById('submit-text');
-      const editId = document.getElementById('edit-id').value;
+  const submitBtn = document.getElementById('submit-btn');
+  const submitText = document.getElementById('submit-text');
+  const editId = document.getElementById('edit-id').value;
 
-      // Check limit for new records
-      if (!editId && allData.length >= 999) {
-        showToast('ถึงขีดจำกัด 999 รายการแล้ว กรุณาลบข้อมูลเก่าก่อน', 'error');
-        return;
-      }
+  isSubmitting = true;
+  submitBtn.disabled = true;
+  submitText.textContent = 'กำลังบันทึก...';
 
-      isSubmitting = true;
-      submitBtn.disabled = true;
-      submitText.textContent = 'กำลังบันทึก...';
+  const formData = {
+    department: document.getElementById('department').value.trim(),
+    link_name: document.getElementById('link-name').value.trim(),
+    url: document.getElementById('link-url').value.trim(),
+    description: document.getElementById('description').value.trim()
+  };
 
-      const formData = {
-        department: document.getElementById('department').value.trim(),
-        link_name: document.getElementById('link-name').value.trim(),
-        url: document.getElementById('link-url').value.trim(),
-        description: document.getElementById('description').value.trim(),
-        created_at: new Date().toISOString()
-      };
+  /* =========================
+     UPDATE
+  ========================= */
+  if (editId) {
+    const { error } = await supabaseClient
+      .from('webportal')
+      .update({
+        department: formData.department,
+        link_name: formData.link_name,
+        url: formData.url,
+        description: formData.description,
+        updated_by: getUserId(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', editId);
 
-      let result;
-      if (editId) {
-        const existingItem = allData.find(d => d.__backendId === editId);
-        if (existingItem) {
-          result = await window.dataSdk.update({ ...existingItem, ...formData });
-        }
-      } else {
-        formData.id = Date.now().toString();
-        result = await window.dataSdk.create(formData);
-      }
-
-      isSubmitting = false;
-      submitBtn.disabled = false;
-      submitText.textContent = editId ? 'อัปเดต' : 'บันทึก';
-
-      if (result && result.isOk) {
-        showToast(editId ? 'อัปเดตข้อมูลเรียบร้อยแล้ว' : 'เพิ่มข้อมูลเรียบร้อยแล้ว', 'success');
-        closeModal();
-      } else {
-        showToast('เกิดข้อผิดพลาด กรุณาลองอีกครั้ง', 'error');
-      }
+    if (error) {
+      console.error(error);
+      showToast('อัปเดตไม่สำเร็จ', 'error');
+      resetSubmit();
+      return;
     }
 
+    await logStory('WebPortal-Update', {
+      id: editId,
+      department: formData.department,
+      link_name: formData.link_name,
+      url: formData.url
+    });
+
+    showToast('อัปเดตข้อมูลเรียบร้อยแล้ว', 'success');
+  }
+
+  /* =========================
+     CREATE
+  ========================= */
+  else {
+    const { data, error } = await supabaseClient
+  .from('webportal')
+  .insert([{
+    department: formData.department,
+    link_name: formData.link_name,
+    url: formData.url,
+    description: formData.description,
+    created_by: getUserId(),
+    status: 'active'
+  }])
+  .select('id, url, link_name, department')
+  .single();
+
+    if (error) {
+      console.error(error);
+      showToast('เพิ่มข้อมูลไม่สำเร็จ', 'error');
+      resetSubmit();
+      return;
+    }
+
+    await logStory('WebPortal-Create', {
+        id: data.id,
+        url: data.url,
+        link_name: data.link_name,
+        department: data.department
+    });
+
+    showToast('เพิ่มข้อมูลเรียบร้อยแล้ว', 'success');
+  }
+
+  closeModal();
+  loadWebPortal();
+  resetSubmit();
+
+  function resetSubmit() {
+    isSubmitting = false;
+    submitBtn.disabled = false;
+    submitText.textContent = editId ? 'อัปเดต' : 'บันทึก';
+  }
+}
     // Toast notification
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
@@ -578,7 +792,14 @@
 
     // Event listeners
     document.getElementById('add-btn').addEventListener('click', () => openModal('add'));
-    document.getElementById('empty-add-btn').addEventListener('click', () => openModal('add'));
+    document.getElementById('add-btn').addEventListener('click', () => openModal('add'));
+
+const emptyBtn = document.getElementById('empty-add-btn');
+if (emptyBtn) {
+  emptyBtn.addEventListener('click', () => openModal('add'));
+}
+
+document.getElementById('cancel-btn').addEventListener('click', closeModal);
     document.getElementById('cancel-btn').addEventListener('click', closeModal);
     document.getElementById('modal-backdrop').addEventListener('click', closeModal);
     document.getElementById('data-form').addEventListener('submit', handleSubmit);
@@ -590,8 +811,9 @@
     });
 
     // Initialize
-    initDataSdk();
+    loadWebPortal();
     applyConfig();
+
   </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c7eb78677f3e878',t:'MTc3MDA4ODAzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

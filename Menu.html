@@ -153,14 +153,15 @@
       </svg>
     </div>
     <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-purple-600">Web Portal</h2>
-    <p class="text-sm sm:text-base text-gray-500">รวมลิงค์ Google Sheet</p>
+    <p class="text-sm sm:text-base text-gray-500">รวมลิงก์อ้างอิง</p> 
+    <p class="text-xs xs:text-base text-gray-500">Ardent Synergy Co., Ltd.</p>
     <div class="mt-4 sm:mt-6 flex items-center text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-sm font-medium">เข้าสู่เมนู</span>
       <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
   </div>
 </button>
      </div><!-- Footer -->
      <div class="mt-8 lg:mt-12 text-center opacity-0 animate-fade-in animate-delay-3">
-      <p class="text-xs sm:text-sm text-gray-400">© 2025 ระบบหลังบ้าน • เวอร์ชัน 2.0</p>
+      <p class="text-xs sm:text-sm text-gray-400">© 2025 suttinan • เวอร์ชัน 2.3</p>
      </div>
     </div>
    </div>
@@ -194,7 +195,7 @@
    <p id="toast-message" class="text-sm font-medium text-gray-700"></p>
   </div>
   <script>
-  /******** 🔐 CHECK LOGIN (เหมือน home.html) ********/
+  /******** 🔐 CHECK LOGIN ********/
   const uid = localStorage.getItem("userId");
   const alive = sessionStorage.getItem("alive");
 
@@ -325,7 +326,8 @@ document.getElementById('password-form').addEventListener('submit', async (e) =>
   const errorMsg = document.getElementById('error-message');
   const modalContent = document.getElementById('password-modal-content');
 
-  const ok = await verifyMenuPin('CLEARPORT', password);
+  const menuCode = window.currentMenu || 'CLEARPORT';
+  const ok = await verifyMenuPin(menuCode, password);
 
   if (ok) {
     hidePasswordModal();
@@ -335,7 +337,15 @@ document.getElementById('password-form').addEventListener('submit', async (e) =>
     sessionStorage.setItem('CLEARPORT_OK', 'true');
 
     setTimeout(() => {
-      window.location.href = 'clearport.html';
+      if (menuCode === 'CLEARPORT') {
+  sessionStorage.setItem('CLEARPORT_OK', 'true');
+  window.location.href = 'clearport.html';
+}
+
+if (menuCode === 'WEBPORTAL') {
+  sessionStorage.setItem('WEBPORTAL_OK', 'true');
+  window.location.href = 'webportal.html';
+}
     }, 500);
   } else {
     errorMsg.classList.remove('hidden');
@@ -481,8 +491,15 @@ if (window.elementSdk) {
       }, 500);
     });
   }
+  /* ===== Web Portal (เพิ่มใหม่) ===== */
+  const webportalBtn = document.getElementById('menu-webportal');
+if (webportalBtn) {
+  webportalBtn.addEventListener('click', () => {
+    window.currentMenu = 'WEBPORTAL'; // ✅ เก็บว่าเข้าจากเมนูไหน
+    showPasswordModal();
+  });
 }
-
+}
   </script>
   <script>
   function getUserId() {
