@@ -271,15 +271,19 @@ async function logStory(action, detail) {
 }
 
 const uid = getUserId();
+const alive = sessionStorage.getItem("alive");
 
-// ✅ เช็คทั้ง session + local
-const alive =
-  sessionStorage.getItem("alive") ||
-  localStorage.getItem("alive");
-
+// ❗ ถ้ายังไม่ login → ไป login เท่านั้น
 if (!uid || !alive) {
   localStorage.clear();
   window.location.href = "index.html";
+  throw new Error("NOT_LOGIN"); // 🔥 หยุด script ตรงนี้
+}
+const webportalOk = sessionStorage.getItem('WEBPORTAL_OK');
+
+// ❗ เช็คเฉพาะ "คนที่ login แล้ว"
+if (uid && alive && webportalOk !== 'true') {
+  window.location.href = 'menu.html';
 }
 
         async function loadWebPortal() {
