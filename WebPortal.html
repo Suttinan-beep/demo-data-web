@@ -271,7 +271,11 @@ async function logStory(action, detail) {
 }
 
 const uid = getUserId();
-const alive = sessionStorage.getItem("alive");
+
+// ✅ เช็คทั้ง session + local
+const alive =
+  sessionStorage.getItem("alive") ||
+  localStorage.getItem("alive");
 
 if (!uid || !alive) {
   localStorage.clear();

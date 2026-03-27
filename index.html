@@ -218,10 +218,17 @@
       }
 
       if (data.Password === password) {
-          localStorage.setItem("nickname", data.NicKname);
-          localStorage.setItem("userId", data.user_id);
-          sessionStorage.setItem("alive", "1");
-          window.location.href = "Menu.html";
+      localStorage.setItem("nickname", data.NicKname);
+      localStorage.setItem("userId", data.user_id);
+
+  // ✅ สำคัญมาก
+  sessionStorage.setItem("alive", "true");
+
+  // ✅ (แนะนำ) กัน session หาย
+  localStorage.setItem("alive", "true");
+
+  window.location.href = "Menu.html";
+  
 } else {
         errorEl.textContent = "❌ รหัสผ่านไม่ถูกต้อง";
         button.disabled = false;

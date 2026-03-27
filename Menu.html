@@ -344,6 +344,10 @@ document.getElementById('password-form').addEventListener('submit', async (e) =>
 
 if (menuCode === 'WEBPORTAL') {
   sessionStorage.setItem('WEBPORTAL_OK', 'true');
+
+  // ✅ เพิ่ม 2 บรรทัดนี้
+  sessionStorage.setItem('alive', 'true');
+  localStorage.setItem('alive', 'true');
   window.location.href = 'webportal.html';
 }
     }, 500);
