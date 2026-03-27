@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบหลังบ้าน - Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/element_sdk.js"></script>
+  <script src="./_sdk/element_sdk.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -471,14 +471,19 @@ const menuCode = window.currentMenu;
       ]);
       
     }
-if (window.elementSdk) {
-  window.elementSdk.init({
-    defaultConfig,
-    onConfigChange,
-    mapToCapabilities,
-    mapToEditPanelValues
-  });
-} else {
+try {
+  if (window.elementSdk && typeof window.elementSdk.init === 'function') {
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange,
+      mapToCapabilities,
+      mapToEditPanelValues
+    });
+  } else {
+    onConfigChange(defaultConfig);
+  }
+} catch (e) {
+  console.error('SDK ERROR:', e);
   onConfigChange(defaultConfig);
 }
 
