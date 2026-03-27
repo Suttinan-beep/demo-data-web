@@ -326,7 +326,13 @@ document.getElementById('password-form').addEventListener('submit', async (e) =>
   const errorMsg = document.getElementById('error-message');
   const modalContent = document.getElementById('password-modal-content');
 
-  const menuCode = window.currentMenu || 'CLEARPORT';
+  if (!window.currentMenu) {
+  console.error('❌ currentMenu is NULL');
+  return;
+}
+console.log('CLICK MENU:', window.currentMenu);
+
+const menuCode = window.currentMenu;
   const ok = await verifyMenuPin(menuCode, password);
 
   if (ok) {
@@ -481,8 +487,9 @@ if (window.elementSdk) {
   if (!updateBtn) return;
 
   updateBtn.addEventListener('click', () => {
-    showPasswordModal();
-  });
+  window.currentMenu = 'CLEARPORT'; // ✅ เพิ่มบรรทัดนี้
+  showPasswordModal();
+});
 
   const searchBtn = document.getElementById('menu-search');
   if (searchBtn) {
@@ -497,9 +504,10 @@ if (window.elementSdk) {
   const webportalBtn = document.getElementById('menu-webportal');
 if (webportalBtn) {
   webportalBtn.addEventListener('click', () => {
-    window.currentMenu = 'WEBPORTAL'; // ✅ เก็บว่าเข้าจากเมนูไหน
-    showPasswordModal();
-  });
+  window.currentMenu = 'WEBPORTAL';
+  console.log('SET MENU = WEBPORTAL'); // ✅ เพิ่ม
+  showPasswordModal();
+});
 }
 }
   </script>
