@@ -100,9 +100,9 @@
       </svg>
     </div>
 
-    <h1 class="text-xl font-semibold text-gray-800">
-      Enterprise Web Portal
-    </h1>
+    <h1 id="portal-title" class="text-xl font-semibold text-gray-800">
+    Enterprise Web Portal
+</h1>
   </div>
 
   <!-- CENTER GROUP -->
@@ -281,10 +281,16 @@ if (!uid || !alive) {
 }
 const webportalOk = sessionStorage.getItem('WEBPORTAL_OK');
 
-// ❗ เช็คเฉพาะ "คนที่ login แล้ว"
-if (uid && alive && webportalOk !== 'true') {
-  window.location.href = 'menu.html';
+function checkWebportalAccess() {
+  const webportalOk = sessionStorage.getItem('WEBPORTAL_OK');
+
+  if (!webportalOk) {
+    console.warn('❌ WEBPORTAL_OK missing → redirect menu');
+    window.location.href = 'menu.html';
+  }
 }
+
+setTimeout(checkWebportalAccess, 300);
 
         async function loadWebPortal() {
     const { data, error } = await supabaseClient

@@ -330,32 +330,32 @@ document.getElementById('password-form').addEventListener('submit', async (e) =>
   console.error('❌ currentMenu is NULL');
   return;
 }
-console.log('CLICK MENU:', window.currentMenu);
 
 const menuCode = window.currentMenu;
   const ok = await verifyMenuPin(menuCode, password);
 
   if (ok) {
-    hidePasswordModal();
-    showToast('✅ รหัสถูกต้อง! กำลังเข้าสู่หน้า Web portal...');
+  hidePasswordModal();
+  showToast('✅ รหัสถูกต้อง! กำลังเข้าสู่หน้า Web portal...');
 
-    // ✅ ตัวนี้สำคัญ
+  if (menuCode === 'CLEARPORT') {
     sessionStorage.setItem('CLEARPORT_OK', 'true');
 
+    // ✅ delay ตรงนี้
     setTimeout(() => {
-      if (menuCode === 'CLEARPORT') {
-  sessionStorage.setItem('CLEARPORT_OK', 'true');
-  window.location.href = 'clearport.html';
-}
+      window.location.href = 'clearport.html';
+    }, 100);
+  }
 
-if (menuCode === 'WEBPORTAL') {
-  sessionStorage.setItem('WEBPORTAL_OK', 'true');
+  if (menuCode === 'WEBPORTAL') {
+    sessionStorage.setItem('WEBPORTAL_OK', 'true');
 
-sessionStorage.setItem('alive', 'true');
-  window.location.href = 'webportal.html';
-}
-    }, 500);
-  } else {
+    // ✅ delay ตรงนี้ (สำคัญ)
+    setTimeout(() => {
+      window.location.href = 'webportal.html';
+    }, 100);
+  }
+} else {
     errorMsg.classList.remove('hidden');
     modalContent.classList.add('shake');
     document.getElementById('password-input').value = '';
