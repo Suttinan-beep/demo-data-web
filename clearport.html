@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="th" class="h-full">
  <head>
   <meta charset="UTF-8">
@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="/_sdk/data_sdk.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
   <style>
     body {
@@ -460,19 +459,8 @@
     </div>
    </div>
   </div>
-  <script>
-    const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
-    const supabaseClient = supabase.createClient(
-          SUPABASE_URL,SUPABASE_ANON_KEY,
-  {
-    global: {
-      headers: {
-        'x-user-id': getUserId()
-      }
-    }
-  }
-);
+  <script type="module">
+    import { getUserId, supabase as supabaseClient } from "./supabase-client.js";
 
   /******** 🔐 CHECK LOGIN (เหมือน home.html) ********/
   const uid = localStorage.getItem("userId");
@@ -488,7 +476,7 @@ const pinOk = sessionStorage.getItem('CLEARPORT_OK');
 
 if (pinOk !== 'true') {
   alert('กรุณาใส่รหัสผ่านก่อนเข้าใช้งานเมนู ClearPort');
-  window.location.href = 'menu.html';
+  window.location.href = 'Menu.html';
 }
 
 
@@ -552,11 +540,6 @@ if (pinOk !== 'true') {
 
       }
       return data;
-    }
-    function getUserId() {
-      return ['currentUserID','currentUserId','userId','userid']
-        .map(k => localStorage.getItem(k))
-        .find(Boolean);
     }
 
     // Update preview table

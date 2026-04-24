@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
@@ -179,17 +179,11 @@
   </div>
 
   <!-- Supabase Logic -->
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-    localStorage.clear();
-
-    const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
-    const SUPABASE_ANON_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <script type="module">
+    import { supabase } from "./supabase-client.js";
 
     // ต้องผูกกับ window เพราะใช้ onsubmit ใน HTML
-      window.handleLogin = async function (event) {
+    window.handleLogin = async function (event) {
       event.preventDefault();
 
       const username = document.getElementById("username").value.trim().toLowerCase();
@@ -199,42 +193,29 @@
 
       button.disabled = true;
       button.querySelector("span").textContent = "กำลังเข้าสู่ระบบ...";
+      errorEl.textContent = "";
 
-    const { data, error } = await supabase
-      .from("UserIDdemoDATA")
-      .select("user_id, Password, NicKname, Department")
-      .eq("user_id", username)
-      .single();
+      const { data, error } = await supabase.rpc("verify_user_login", {
+        p_user_id: username,
+        p_password: password,
+      });
 
-      console.log("username:", username);
-      console.log("data:", data);
-      console.log("error:", error);
+      const user = Array.isArray(data) ? data[0] : null;
 
-      if (error || !data) {
-        errorEl.textContent = "❌ ไม่พบ User นี้";
+      if (error || !user) {
+        errorEl.textContent = "❌ User ID หรือรหัสผ่านไม่ถูกต้อง";
         button.disabled = false;
         button.querySelector("span").textContent = "เข้าสู่ระบบ";
         return;
       }
 
-      if (data.Password === password) {
-      localStorage.setItem("nickname", data.NicKname);
-      localStorage.setItem("userId", data.user_id);
-
-  // ✅ สำคัญมาก
-  sessionStorage.setItem("alive", "true");
-
-  // ✅ (แนะนำ) กัน session หาย
-  localStorage.setItem("alive", "true");
-
-  window.location.href = "menu.html";
-  
-} else {
-        errorEl.textContent = "❌ รหัสผ่านไม่ถูกต้อง";
-        button.disabled = false;
-        button.querySelector("span").textContent = "เข้าสู่ระบบ";
-      }
+      localStorage.setItem("nickname", user.nickname || "");
+      localStorage.setItem("userId", user.user_id);
+      sessionStorage.setItem("alive", "true");
+      localStorage.setItem("alive", "true");
+      window.location.href = "Menu.html";
     };
   </script>
 </body>
 </html>
+

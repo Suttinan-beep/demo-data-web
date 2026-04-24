@@ -1,11 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="th" class="h-full">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Enterprise Web Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
@@ -204,33 +203,9 @@
    </div>
   </div><!-- Toast Container -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
-  <script>
-    const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
+  <script type="module">
+    import { getUserId, supabase as supabaseClient } from "./supabase-client.js";
 /******** 🔐 CHECK LOGIN  ********/
-function getUserId() {
-  return ['currentUserID','currentUserId','userId','userid']
-    .map(k => localStorage.getItem(k))
-    .find(Boolean);
-}
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
-  {
-    global: {
-      headers: {
-        'x-user-id': getUserId()
-      }
-    }
-  }
-);
-
-function getUserId() {
-  return ['currentUserID','currentUserId','userId','userid']
-    .map(k => localStorage.getItem(k))
-    .find(Boolean);
-}
-
 function getNickname() {
   return ['currentNickname','nickname','NickName','nick','Nick']
     .map(k => localStorage.getItem(k))
@@ -286,7 +261,7 @@ function checkWebportalAccess() {
 
   if (!webportalOk) {
     console.warn('❌ WEBPORTAL_OK missing → redirect menu');
-    window.location.href = 'menu.html';
+    window.location.href = 'Menu.html';
   }
 }
 
@@ -364,6 +339,7 @@ function selectDept(dept) {
   renderDeptFilter();
   renderCards();
 }
+window.selectDept = selectDept;
     
 
     function applyConfig() {
@@ -828,6 +804,5 @@ document.getElementById('cancel-btn').addEventListener('click', closeModal);
     loadWebPortal();
     applyConfig();
 
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c7eb78677f3e878',t:'MTc3MDA4ODAzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+  </script></body>
 </html>

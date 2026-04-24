@@ -1,13 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="th" class="h-full">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบหลังบ้าน - Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./_sdk/element_sdk.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
@@ -128,7 +125,7 @@
          </svg>
         </div><!-- Text Content -->
         <h2 id="menu-search-title" class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">ค้นหาข้อมูลลูกค้า</h2>
-        <p id="menu-search-desc" class="text-sm sm:text-base text-gray-500">ค้นหาและดูข้อมูลลูกค้าในระบบ</p><!-- Arrow Indicator -->
+        <p id="menu-search-desc" class="text-sm sm:text-base text-gray-500">ค้นหาข้อมูลลูกค้าในระบบ</p><!-- Arrow Indicator -->
         <div class="mt-4 sm:mt-6 flex items-center text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-sm font-medium">เข้าสู่เมนู</span>
          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
          </svg>
@@ -194,8 +191,9 @@
   <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-card px-6 py-3 rounded-xl shadow-lg opacity-0 transition-all duration-300 pointer-events-none z-50">
    <p id="toast-message" class="text-sm font-medium text-gray-700"></p>
   </div>
-  <script>
-  /******** 🔐 CHECK LOGIN ********/
+    <script type="module">
+  import { getUserId, supabase } from "./supabase-client.js";
+
   const uid = localStorage.getItem("userId");
   const alive = sessionStorage.getItem("alive");
 
@@ -203,318 +201,186 @@
     localStorage.clear();
     window.location.href = "Index.html";
   }
-  const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
-  const supabaseClient = supabase.createClient(
-          SUPABASE_URL,SUPABASE_ANON_KEY,
-  {
-    global: {
-      headers: {
-        'x-user-id': getUserId()
-      }
-    }
-  }
-);
 
-function getUserId() {
-  return ['currentUserID','currentUserId','userId','userid']
-    .map(k => localStorage.getItem(k))
-    .find(Boolean);
-}
-    // Default configuration
-    const defaultConfig = {
-      page_title: 'กรุณาเลือกเมนูที่ต้องการ',
-      menu_search_title: 'ค้นหาข้อมูลลูกค้า',
-      menu_search_desc: 'ค้นหาและดูข้อมูลลูกค้าในระบบ',
-      menu_update_title: 'Update ClearPort',
-      menu_update_desc: 'จัดการและอัปเดตข้อมูลในระบบ',
-      welcome_text: 'ยินดีต้อนรับ',
-      password_title: 'กรุณาใส่รหัสเพื่อเข้าใช้งาน',
-      password_placeholder: 'ใส่รหัสผ่าน',
-      submit_button: 'ยืนยัน',
-      cancel_button: 'ยกเลิก',
-      background_color: '#e0f2fe',
-      card_color: '#ffffff',
-      text_color: '#1f2937',
-      primary_action_color: '#3b82f6',
-      secondary_action_color: '#f97316',
-      font_family: 'Prompt',
-      font_size: 16
-    };
-    
-async function verifyMenuPin(menuCode, inputPin) {
-  const userId = getUserId();
-  if (!userId) return false;
+  const defaultConfig = {
+    page_title: 'กรุณาเลือกเมนูที่ต้องการ',
+    menu_search_title: 'ค้นหาข้อมูลลูกค้า',
+    menu_search_desc: 'ค้นหาและดูข้อมูลลูกค้าในระบบ',
+    menu_update_title: 'Update ClearPort',
+    menu_update_desc: 'จัดการและอัปเดตข้อมูลในระบบ',
+    welcome_text: 'ยินดีต้อนรับ',
+    password_title: 'กรุณาใส่รหัสเพื่อเข้าใช้งาน',
+    password_placeholder: 'ใส่รหัสผ่าน',
+    submit_button: 'ยืนยัน',
+    cancel_button: 'ยกเลิก',
+    background_color: '#e0f2fe',
+    card_color: '#ffffff',
+    text_color: '#1f2937',
+    primary_action_color: '#3b82f6',
+    secondary_action_color: '#f97316',
+    font_family: 'Prompt',
+    font_size: 16
+  };
 
-  const { data, error } = await supabaseClient
-    .from('UserMenuPIN')
-    .select('pin_hash')
-    .eq('user_id', userId)
-    .eq('menu_code', menuCode)
-    .eq('is_active', true)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  async function verifyMenuPin(menuCode, inputPin) {
+    const userId = getUserId();
+    if (!userId) return false;
 
-  if (error || !data) {
-    console.error('PIN error:', error);
-    return false;
-  }
-
-  // ✅ ต้อง return ค่า
-  return window.dcodeIO.bcrypt.compareSync(inputPin, data.pin_hash);
-}
-
-
-    // Show toast notification
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      const toastMessage = document.getElementById('toast-message');
-      toastMessage.textContent = message;
-      toast.classList.remove('opacity-0');
-      toast.classList.add('opacity-100');
-      
-      setTimeout(() => {
-        toast.classList.remove('opacity-100');
-        toast.classList.add('opacity-0');
-      }, 2500);
-    }
-
-    // Show/Hide password modal
-    function showPasswordModal() {
-      const modal = document.getElementById('password-modal');
-      const modalContent = document.getElementById('password-modal-content');
-      modal.classList.remove('pointer-events-none', 'opacity-0');
-      modal.classList.add('opacity-100');
-      setTimeout(() => {
-        modalContent.classList.remove('scale-95');
-        modalContent.classList.add('scale-100');
-      }, 10);
-      document.getElementById('password-input').focus();
-    }
-
-    function hidePasswordModal() {
-      const modal = document.getElementById('password-modal');
-      const modalContent = document.getElementById('password-modal-content');
-      modalContent.classList.remove('scale-100');
-      modalContent.classList.add('scale-95');
-      setTimeout(() => {
-        modal.classList.add('pointer-events-none', 'opacity-0');
-        modal.classList.remove('opacity-100');
-      }, 200);
-      document.getElementById('password-input').value = '';
-      document.getElementById('error-message').classList.add('hidden');
-    }
-
-    // Menu click handlers
-    document.getElementById('menu-search').addEventListener('click', () => {
-        showToast('🔍 กำลังเข้าสู่หน้าค้นหาข้อมูลลูกค้า...');
-        setTimeout(() => {
-            window.location.href = 'home.html';
-        }, 500);
+    const { data, error } = await supabase.rpc('verify_menu_pin', {
+      p_user_id: userId,
+      p_menu_code: menuCode,
+      p_pin: inputPin,
     });
 
-    // Password form handlers
-    document.getElementById('cancel-btn').addEventListener('click', () => {
-      hidePasswordModal();
-    });
+    if (error) {
+      console.error('PIN error:', error);
+      return false;
+    }
 
-document.getElementById('password-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const password = document.getElementById('password-input').value;
-  const errorMsg = document.getElementById('error-message');
-  const modalContent = document.getElementById('password-modal-content');
-
-  if (!window.currentMenu) {
-  console.error('❌ currentMenu is NULL');
-  return;
-}
-
-const menuCode = window.currentMenu;
-  const ok = await verifyMenuPin(menuCode, password);
-
-  if (ok) {
-  hidePasswordModal();
-  showToast('✅ รหัสถูกต้อง! กำลังเข้าสู่หน้า Web portal...');
-
-  if (menuCode === 'CLEARPORT') {
-    sessionStorage.setItem('CLEARPORT_OK', 'true');
-
-    // ✅ delay ตรงนี้
-    setTimeout(() => {
-      window.location.href = 'clearport.html';
-    }, 100);
+    return data === true;
   }
 
-  if (menuCode === 'WEBPORTAL') {
-    sessionStorage.setItem('WEBPORTAL_OK', 'true');
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toast-message');
+    toastMessage.textContent = message;
+    toast.classList.remove('opacity-0');
+    toast.classList.add('opacity-100');
 
-    // ✅ delay ตรงนี้ (สำคัญ)
     setTimeout(() => {
-      window.location.href = 'webportal.html';
-    }, 100);
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0');
+    }, 2500);
   }
-} else {
-    errorMsg.classList.remove('hidden');
-    modalContent.classList.add('shake');
-    document.getElementById('password-input').value = '';
+
+  function showPasswordModal() {
+    const modal = document.getElementById('password-modal');
+    const modalContent = document.getElementById('password-modal-content');
+    modal.classList.remove('pointer-events-none', 'opacity-0');
+    modal.classList.add('opacity-100');
+    setTimeout(() => {
+      modalContent.classList.remove('scale-95');
+      modalContent.classList.add('scale-100');
+    }, 10);
     document.getElementById('password-input').focus();
+  }
 
+  function hidePasswordModal() {
+    const modal = document.getElementById('password-modal');
+    const modalContent = document.getElementById('password-modal-content');
+    modalContent.classList.remove('scale-100');
+    modalContent.classList.add('scale-95');
     setTimeout(() => {
-      modalContent.classList.remove('shake');
-    }, 500);
+      modal.classList.add('pointer-events-none', 'opacity-0');
+      modal.classList.remove('opacity-100');
+    }, 200);
+    document.getElementById('password-input').value = '';
+    document.getElementById('error-message').classList.add('hidden');
   }
-});
 
-    // Close modal when clicking outside
-    document.getElementById('password-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'password-modal') {
-        hidePasswordModal();
+  function applyConfig(config) {
+    const cfg = { ...defaultConfig, ...config };
+    document.getElementById('page-title').textContent = cfg.page_title;
+    document.getElementById('welcome-text').textContent = cfg.welcome_text;
+    document.getElementById('menu-search-title').textContent = cfg.menu_search_title;
+    document.getElementById('menu-search-desc').textContent = cfg.menu_search_desc;
+    document.getElementById('menu-update-title').textContent = cfg.menu_update_title;
+    document.getElementById('menu-update-desc').textContent = cfg.menu_update_desc;
+    document.getElementById('password-title').textContent = cfg.password_title;
+    document.getElementById('password-input').placeholder = cfg.password_placeholder;
+    document.getElementById('submit-btn').textContent = cfg.submit_button;
+    document.getElementById('cancel-btn').textContent = cfg.cancel_button;
+    document.body.style.fontFamily = `${cfg.font_family}, sans-serif`;
+    document.body.style.fontSize = `${cfg.font_size}px`;
+  }
+
+  function bindMenuEvents() {
+    const searchBtn = document.getElementById('menu-search');
+    const updateBtn = document.getElementById('menu-update');
+    const webportalBtn = document.getElementById('menu-webportal');
+
+    if (searchBtn && !searchBtn.dataset.bound) {
+      searchBtn.dataset.bound = 'true';
+      searchBtn.addEventListener('click', () => {
+        showToast('กำลังเข้าสู่หน้าค้นหาข้อมูลลูกค้า...');
+        setTimeout(() => {
+          window.location.href = 'home.html';
+        }, 500);
+      });
+    }
+
+    if (updateBtn && !updateBtn.dataset.bound) {
+      updateBtn.dataset.bound = 'true';
+      updateBtn.addEventListener('click', () => {
+        window.currentMenu = 'CLEARPORT';
+        showPasswordModal();
+      });
+    }
+
+    if (webportalBtn && !webportalBtn.dataset.bound) {
+      webportalBtn.dataset.bound = 'true';
+      webportalBtn.addEventListener('click', () => {
+        window.currentMenu = 'WEBPORTAL';
+        showPasswordModal();
+      });
+    }
+  }
+
+  document.getElementById('cancel-btn').addEventListener('click', () => {
+    hidePasswordModal();
+  });
+
+  document.getElementById('password-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const password = document.getElementById('password-input').value;
+    const errorMsg = document.getElementById('error-message');
+    const modalContent = document.getElementById('password-modal-content');
+    const menuCode = window.currentMenu;
+
+    if (!menuCode) {
+      console.error('currentMenu is null');
+      return;
+    }
+
+    const ok = await verifyMenuPin(menuCode, password);
+
+    if (ok) {
+      hidePasswordModal();
+      showToast('ตรวจสอบรหัสผ่านสำเร็จ');
+
+      if (menuCode === 'CLEARPORT') {
+        sessionStorage.setItem('CLEARPORT_OK', 'true');
+        setTimeout(() => {
+          window.location.href = 'clearport.html';
+        }, 100);
       }
-    });
-    
 
-    // Config change handler
-    async function onConfigChange(config) {
-      const cfg = { ...defaultConfig, ...config };
-      
-      // Update text content
-      document.getElementById('page-title').textContent = cfg.page_title || defaultConfig.page_title;
-      document.getElementById('welcome-text').textContent = cfg.welcome_text || defaultConfig.welcome_text;
-      document.getElementById('menu-search-title').textContent = cfg.menu_search_title || defaultConfig.menu_search_title;
-      document.getElementById('menu-search-desc').textContent = cfg.menu_search_desc || defaultConfig.menu_search_desc;
-      document.getElementById('menu-update-title').textContent = cfg.menu_update_title || defaultConfig.menu_update_title;
-      document.getElementById('menu-update-desc').textContent = cfg.menu_update_desc || defaultConfig.menu_update_desc;
-      
-      // Update password modal text
-      document.getElementById('password-title').textContent = cfg.password_title || defaultConfig.password_title;
-      document.getElementById('password-input').placeholder = cfg.password_placeholder || defaultConfig.password_placeholder;
-      document.getElementById('submit-btn').textContent = cfg.submit_button || defaultConfig.submit_button;
-      document.getElementById('cancel-btn').textContent = cfg.cancel_button || defaultConfig.cancel_button;
-      
-      // Apply colors
-      const bgColor = cfg.background_color || defaultConfig.background_color;
-      const cardColor = cfg.card_color || defaultConfig.card_color;
-      const textColor = cfg.text_color || defaultConfig.text_color;
-      const primaryColor = cfg.primary_action_color || defaultConfig.primary_action_color;
-      const secondaryColor = cfg.secondary_action_color || defaultConfig.secondary_action_color;
-      
-      // Update text colors
-      document.getElementById('page-title').style.color = textColor;
-      document.getElementById('menu-search-title').style.color = textColor;
-      document.getElementById('menu-update-title').style.color = textColor;
-      
-      // Apply font
-      const fontFamily = cfg.font_family || defaultConfig.font_family;
-      const fontSize = cfg.font_size || defaultConfig.font_size;
-      document.body.style.fontFamily = `${fontFamily}, sans-serif`;
-      document.body.style.fontSize = `${fontSize}px`;
-         // ✅ เพิ่มบรรทัดนี้ท้ายฟังก์ชัน
-            bindMenuEvents();
-    }
-
-    // Map to capabilities
-    function mapToCapabilities(config) {
-      const cfg = window.elementSdk?.config || config || defaultConfig;
-      
-      return {
-        recolorables: [
-          {
-            get: () => cfg.background_color || defaultConfig.background_color,
-            set: (value) => { cfg.background_color = value; window.elementSdk?.setConfig({ background_color: value }); }
-          },
-          {
-            get: () => cfg.card_color || defaultConfig.card_color,
-            set: (value) => { cfg.card_color = value; window.elementSdk?.setConfig({ card_color: value }); }
-          },
-          {
-            get: () => cfg.text_color || defaultConfig.text_color,
-            set: (value) => { cfg.text_color = value; window.elementSdk?.setConfig({ text_color: value }); }
-          },
-          {
-            get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
-            set: (value) => { cfg.primary_action_color = value; window.elementSdk?.setConfig({ primary_action_color: value }); }
-          },
-          {
-            get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
-            set: (value) => { cfg.secondary_action_color = value; window.elementSdk?.setConfig({ secondary_action_color: value }); }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => cfg.font_family || defaultConfig.font_family,
-          set: (value) => { cfg.font_family = value; window.elementSdk?.setConfig({ font_family: value }); }
-        },
-        fontSizeable: {
-          get: () => cfg.font_size || defaultConfig.font_size,
-          set: (value) => { cfg.font_size = value; window.elementSdk?.setConfig({ font_size: value }); }
-        }
-      };
-    }
-    
-
-    // Map to edit panel values
-    function mapToEditPanelValues(config) {
-      const cfg = config || defaultConfig;
-      return new Map([
-        ['page_title', cfg.page_title || defaultConfig.page_title],
-        ['menu_search_title', cfg.menu_search_title || defaultConfig.menu_search_title],
-        ['menu_search_desc', cfg.menu_search_desc || defaultConfig.menu_search_desc],
-        ['menu_update_title', cfg.menu_update_title || defaultConfig.menu_update_title],
-        ['menu_update_desc', cfg.menu_update_desc || defaultConfig.menu_update_desc],
-        ['welcome_text', cfg.welcome_text || defaultConfig.welcome_text],
-        ['password_title', cfg.password_title || defaultConfig.password_title],
-        ['password_placeholder', cfg.password_placeholder || defaultConfig.password_placeholder],
-        ['submit_button', cfg.submit_button || defaultConfig.submit_button],
-        ['cancel_button', cfg.cancel_button || defaultConfig.cancel_button]
-      ]);
-      
-    }
-try {
-  if (window.elementSdk && typeof window.elementSdk.init === 'function') {
-    window.elementSdk.init({
-      defaultConfig,
-      onConfigChange,
-      mapToCapabilities,
-      mapToEditPanelValues
-    });
-  } else {
-    onConfigChange(defaultConfig);
-  }
-} catch (e) {
-  console.error('SDK ERROR:', e);
-  onConfigChange(defaultConfig);
-}
-
-    function bindMenuEvents() {
-  const updateBtn = document.getElementById('menu-update');
-  if (!updateBtn) return;
-
-  updateBtn.addEventListener('click', () => {
-  window.currentMenu = 'CLEARPORT'; // ✅ เพิ่มบรรทัดนี้
-  showPasswordModal();
-});
-
-  const searchBtn = document.getElementById('menu-search');
-  if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-      showToast('🔍 กำลังเข้าสู่หน้าค้นหาข้อมูลลูกค้า...');
+      if (menuCode === 'WEBPORTAL') {
+        sessionStorage.setItem('WEBPORTAL_OK', 'true');
+        setTimeout(() => {
+          window.location.href = 'webportal.html';
+        }, 100);
+      }
+    } else {
+      errorMsg.classList.remove('hidden');
+      modalContent.classList.add('shake');
+      document.getElementById('password-input').value = '';
+      document.getElementById('password-input').focus();
       setTimeout(() => {
-        window.location.href = 'home.html';
+        modalContent.classList.remove('shake');
       }, 500);
-    });
-  }
-  /* ===== Web Portal (เพิ่มใหม่) ===== */
-  const webportalBtn = document.getElementById('menu-webportal');
-if (webportalBtn) {
-  webportalBtn.addEventListener('click', () => {
-  window.currentMenu = 'WEBPORTAL';
-  console.log('SET MENU = WEBPORTAL'); // ✅ เพิ่ม
-  showPasswordModal();
-});
-}
-}
+    }
+  });
+
+  document.getElementById('password-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'password-modal') {
+      hidePasswordModal();
+    }
+  });
+
+  applyConfig(defaultConfig);
+  bindMenuEvents();
   </script>
   <script>
   function getUserId() {
@@ -540,5 +406,6 @@ if (webportalBtn) {
   });
 </script>
 
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c15699f22539102',t:'MTc2ODk4MzgzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
+

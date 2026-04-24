@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -8,9 +8,6 @@
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    window.addEventListener("beforeunload", () => {
-  sessionStorage.removeItem("alive");
-});
     tailwind.config = {
       theme: {
         extend: {
@@ -76,8 +73,6 @@
 }
   </style>
 
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- XLSX -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -146,20 +141,10 @@
     <p class="text-gray-500">กรุณาตรวจสอบข้อมูลและลองค้นหาใหม่อีกครั้ง</p>
   </div>
 </div>
-<script>
+<script type="module">
+import { getUserId, supabase as supabaseClient } from "./supabase-client.js";
+
 /******** CONFIG ********/
-const SUPABASE_URL = "https://ihfxsyxzjgolhfumemiw.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZnhzeXh6amdvbGhmdW1lbWl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDEwNDksImV4cCI6MjA3MTI3NzA0OX0.dPtOjlr6N3WEclJ2rcQ0HkWtGDLgn-qdQlKGa4DCe9o";
-const supabaseClient = supabase.createClient(
-      SUPABASE_URL,SUPABASE_ANON_KEY,
-  {
-    global: {
-      headers: {
-        'x-user-id': getUserId()
-      }
-    }
-  }
-);
 
 /******** 🔐 CHECK LOGIN (LOCAL STORAGE VERSION) ********/
 const uid = localStorage.getItem("userId");
@@ -197,11 +182,6 @@ function fileDateStr() {   // ⭐ เพิ่มอันนี้
 }
 
 
-function getUserId() {
-  return ['currentUserID','currentUserId','userId','userid']
-    .map(k=>localStorage.getItem(k))
-    .find(Boolean);
-}
 function getNickname() {
   return ['currentNickname','nickname','NickName','nick','Nick']
     .map(k => localStorage.getItem(k))
@@ -324,6 +304,10 @@ function logout() {
   localStorage.clear();
   window.location.href = "Index.html";
 }
+
+window.searchContract = searchContract;
+window.clearSearch = clearSearch;
+window.downloadExcel = downloadExcel;
 
 </script>
 
