@@ -108,8 +108,8 @@
     </div>
 
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <button onclick="searchContract()" class="gradient-bg text-white px-8 py-3 rounded-xl font-semibold">🔎 ค้นหาข้อมูล</button>
-      <button onclick="clearSearch()" class="bg-gray-100 text-gray-700 px-8 py-3 rounded-xl font-semibold">🗑️ ล้างข้อมูล</button>
+      <button id="search-btn" class="gradient-bg text-white px-8 py-3 rounded-xl font-semibold">🔎 ค้นหาข้อมูล</button>
+      <button id="clear-btn" class="bg-gray-100 text-gray-700 px-8 py-3 rounded-xl font-semibold">🗑️ ล้างข้อมูล</button>
     </div>
   </div>
 
@@ -120,7 +120,7 @@
         <h2 class="text-2xl font-bold">📊 ผลการค้นหา</h2>
         <p id="resultCount" class="text-white/90 mt-1"></p>
       </div>
-      <button onclick="downloadExcel()" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-semibold">📥 ดาวน์โหลด Excel</button>
+      <button id="download-btn" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-semibold">📥 ดาวน์โหลด Excel</button>
     </div>
 
     <div class="p-6">
@@ -142,17 +142,14 @@
   </div>
 </div>
 <script type="module">
-import { getUserId, supabase as supabaseClient } from "./supabase-client.js";
+import { supabase as supabaseClient } from "./supabase-client.js";
+import { getUserId, insertStory, renderUserInfo, requireLogin } from "./app-helpers.js";
 
 /******** CONFIG ********/
 
 /******** 🔐 CHECK LOGIN (LOCAL STORAGE VERSION) ********/
-const uid = localStorage.getItem("userId");
-const alive = sessionStorage.getItem("alive");
-
-if (!uid || !alive) {
-  localStorage.clear();
-  window.location.href = "Index.html";
+if (!requireLogin()) {
+  throw new Error("NOT_LOGIN");
 }
 
 const FIELDS = [
@@ -169,48 +166,21 @@ let lastSearchOrders = null; // ⭐ เพิ่ม
 $('tableHead').innerHTML = ['No.', ...FIELDS].map(h => `<th class="px-4 py-3 text-left font-semibold">${h}</th>`).join('');
 
 /******** HELPERS ********/
-function nowStr() {
-  const d = new Date();
-  const p = n => String(n).padStart(2,'0');
-  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
-}
-
 function fileDateStr() {   // ⭐ เพิ่มอันนี้
   const d = new Date();
   const p = n => String(n).padStart(2, '0');
   return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
 }
 
-
-function getNickname() {
-  return ['currentNickname','nickname','NickName','nick','Nick']
-    .map(k => localStorage.getItem(k))
-    .find(Boolean);
-}
 window.addEventListener('DOMContentLoaded', () => {
-  const uid = getUserId();
-  const nick = getNickname();
-  if (uid) {
-    $('userInfo').textContent =
-      `👤 ${nick || 'ผู้ใช้'} (User ID: ${uid})`;
-  }
+  renderUserInfo('userInfo');
 });
 
 async function logStory(type, orders) {
-  const payload = {
-    created_at: nowStr(),
-    User_ID_FK: getUserId(),
-    Story: type,
-    Orders: orders
-  };
-
-  const { data, error } = await supabaseClient
-    .from('Storyline')
-    .insert([payload]);
-
-  console.log('Story payload:', payload);
-  console.log('Story data:', data);
-  console.log('Story error:', error);
+  const { error } = await insertStory(supabaseClient, type, orders);
+  if (error) {
+    console.error('Storyline error:', error);
+  }
 }
 
 
@@ -300,14 +270,15 @@ async function downloadExcel() {
 ['contractNumber','houseNumber','circuitNumber'].forEach(id => {
   $(id).addEventListener('keypress', e => e.key === 'Enter' && searchContract());
 });
+
+$('search-btn').addEventListener('click', searchContract);
+$('clear-btn').addEventListener('click', clearSearch);
+$('download-btn').addEventListener('click', downloadExcel);
+
 function logout() {
   localStorage.clear();
   window.location.href = "Index.html";
 }
-
-window.searchContract = searchContract;
-window.clearSearch = clearSearch;
-window.downloadExcel = downloadExcel;
 
 </script>
 

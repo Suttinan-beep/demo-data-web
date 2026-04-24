@@ -460,23 +460,17 @@
    </div>
   </div>
   <script type="module">
-    import { getUserId, supabase as supabaseClient } from "./supabase-client.js";
+    import { supabase as supabaseClient } from "./supabase-client.js";
+    import { getUserId, insertStory, renderUserInfo, requireLogin, requirePageFlag } from "./app-helpers.js";
 
   /******** 🔐 CHECK LOGIN (เหมือน home.html) ********/
-  const uid = localStorage.getItem("userId");
-  const alive = sessionStorage.getItem("alive");
-
-  if (!uid || !alive) {
-    localStorage.clear();
-    window.location.href = "Index.html";
+  if (!requireLogin()) {
+    throw new Error("NOT_LOGIN");
   }
 
   /******** 🔐 CHECK CLEARPORT PIN ********/
-const pinOk = sessionStorage.getItem('CLEARPORT_OK');
-
-if (pinOk !== 'true') {
-  alert('กรุณาใส่รหัสผ่านก่อนเข้าใช้งานเมนู ClearPort');
-  window.location.href = 'Menu.html';
+if (!requirePageFlag('CLEARPORT_OK', 'Menu.html', 'กรุณาใส่รหัสผ่านก่อนเข้าใช้งานเมนู ClearPort')) {
+  throw new Error("PIN_REQUIRED");
 }
 
 
@@ -660,26 +654,8 @@ if (pinOk !== 'true') {
       }
     };
 
-  function getUserId() {
-    return ['currentUserID','currentUserId','userId','userid']
-      .map(k => localStorage.getItem(k))
-      .find(Boolean);
-  }
-
-  function getNickname() {
-    return ['currentNickname','nickname','NickName','nick','Nick']
-      .map(k => localStorage.getItem(k))
-      .find(Boolean);
-  }
-
   window.addEventListener('DOMContentLoaded', () => {
-    const uid = getUserId();
-    const nick = getNickname();
-
-    if (uid) {
-      document.getElementById('userInfo').textContent =
-        `👤 ${nick || 'ผู้ใช้'} (User ID: ${uid})`;
-    }
+    renderUserInfo('userInfo');
   });
 
     // Initialize
@@ -752,23 +728,8 @@ if (pinOk !== 'true') {
       return new Set(data.map(d => String(d.no_id)));
     }
     
-    function nowStr() {
-  const d = new Date();
-  const p = n => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} `
-       + `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
-}
-
 async function logStory(type, payload) {
-  const { error } = await supabaseClient
-    .from('Storyline')
-    .insert([{
-      created_at: nowStr(),
-      User_ID_FK: getUserId(),
-      Story: type,
-      Orders: payload
-    }]);
-
+  const { error } = await insertStory(supabaseClient, type, payload);
   if (error) {
     console.error('Storyline error:', error);
   }

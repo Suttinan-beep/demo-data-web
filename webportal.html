@@ -204,68 +204,26 @@
   </div><!-- Toast Container -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
   <script type="module">
-    import { getUserId, supabase as supabaseClient } from "./supabase-client.js";
+    import { supabase as supabaseClient } from "./supabase-client.js";
+    import { getUserId, insertStory, renderUserInfo, requireLogin, requirePageFlag } from "./app-helpers.js";
 /******** 🔐 CHECK LOGIN  ********/
-function getNickname() {
-  return ['currentNickname','nickname','NickName','nick','Nick']
-    .map(k => localStorage.getItem(k))
-    .find(Boolean);
-}
-
 window.addEventListener('DOMContentLoaded', () => {
-  const uid = getUserId();
-  const nick = getNickname();
-
-  if (uid) {
-    document.getElementById('userInfo').textContent =
-      `👤 ${nick || 'User'} (User ID: ${uid})`;
-  }
+  renderUserInfo('userInfo', 'User');
 });
 
-function nowStr() {
-  const d = new Date();
-  const p = n => String(n).padStart(2,'0');
-  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
-}
-
 async function logStory(action, detail) {
-  const payload = {
-    created_at: nowStr(),
-    User_ID_FK: getUserId(),
-    Story: action,
-    Orders: detail
-  };
-
-  const { error } = await supabaseClient
-    .from('Storyline')
-    .insert([payload]);
-
+  const { error } = await insertStory(supabaseClient, action, detail);
   if (error) {
     console.error('StoryLine error:', error);
   }
 }
 
-const uid = getUserId();
-const alive = sessionStorage.getItem("alive");
-
-// ❗ ถ้ายังไม่ login → ไป login เท่านั้น
-if (!uid || !alive) {
-  localStorage.clear();
-  window.location.href = "Index.html";
+if (!requireLogin()) {
   throw new Error("NOT_LOGIN"); // 🔥 หยุด script ตรงนี้
 }
-const webportalOk = sessionStorage.getItem('WEBPORTAL_OK');
-
-function checkWebportalAccess() {
-  const webportalOk = sessionStorage.getItem('WEBPORTAL_OK');
-
-  if (!webportalOk) {
-    console.warn('❌ WEBPORTAL_OK missing → redirect menu');
-    window.location.href = 'Menu.html';
-  }
-}
-
-setTimeout(checkWebportalAccess, 300);
+setTimeout(() => {
+  requirePageFlag('WEBPORTAL_OK', 'Menu.html');
+}, 300);
 
         async function loadWebPortal() {
     const { data, error } = await supabaseClient
@@ -273,9 +231,6 @@ setTimeout(checkWebportalAccess, 300);
         .select('*')
         .eq('status', 'active')
         .order('created_at', { ascending: false });
-        console.log('DATA:', data); // 👈 เพิ่ม
-        console.log('ERROR:', error); // 👈 เพิ่ม
-
         if (error) {
         console.error('INSERT ERROR:', error?.message, error);
         showToast('โหลดข้อมูลไม่สำเร็จ', 'error');
@@ -314,7 +269,7 @@ setTimeout(checkWebportalAccess, 300);
   let html = `
     <div 
       class="cursor-pointer px-3 py-2 rounded-lg ${!selectedDept ? 'bg-sky-100 text-sky-600' : 'hover:bg-gray-100'}"
-      onclick="selectDept('')"
+      data-dept=""
     >
       ทั้งหมด
     </div>
@@ -324,7 +279,7 @@ setTimeout(checkWebportalAccess, 300);
     html += `
       <div 
         class="cursor-pointer px-3 py-2 rounded-lg ${selectedDept === dept ? 'bg-sky-100 text-sky-600' : 'hover:bg-gray-100'}"
-        onclick="selectDept('${dept}')"
+        data-dept="${dept}"
       >
         ${dept}
       </div>
@@ -339,7 +294,6 @@ function selectDept(dept) {
   renderDeptFilter();
   renderCards();
 }
-window.selectDept = selectDept;
     
 
     function applyConfig() {
@@ -541,7 +495,6 @@ window.selectDept = selectDept;
 
       // Delete buttons
       document.querySelectorAll('.delete-btn').forEach(btn => {
-        console.log('BTN ID:', btn.dataset.id); // 👈 เพิ่มบรรทัดนี้
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const id = btn.dataset.id;
@@ -589,10 +542,7 @@ window.selectDept = selectDept;
     }
 
 async function deleteItem(id) {
-  console.log('Deleting ID:', id);
-  console.log('TYPE OF ID:', typeof id);
-
-  const { data, error } = await supabaseClient
+  const { error } = await supabaseClient
     .from('webportal')
     .update({
       status: 'inactive',
@@ -606,8 +556,6 @@ async function deleteItem(id) {
     showToast('ลบข้อมูลไม่สำเร็จ', 'error');
     return;
   }
-
-  console.log('DELETE RESULT:', data);
 
   await logStory('WebPortal-Delete', { id });
 
@@ -794,6 +742,11 @@ document.getElementById('cancel-btn').addEventListener('click', closeModal);
     document.getElementById('modal-backdrop').addEventListener('click', closeModal);
     document.getElementById('data-form').addEventListener('submit', handleSubmit);
     document.getElementById('search-input').addEventListener('input', handleSearch);
+    document.getElementById('dept-filter').addEventListener('click', (e) => {
+      const target = e.target.closest('[data-dept]');
+      if (!target) return;
+      selectDept(target.dataset.dept);
+    });
 
     // Escape key to close modal
     document.addEventListener('keydown', (e) => {

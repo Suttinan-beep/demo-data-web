@@ -192,14 +192,11 @@
    <p id="toast-message" class="text-sm font-medium text-gray-700"></p>
   </div>
     <script type="module">
-  import { getUserId, supabase } from "./supabase-client.js";
+  import { supabase } from "./supabase-client.js";
+  import { getUserId, renderUserInfo, requireLogin } from "./app-helpers.js";
 
-  const uid = localStorage.getItem("userId");
-  const alive = sessionStorage.getItem("alive");
-
-  if (!uid || !alive) {
-    localStorage.clear();
-    window.location.href = "Index.html";
+  if (!requireLogin()) {
+    throw new Error("NOT_LOGIN");
   }
 
   const defaultConfig = {
@@ -381,31 +378,8 @@
 
   applyConfig(defaultConfig);
   bindMenuEvents();
+  renderUserInfo('userInfo');
   </script>
-  <script>
-  function getUserId() {
-    return ['currentUserID','currentUserId','userId','userid']
-      .map(k => localStorage.getItem(k))
-      .find(Boolean);
-  }
-
-  function getNickname() {
-    return ['currentNickname','nickname','NickName','nick','Nick']
-      .map(k => localStorage.getItem(k))
-      .find(Boolean);
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const uid = getUserId();
-    const nick = getNickname();
-
-    if (uid) {
-      document.getElementById('userInfo').textContent =
-        `👤 ${nick || 'ผู้ใช้'} (User ID: ${uid})`;
-    }
-  });
-</script>
-
  </body>
 </html>
 
