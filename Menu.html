@@ -1,385 +1,467 @@
-﻿<!doctype html>
-<html lang="th" class="h-full">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบหลังบ้าน - Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html class="light" lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>DataNest - Enterprise Menu</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "outline-variant": "#c3c6d7",
+            "on-surface-variant": "#434655",
+            "outline": "#737686",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#e4f2ff",
+            "inverse-on-surface": "#eff1f3",
+            "error-container": "#ffdad6",
+            "on-background": "#191c1e",
+            "tertiary-fixed-dim": "#89ceff",
+            "on-secondary-container": "#54647a",
+            "background": "#f7f9fb",
+            "tertiary": "#005a82",
+            "surface-bright": "#f7f9fb",
+            "on-tertiary": "#ffffff",
+            "surface-container": "#eceef0",
+            "primary-container": "#2563eb",
+            "on-primary-container": "#eeefff",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed": "#001e2f",
+            "on-primary-fixed-variant": "#003ea8",
+            "surface-container-highest": "#e0e3e5",
+            "inverse-surface": "#2d3133",
+            "on-surface": "#191c1e",
+            "inverse-primary": "#b4c5ff",
+            "secondary-fixed-dim": "#b7c8e1",
+            "on-secondary-fixed-variant": "#38485d",
+            "surface-tint": "#0053db",
+            "tertiary-container": "#0074a6",
+            "surface": "#f7f9fb",
+            "secondary": "#505f76",
+            "on-secondary-fixed": "#0b1c30",
+            "surface-container-high": "#e6e8ea",
+            "primary-fixed-dim": "#b4c5ff",
+            "on-primary-fixed": "#00174b",
+            "on-tertiary-fixed-variant": "#004c6e",
+            "tertiary-fixed": "#c9e6ff",
+            "surface-variant": "#e0e3e5",
+            "on-error-container": "#93000a",
+            "surface-dim": "#d8dadc",
+            "secondary-container": "#d0e1fb",
+            "surface-container-low": "#f2f4f6",
+            "primary-fixed": "#dbe1ff",
+            "secondary-fixed": "#d3e4fe",
+            "on-error": "#ffffff",
+            "on-secondary": "#ffffff",
+            "primary": "#004ac6",
+            "error": "#ba1a1a"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            md: "16px",
+            lg: "24px",
+            xl: "48px",
+            gutter: "20px",
+            "container-margin": "32px",
+            sm: "8px",
+            xs: "4px",
+            "base-unit": "4px"
+          },
+          fontFamily: {
+            "body-base": ["Inter"],
+            "headline-md": ["Manrope"],
+            "label-uppercase": ["Inter"],
+            "display-lg": ["Manrope"],
+            "body-sm": ["Inter"],
+            thai: ["IBM Plex Sans Thai"]
+          },
+          fontSize: {
+            "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }],
+            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }]
+          }
+        }
+      }
+    };
+  </script>
   <style>
     body {
       box-sizing: border-box;
     }
-    
-    * {
-      font-family: 'Prompt', sans-serif;
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
     }
-    
-    .glass-card {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
+
+    .thai-text {
+      font-family: 'IBM Plex Sans Thai', sans-serif;
     }
-    
-    .menu-card {
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .ambient-card {
+      background: #ffffff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f1f5f9;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
-    
-    .menu-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-      background: rgba(255, 255, 255, 0.85);
+
+    .ambient-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
     }
-    
-    .menu-card-blue:hover {
-      box-shadow: 0 25px 50px -12px rgba(96, 165, 250, 0.3);
+
+    .blue-gradient-btn {
+      background: linear-gradient(135deg, #004ac6 0%, #0074a6 100%);
     }
-    
-    .menu-card-orange:hover {
-      box-shadow: 0 25px 50px -12px rgba(251, 146, 60, 0.3);
-    }
-    
-    .icon-container {
-      transition: all 0.3s ease;
-    }
-    
-    .menu-card:hover .icon-container {
-      transform: scale(1.1);
-    }
-    
-    .gradient-bg {
-      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7d6 100%);
-    }
-    
-    .floating-shape {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.5;
-      animation: float 8s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(5deg); }
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-fade-in {
-      animation: fadeInUp 0.6s ease-out forwards;
-    }
-    
-    .animate-delay-1 { animation-delay: 0.1s; }
-    .animate-delay-2 { animation-delay: 0.2s; }
-    .animate-delay-3 { animation-delay: 0.3s; }
-    
+
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
       20%, 40%, 60%, 80% { transform: translateX(5px); }
     }
-    
+
     .shake {
       animation: shake 0.5s ease-in-out;
     }
   </style>
-  <style>@view-transition { navigation: auto; }</style>
- </head>
- <body class="h-full gradient-bg overflow-auto">
-  <div class="min-h-full w-full flex items-center justify-center p-4 sm:p-6 lg:p-8 relative"><!-- Floating Background Shapes -->
-   <div class="floating-shape w-64 h-64 bg-blue-200 top-10 left-10" style="animation-delay: 0s;"></div>
-   <div class="floating-shape w-96 h-96 bg-orange-100 bottom-10 right-10" style="animation-delay: 2s;"></div>
-   <div class="floating-shape w-48 h-48 bg-pink-100 top-1/2 left-1/4" style="animation-delay: 4s;"></div><!-- Main Container -->
-   <div class="w-full max-w-4xl relative z-10"><!-- Glass Card Container -->
-    <div class="glass-card rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 opacity-0 animate-fade-in"><!-- Header Section -->
-     <div class="text-center mb-8 lg:mb-12 opacity-0 animate-fade-in animate-delay-1"><!-- Logo/Brand Area -->
-      <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg mb-4 sm:mb-6">
-       <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-       </svg>
-      </div>
-      <p id="welcome-text" class="text-sm sm:text-base text-gray-500 mb-2">ยินดีต้อนรับ</p>
-      <h1 id="page-title" class="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-800">กรุณาเลือกเมนูที่ต้องการ</h1>
-        <p id="userInfo" class="mt-2 text-sm sm:text-base text-gray-600"></p>
-     </div><!-- Menu Cards Grid -->
-     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 opacity-0 animate-fade-in animate-delay-2"><!-- Search Menu Card --> <button id="menu-search" class="menu-card menu-card-blue rounded-2xl p-6 sm:p-8 text-left group cursor-pointer focus:outline-none focus:ring-4 focus:ring-blue-200">
-       <div class="flex flex-col items-center text-center"><!-- Icon -->
-        <div class="icon-container w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg mb-4 sm:mb-6">
-         <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-         </svg>
-        </div><!-- Text Content -->
-        <h2 id="menu-search-title" class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">ค้นหาข้อมูลลูกค้า</h2>
-        <p id="menu-search-desc" class="text-sm sm:text-base text-gray-500">ค้นหาข้อมูลลูกค้าในระบบ</p><!-- Arrow Indicator -->
-        <div class="mt-4 sm:mt-6 flex items-center text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-sm font-medium">เข้าสู่เมนู</span>
-         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-         </svg>
-        </div>
-       </div></button> <!-- Update ClearPort Card --> <button id="menu-update" class="menu-card menu-card-orange rounded-2xl p-6 sm:p-8 text-left group cursor-pointer focus:outline-none focus:ring-4 focus:ring-orange-200">
-       <div class="flex flex-col items-center text-center"><!-- Icon -->
-        <div class="icon-container w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-lg mb-4 sm:mb-6">
-         <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-         </svg>
-        </div><!-- Text Content -->
-        <h2 id="menu-update-title" class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-orange-600 transition-colors">Update ClearPort</h2>
-        <p id="menu-update-desc" class="text-sm sm:text-base text-gray-500">จัดการและอัปเดตข้อมูลในระบบ</p><!-- Arrow Indicator -->
-        <div class="mt-4 sm:mt-6 flex items-center text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-sm font-medium">เข้าสู่เมนู</span>
-         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-         </svg>
-        </div>
-       </div></button>
-       <button id="menu-webportal" class="menu-card rounded-2xl p-6 sm:p-8 text-left group cursor-pointer focus:outline-none focus:ring-4 focus:ring-purple-200"><div class="flex flex-col items-center text-center">
-    <div class="icon-container w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center shadow-lg mb-4 sm:mb-6">
-      <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
-      </svg>
+</head>
+<body class="bg-background font-body-base text-on-surface min-h-screen flex flex-col">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
+    <div class="flex items-center gap-8">
+      <span class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50">DataNest</span>
+      <nav class="hidden md:flex items-center gap-6">
+        <a class="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 py-1 transition-colors duration-200 cursor-pointer" href="#">Menu</a>
+        <a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer" href="#">Attendance System</a>
+      </nav>
     </div>
-    <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-purple-600">Web Portal</h2>
-    <p class="text-sm sm:text-base text-gray-500">รวมลิงก์อ้างอิง</p> 
-    <p class="text-xs xs:text-base text-gray-500">Ardent Synergy Co., Ltd.</p>
-    <div class="mt-4 sm:mt-6 flex items-center text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-sm font-medium">เข้าสู่เมนู</span>
-      <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-  </div>
-</button>
-     </div><!-- Footer -->
-     <div class="mt-8 lg:mt-12 text-center opacity-0 animate-fade-in animate-delay-3">
-      <p class="text-xs sm:text-sm text-gray-400">© 2025 suttinan • เวอร์ชัน 2.3</p>
-     </div>
-    </div>
-   </div>
-  </div><!-- Password Modal -->
-  <div id="password-modal" class="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
-   <div id="password-modal-content" class="glass-card rounded-3xl shadow-2xl p-6 sm:p-8 w-full max-w-md transform scale-95 transition-transform duration-300"><!-- Lock Icon -->
-    <div class="flex justify-center mb-6">
-     <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-lg">
-      <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-      </svg>
-     </div>
-    </div><!-- Title -->
-    <h2 id="password-title" class="text-xl sm:text-2xl font-semibold text-gray-800 text-center mb-2">กรุณาใส่รหัสเพื่อเข้าใช้งาน</h2>
-    <p class="text-sm text-gray-500 text-center mb-6">Ardent Synergy Co., Ltd.</p><!-- Password Form -->
-    <form id="password-form" class="space-y-4">
-     <div><label for="password-input" class="block text-sm font-medium text-gray-700 mb-2"> รหัสผ่าน </label> <input type="password" id="password-input" placeholder="ใส่รหัสผ่าน" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all bg-white bg-opacity-50 backdrop-blur-sm" required>
-     </div><!-- Error Message -->
-     <div id="error-message" class="hidden bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm">
-      <div class="flex items-center">
-       <svg class="w-5 h-5 mr-2" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-       </svg> รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+
+    <div class="flex items-center gap-4">
+      <div class="flex items-center border-r border-slate-100 pr-6 mr-2">
+        <img
+          alt="User avatar"
+          class="mr-3 h-8 w-8 rounded-full object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"
+        />
+        <div class="flex flex-col">
+          <span id="userIdText" class="font-manrope text-sm font-bold text-slate-900">-</span>
+          <span id="userInfo" class="font-inter text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
+        </div>
       </div>
-     </div><!-- Buttons -->
-     <div class="flex gap-3 pt-2"><button type="button" id="cancel-btn" class="flex-1 px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-gray-300"> ยกเลิก </button> <button type="submit" id="submit-btn" class="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-orange-400 to-orange-500 text-white font-medium hover:from-orange-500 hover:to-orange-600 shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-orange-300"> ยืนยัน </button>
-     </div>
-    </form><!-- Helper Text -->
-    <p class="text-xs text-gray-400 text-center mt-4">💡 กรุณาใส่ Pin เพื่อเข้าใช้งาน</p>
-   </div>
-  </div><!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-card px-6 py-3 rounded-xl shadow-lg opacity-0 transition-all duration-300 pointer-events-none z-50">
-   <p id="toast-message" class="text-sm font-medium text-gray-700"></p>
+    </div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center p-lg">
+    <div class="max-w-6xl w-full">
+      <div class="text-center mb-xl">
+        <h1 id="page-title" class="font-display-lg text-display-lg text-on-background mb-sm thai-text">กรุณาเลือกเมนูที่ต้องการ</h1>
+        <p id="welcome-text" class="text-body-base text-secondary max-w-lg mx-auto thai-text">เข้าถึงเครื่องมือฐานข้อมูลและระบบจัดการ</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+        <button id="menu-search" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+          <div class="w-16 h-16 rounded-2xl bg-secondary-container flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
+            <span class="material-symbols-outlined text-primary text-3xl" data-icon="person_search">person_search</span>
+          </div>
+          <h2 id="menu-search-title" class="font-headline-md text-headline-md text-on-surface mb-md">Customer Search</h2>
+          <p id="menu-search-desc" class="thai-text text-body-sm text-on-surface-variant leading-relaxed">
+            ค้นหาและจัดการข้อมูลลูกค้าภายในระบบฐานข้อมูลหลัก ตรวจสอบประวัติการทำรายการและสถานะบัญชีได้อย่างรวดเร็ว
+          </p>
+          <div class="mt-lg pt-lg border-t border-slate-50 w-full">
+            <span class="text-primary font-semibold text-sm flex items-center justify-center gap-1 group-hover:gap-2 transition-all">
+              Access Database <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </span>
+          </div>
+        </button>
+
+        <button id="menu-webportal" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+          <div class="w-16 h-16 rounded-2xl bg-tertiary-container flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
+            <span class="material-symbols-outlined text-on-tertiary-container text-3xl" data-icon="public">public</span>
+          </div>
+          <h2 class="font-headline-md text-headline-md text-on-surface mb-md">Web Portal</h2>
+          <p class="thai-text text-body-sm text-on-surface-variant leading-relaxed">
+            เข้าสู่หน้าเว็บพอร์ทัลหลักสำหรับการจัดการคำสั่งซื้อและบริการลูกค้าภายนอก รองรับการเชื่อมต่อแบบเรียลไทม์
+          </p>
+          <div class="mt-lg pt-lg border-t border-slate-50 w-full">
+            <span class="text-primary font-semibold text-sm flex items-center justify-center gap-1 group-hover:gap-2 transition-all">
+              Open Portal <span class="material-symbols-outlined text-sm">open_in_new</span>
+            </span>
+          </div>
+        </button>
+
+        <button id="menu-update" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+          <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
+            <span class="material-symbols-outlined text-blue-600 text-3xl" data-icon="update">update</span>
+          </div>
+          <h2 id="menu-update-title" class="font-headline-md text-headline-md text-on-surface mb-md">Update Clearport</h2>
+          <p id="menu-update-desc" class="thai-text text-body-sm text-on-surface-variant leading-relaxed">
+            ปรับปรุงข้อมูลระบบ Clearport ให้เป็นปัจจุบัน ตรวจสอบความถูกต้องของซิงโครไนซ์ข้อมูลและการส่งรายงานประจำวัน
+          </p>
+          <div class="mt-lg pt-lg border-t border-slate-50 w-full">
+            <span class="text-primary font-semibold text-sm flex items-center justify-center gap-1 group-hover:gap-2 transition-all">
+              Run Synchronization <span class="material-symbols-outlined text-sm">sync</span>
+            </span>
+          </div>
+        </button>
+      </div>
+
+      <div class="mt-xl flex flex-col md:flex-row items-center justify-between gap-md py-lg border-t border-slate-200/60">
+        <div class="text-body-sm text-secondary thai-text">
+          ระบบพร้อมใช้งานสำหรับเมนูฐานข้อมูลและพอร์ทัลภายใน
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="password-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+    <div id="password-modal-content" class="bg-white rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md transform scale-95 transition-transform duration-300 border border-slate-100">
+      <div class="flex justify-center mb-6">
+        <div class="w-16 h-16 rounded-2xl bg-secondary-container flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined text-primary text-3xl">lock</span>
+        </div>
+      </div>
+      <h2 id="password-title" class="text-xl sm:text-2xl font-semibold text-gray-800 text-center mb-2 thai-text">กรุณาใส่รหัสเพื่อเข้าใช้งาน</h2>
+      <p class="text-sm text-gray-500 text-center mb-6">Ardent Synergy Co., Ltd.</p>
+      <form id="password-form" class="space-y-4">
+        <div>
+          <label for="password-input" class="block text-sm font-medium text-gray-700 mb-2 thai-text">รหัสผ่าน</label>
+          <input type="password" id="password-input" placeholder="ใส่รหัสผ่าน" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white" required>
+        </div>
+        <div id="error-message" class="hidden bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+          <div class="flex items-center thai-text">
+            <span class="material-symbols-outlined text-lg mr-2">error</span>
+            รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+          </div>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="cancel-btn" class="flex-1 px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-gray-300 thai-text">ยกเลิก</button>
+          <button type="submit" id="submit-btn" class="flex-1 px-6 py-3 rounded-lg blue-gradient-btn text-white font-medium shadow-md hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary/20 thai-text">ยืนยัน</button>
+        </div>
+      </form>
+      <p class="text-xs text-gray-400 text-center mt-4 thai-text">กรุณาใส่ PIN เพื่อเข้าใช้งาน</p>
+    </div>
   </div>
-    <script type="module">
-  import { supabase } from "./supabase-client.js";
-  import { getUserId, renderUserInfo, requireLogin } from "./app-helpers.js";
 
-  if (!requireLogin()) {
-    throw new Error("NOT_LOGIN");
-  }
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white px-6 py-3 rounded-lg shadow-lg opacity-0 transition-all duration-300 pointer-events-none z-50 border border-slate-100">
+    <p id="toast-message" class="text-sm font-medium text-gray-700 thai-text"></p>
+  </div>
 
-  const defaultConfig = {
-    page_title: 'กรุณาเลือกเมนูที่ต้องการ',
-    menu_search_title: 'ค้นหาข้อมูลลูกค้า',
-    menu_search_desc: 'ค้นหาและดูข้อมูลลูกค้าในระบบ',
-    menu_update_title: 'Update ClearPort',
-    menu_update_desc: 'จัดการและอัปเดตข้อมูลในระบบ',
-    welcome_text: 'ยินดีต้อนรับ',
-    password_title: 'กรุณาใส่รหัสเพื่อเข้าใช้งาน',
-    password_placeholder: 'ใส่รหัสผ่าน',
-    submit_button: 'ยืนยัน',
-    cancel_button: 'ยกเลิก',
-    background_color: '#e0f2fe',
-    card_color: '#ffffff',
-    text_color: '#1f2937',
-    primary_action_color: '#3b82f6',
-    secondary_action_color: '#f97316',
-    font_family: 'Prompt',
-    font_size: 16
-  };
+  <script type="module">
+    import { supabase } from "./supabase-client.js";
+    import { getAppSessionToken, getDepartment, getNickname, getUserId, requireLogin } from "./app-helpers.js";
 
-  async function verifyMenuPin(menuCode, inputPin) {
-    const userId = getUserId();
-    if (!userId) return false;
+    if (!requireLogin()) {
+      throw new Error("NOT_LOGIN");
+    }
 
-    const { data, error } = await supabase.rpc('verify_menu_pin', {
-      p_user_id: userId,
-      p_menu_code: menuCode,
-      p_pin: inputPin,
+    const defaultConfig = {
+      page_title: "Welcome back",
+      menu_search_title: "Customer Search",
+      menu_search_desc: "ค้นหาและจัดการข้อมูลลูกค้าภายในระบบฐานข้อมูลหลัก ตรวจสอบประวัติการทำรายการและสถานะบัญชีได้อย่างรวดเร็ว",
+      menu_update_title: "Update Clearport",
+      menu_update_desc: "ปรับปรุงข้อมูลระบบ Clearport ให้เป็นปัจจุบัน ตรวจสอบความถูกต้องของซิงโครไนซ์ข้อมูลและการส่งรายงานประจำวัน",
+      welcome_text: "เข้าถึงเครื่องมือฐานข้อมูลและระบบจัดการ",
+      password_title: "กรุณาใส่รหัสเพื่อเข้าใช้งาน",
+      password_placeholder: "ใส่รหัสผ่าน",
+      submit_button: "ยืนยัน",
+      cancel_button: "ยกเลิก",
+      background_color: "#f7f9fb",
+      card_color: "#ffffff",
+      text_color: "#1f2937",
+      primary_action_color: "#3b82f6",
+      secondary_action_color: "#f97316",
+      font_family: "IBM Plex Sans Thai",
+      font_size: 16
+    };
+
+    async function verifyMenuPin(menuCode, inputPin) {
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) return false;
+
+      const { data, error } = await supabase.rpc("verify_menu_pin_for_session", {
+        p_session_token: sessionToken,
+        p_menu_code: menuCode,
+        p_pin: inputPin,
+      });
+
+      if (error) {
+        console.error("PIN error:", error);
+        return false;
+      }
+
+      return data === true;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const toastMessage = document.getElementById("toast-message");
+      toastMessage.textContent = message;
+      toast.classList.remove("opacity-0");
+      toast.classList.add("opacity-100");
+
+      setTimeout(() => {
+        toast.classList.remove("opacity-100");
+        toast.classList.add("opacity-0");
+      }, 2500);
+    }
+
+    function showPasswordModal() {
+      const modal = document.getElementById("password-modal");
+      const modalContent = document.getElementById("password-modal-content");
+      modal.classList.remove("pointer-events-none", "opacity-0");
+      modal.classList.add("opacity-100");
+      setTimeout(() => {
+        modalContent.classList.remove("scale-95");
+        modalContent.classList.add("scale-100");
+      }, 10);
+      document.getElementById("password-input").focus();
+    }
+
+    function hidePasswordModal() {
+      const modal = document.getElementById("password-modal");
+      const modalContent = document.getElementById("password-modal-content");
+      modalContent.classList.remove("scale-100");
+      modalContent.classList.add("scale-95");
+      setTimeout(() => {
+        modal.classList.add("pointer-events-none", "opacity-0");
+        modal.classList.remove("opacity-100");
+      }, 200);
+      document.getElementById("password-input").value = "";
+      document.getElementById("error-message").classList.add("hidden");
+    }
+
+    function applyConfig(config) {
+      const cfg = { ...defaultConfig, ...config };
+      document.getElementById("page-title").textContent = cfg.page_title;
+      document.getElementById("welcome-text").textContent = cfg.welcome_text;
+      document.getElementById("menu-search-title").textContent = cfg.menu_search_title;
+      document.getElementById("menu-search-desc").textContent = cfg.menu_search_desc;
+      document.getElementById("menu-update-title").textContent = cfg.menu_update_title;
+      document.getElementById("menu-update-desc").textContent = cfg.menu_update_desc;
+      document.getElementById("password-title").textContent = cfg.password_title;
+      document.getElementById("password-input").placeholder = cfg.password_placeholder;
+      document.getElementById("submit-btn").textContent = cfg.submit_button;
+      document.getElementById("cancel-btn").textContent = cfg.cancel_button;
+      document.body.style.fontFamily = `${cfg.font_family}, sans-serif`;
+      document.body.style.fontSize = `${cfg.font_size}px`;
+    }
+
+    function renderCurrentUser() {
+      const nickname = getNickname() || "User";
+      const department = getDepartment();
+      const userId = getUserId();
+      document.getElementById("userIdText").textContent = userId || "-";
+      document.getElementById("page-title").textContent = `Welcome back, ${nickname}`;
+      document.getElementById("userInfo").textContent = department ? `${nickname} (${department})` : nickname;
+    }
+
+    function bindMenuEvents() {
+      const searchBtn = document.getElementById("menu-search");
+      const updateBtn = document.getElementById("menu-update");
+      const webportalBtn = document.getElementById("menu-webportal");
+
+      if (searchBtn && !searchBtn.dataset.bound) {
+        searchBtn.dataset.bound = "true";
+        searchBtn.addEventListener("click", () => {
+          showToast("กำลังเข้าสู่หน้าค้นหาข้อมูลลูกค้า...");
+          setTimeout(() => {
+            window.location.href = "home.html";
+          }, 500);
+        });
+      }
+
+      if (updateBtn && !updateBtn.dataset.bound) {
+        updateBtn.dataset.bound = "true";
+        updateBtn.addEventListener("click", () => {
+          window.currentMenu = "CLEARPORT";
+          showPasswordModal();
+        });
+      }
+
+      if (webportalBtn && !webportalBtn.dataset.bound) {
+        webportalBtn.dataset.bound = "true";
+        webportalBtn.addEventListener("click", () => {
+          window.currentMenu = "WEBPORTAL";
+          showPasswordModal();
+        });
+      }
+    }
+
+    document.getElementById("cancel-btn").addEventListener("click", () => {
+      hidePasswordModal();
     });
 
-    if (error) {
-      console.error('PIN error:', error);
-      return false;
-    }
+    document.getElementById("password-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    return data === true;
-  }
+      const password = document.getElementById("password-input").value;
+      const errorMsg = document.getElementById("error-message");
+      const modalContent = document.getElementById("password-modal-content");
+      const menuCode = window.currentMenu;
 
-  function showToast(message) {
-    const toast = document.getElementById('toast');
-    const toastMessage = document.getElementById('toast-message');
-    toastMessage.textContent = message;
-    toast.classList.remove('opacity-0');
-    toast.classList.add('opacity-100');
+      if (!menuCode) {
+        console.error("currentMenu is null");
+        return;
+      }
 
-    setTimeout(() => {
-      toast.classList.remove('opacity-100');
-      toast.classList.add('opacity-0');
-    }, 2500);
-  }
+      const ok = await verifyMenuPin(menuCode, password);
 
-  function showPasswordModal() {
-    const modal = document.getElementById('password-modal');
-    const modalContent = document.getElementById('password-modal-content');
-    modal.classList.remove('pointer-events-none', 'opacity-0');
-    modal.classList.add('opacity-100');
-    setTimeout(() => {
-      modalContent.classList.remove('scale-95');
-      modalContent.classList.add('scale-100');
-    }, 10);
-    document.getElementById('password-input').focus();
-  }
+      if (ok) {
+        hidePasswordModal();
+        showToast("ตรวจสอบรหัสผ่านสำเร็จ");
 
-  function hidePasswordModal() {
-    const modal = document.getElementById('password-modal');
-    const modalContent = document.getElementById('password-modal-content');
-    modalContent.classList.remove('scale-100');
-    modalContent.classList.add('scale-95');
-    setTimeout(() => {
-      modal.classList.add('pointer-events-none', 'opacity-0');
-      modal.classList.remove('opacity-100');
-    }, 200);
-    document.getElementById('password-input').value = '';
-    document.getElementById('error-message').classList.add('hidden');
-  }
+        if (menuCode === "CLEARPORT") {
+          sessionStorage.setItem("CLEARPORT_OK", "true");
+          setTimeout(() => {
+            window.location.href = "clearport.html";
+          }, 100);
+        }
 
-  function applyConfig(config) {
-    const cfg = { ...defaultConfig, ...config };
-    document.getElementById('page-title').textContent = cfg.page_title;
-    document.getElementById('welcome-text').textContent = cfg.welcome_text;
-    document.getElementById('menu-search-title').textContent = cfg.menu_search_title;
-    document.getElementById('menu-search-desc').textContent = cfg.menu_search_desc;
-    document.getElementById('menu-update-title').textContent = cfg.menu_update_title;
-    document.getElementById('menu-update-desc').textContent = cfg.menu_update_desc;
-    document.getElementById('password-title').textContent = cfg.password_title;
-    document.getElementById('password-input').placeholder = cfg.password_placeholder;
-    document.getElementById('submit-btn').textContent = cfg.submit_button;
-    document.getElementById('cancel-btn').textContent = cfg.cancel_button;
-    document.body.style.fontFamily = `${cfg.font_family}, sans-serif`;
-    document.body.style.fontSize = `${cfg.font_size}px`;
-  }
-
-  function bindMenuEvents() {
-    const searchBtn = document.getElementById('menu-search');
-    const updateBtn = document.getElementById('menu-update');
-    const webportalBtn = document.getElementById('menu-webportal');
-
-    if (searchBtn && !searchBtn.dataset.bound) {
-      searchBtn.dataset.bound = 'true';
-      searchBtn.addEventListener('click', () => {
-        showToast('กำลังเข้าสู่หน้าค้นหาข้อมูลลูกค้า...');
+        if (menuCode === "WEBPORTAL") {
+          sessionStorage.setItem("WEBPORTAL_OK", "true");
+          setTimeout(() => {
+            window.location.href = "webportal.html";
+          }, 100);
+        }
+      } else {
+        errorMsg.classList.remove("hidden");
+        modalContent.classList.add("shake");
+        document.getElementById("password-input").value = "";
+        document.getElementById("password-input").focus();
         setTimeout(() => {
-          window.location.href = 'home.html';
+          modalContent.classList.remove("shake");
         }, 500);
-      });
-    }
-
-    if (updateBtn && !updateBtn.dataset.bound) {
-      updateBtn.dataset.bound = 'true';
-      updateBtn.addEventListener('click', () => {
-        window.currentMenu = 'CLEARPORT';
-        showPasswordModal();
-      });
-    }
-
-    if (webportalBtn && !webportalBtn.dataset.bound) {
-      webportalBtn.dataset.bound = 'true';
-      webportalBtn.addEventListener('click', () => {
-        window.currentMenu = 'WEBPORTAL';
-        showPasswordModal();
-      });
-    }
-  }
-
-  document.getElementById('cancel-btn').addEventListener('click', () => {
-    hidePasswordModal();
-  });
-
-  document.getElementById('password-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const password = document.getElementById('password-input').value;
-    const errorMsg = document.getElementById('error-message');
-    const modalContent = document.getElementById('password-modal-content');
-    const menuCode = window.currentMenu;
-
-    if (!menuCode) {
-      console.error('currentMenu is null');
-      return;
-    }
-
-    const ok = await verifyMenuPin(menuCode, password);
-
-    if (ok) {
-      hidePasswordModal();
-      showToast('ตรวจสอบรหัสผ่านสำเร็จ');
-
-      if (menuCode === 'CLEARPORT') {
-        sessionStorage.setItem('CLEARPORT_OK', 'true');
-        setTimeout(() => {
-          window.location.href = 'clearport.html';
-        }, 100);
       }
+    });
 
-      if (menuCode === 'WEBPORTAL') {
-        sessionStorage.setItem('WEBPORTAL_OK', 'true');
-        setTimeout(() => {
-          window.location.href = 'webportal.html';
-        }, 100);
+    document.getElementById("password-modal").addEventListener("click", (e) => {
+      if (e.target.id === "password-modal") {
+        hidePasswordModal();
       }
-    } else {
-      errorMsg.classList.remove('hidden');
-      modalContent.classList.add('shake');
-      document.getElementById('password-input').value = '';
-      document.getElementById('password-input').focus();
-      setTimeout(() => {
-        modalContent.classList.remove('shake');
-      }, 500);
-    }
-  });
+    });
 
-  document.getElementById('password-modal').addEventListener('click', (e) => {
-    if (e.target.id === 'password-modal') {
-      hidePasswordModal();
-    }
-  });
-
-  applyConfig(defaultConfig);
-  bindMenuEvents();
-  renderUserInfo('userInfo');
+    applyConfig(defaultConfig);
+    renderCurrentUser();
+    bindMenuEvents();
   </script>
- </body>
+</body>
 </html>
-

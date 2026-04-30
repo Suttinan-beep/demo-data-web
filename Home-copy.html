@@ -1,0 +1,761 @@
+﻿<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Web Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'Kanit', 'Inter', sans-serif;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #e8f4fc 0%, #faf8f0 50%, #fef9e7 100%);
+    }
+    
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-transition {
+      transition: all 0.25s ease;
+    }
+    
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+    }
+    
+    .input-focus:focus {
+      outline: none;
+      border-color: #7ec8e3;
+      box-shadow: 0 0 0 3px rgba(126, 200, 227, 0.2);
+    }
+    
+    .link-item:hover {
+      background: linear-gradient(90deg, #e8f4fc 0%, transparent 100%);
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: #c5d8e8;
+      border-radius: 3px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease forwards;
+    }
+    
+    .animate-slideUp {
+      animation: slideUp 0.4s ease forwards;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full gradient-bg">
+  <div id="app" class="h-full overflow-auto scrollbar-thin"><!-- Header -->
+   <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <div class="w-full px-8">
+     <div class="flex items-center h-16 gap-6">
+
+  <!-- LEFT -->
+  <div class="flex items-center gap-3 shrink-0">
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center shadow-lg">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+        </path>
+      </svg>
+    </div>
+
+    <h1 id="portal-title" class="text-xl font-semibold text-gray-800">
+    Enterprise Web Portal
+</h1>
+  </div>
+
+  <!-- CENTER GROUP -->
+  <div class="flex-1 flex items-center justify-center gap-4">
+
+    <!-- SEARCH -->
+    <div class="w-full max-w-xl relative">
+      <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="ค้นหาแผนก, หรือคีย์เวิร์ด..."
+        class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm"
+      >
+    </div>
+
+    <!-- ADD BUTTON -->
+    <button id="add-btn"
+      class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-sky-400 to-blue-400 text-white rounded-full text-sm shadow-md hover:scale-105 transition whitespace-nowrap">
+      <span>+</span>
+      <span>เพิ่มข้อมูล</span>
+    </button>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="flex items-center pr-4 shrink-0">
+    <div id="userInfo"
+      class="text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded-full whitespace-nowrap shadow-sm">
+    </div>
+  </div>
+
+</div>
+</header>
+
+<!-- Main Content -->
+<main class="w-full px-6 py-8">
+  <div class="flex gap-8">
+
+    <!-- Sidebar -->
+    <div class="w-64 fixed top-16 left-0 h-[calc(100vh-64px)] bg-white p-4 card-shadow overflow-auto">
+      <h3 class="font-semibold text-gray-700 mb-3">แผนก</h3>
+      <div id="dept-filter" class="space-y-2"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1" style="margin-left: 280px;">
+
+      <!-- Stats -->
+      <div class="flex items-center gap-6 mb-8">
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          <span class="w-2 h-2 rounded-full bg-green-400"></span>
+          <span>ทั้งหมด <span id="total-count" class="font-semibold text-gray-700">0</span> รายการ</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+          <span><span id="dept-count" class="font-semibold text-gray-700">0</span> แผนก</span>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div id="cards-container" class="flex flex-wrap gap-6"></div>
+
+      <!-- Empty -->
+      <div id="empty-state" class="hidden text-center py-20">
+        <p class="text-gray-400 mb-4">ยังไม่มีข้อมูล</p>
+
+        <button 
+          id="empty-add-btn"
+          class="px-5 py-2 bg-sky-400 text-white rounded-lg hover:bg-sky-500">
+          + เพิ่มข้อมูล
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+  </div><!-- Modal -->
+  <div id="modal" class="fixed inset-0 z-50 hidden">
+   <div class="modal-overlay absolute inset-0" id="modal-backdrop"></div>
+   <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-lg card-shadow animate-fadeIn overflow-hidden"><!-- Modal Header -->
+     <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-sky-50 to-blue-50">
+      <h2 id="modal-title" class="text-lg font-semibold text-gray-800">เพิ่มข้อมูลใหม่</h2>
+     </div><!-- Modal Body -->
+     <form id="data-form" class="p-6 space-y-5"><input type="hidden" id="edit-id">
+      <div><label class="block text-sm font-medium text-gray-600 mb-1.5">แผนก</label> <input type="text" id="department" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm input-focus btn-transition" placeholder="เช่น ฝ่ายบุคคล, ฝ่ายไอที, ฝ่ายการเงิน">
+      </div>
+      <div><label class="block text-sm font-medium text-gray-600 mb-1.5">ชื่อลิงก์</label> <input type="text" id="link-name" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm input-focus btn-transition" placeholder="ระบบจัดการพนักงาน">
+      </div>
+      <div><label class="block text-sm font-medium text-gray-600 mb-1.5">URL</label> <input type="url" id="link-url" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm input-focus btn-transition" placeholder="https://example.com/system">
+      </div>
+      <div><label class="block text-sm font-medium text-gray-600 mb-1.5">หมายเหตุ / คำอธิบาย</label> <textarea id="description" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm input-focus btn-transition resize-none" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
+      </div>
+     </form><!-- Modal Footer -->
+     <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3"><button type="button" id="cancel-btn" class="px-5 py-2.5 text-gray-600 bg-white border border-gray-200 rounded-xl font-medium text-sm btn-transition hover:bg-gray-50"> ยกเลิก </button> <button type="submit" form="data-form" id="submit-btn" class="px-5 py-2.5 bg-gradient-to-r from-sky-400 to-blue-400 text-white rounded-xl font-medium text-sm btn-transition hover:shadow-lg disabled:opacity-50"> <span id="submit-text">บันทึก</span> </button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Toast Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
+  <script type="module">
+    import { supabase as supabaseClient } from "./supabase-client.js";
+    import { getUserId, insertStory, renderUserInfo, requireLogin, requirePageFlag } from "./app-helpers.js";
+/******** 🔐 CHECK LOGIN  ********/
+window.addEventListener('DOMContentLoaded', () => {
+  renderUserInfo('userInfo', 'User');
+});
+
+async function logStory(action, detail) {
+  const { error } = await insertStory(supabaseClient, action, detail);
+  if (error) {
+    console.error('StoryLine error:', error);
+  }
+}
+
+if (!requireLogin()) {
+  throw new Error("NOT_LOGIN"); // 🔥 หยุด script ตรงนี้
+}
+setTimeout(() => {
+  requirePageFlag('WEBPORTAL_OK', 'Menu.html');
+}, 300);
+
+        async function loadWebPortal() {
+    const { data, error } = await supabaseClient
+        .from('webportal')
+        .select('*')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+        if (error) {
+        console.error('INSERT ERROR:', error?.message, error);
+        showToast('โหลดข้อมูลไม่สำเร็จ', 'error');
+        return;
+    }
+
+      allData = data;
+      renderDeptFilter(); // ✅ เพิ่มตรงนี้
+      renderCards();
+    }
+    
+
+
+    // Default configuration
+    const defaultConfig = {
+      portal_title: 'Enterprise Web Portal',
+      search_placeholder: 'ค้นหาแผนก, หรือคีย์เวิร์ด...',
+      background_color: '#e8f4fc',
+      surface_color: '#ffffff',
+      text_color: '#1f2937',
+      primary_action_color: '#38bdf8',
+      secondary_action_color: '#fbbf24'
+    };
+
+    let config = { ...defaultConfig };
+    let allData = [];
+    let searchQuery = '';
+    let isSubmitting = false;
+    let selectedDept = ''; // ✅ เพิ่มตรงนี้
+
+    function renderDeptFilter() {
+  const container = document.getElementById('dept-filter');
+
+  const depts = [...new Set(allData.map(item => item.department || 'ไม่ระบุ'))];
+
+  let html = `
+    <div 
+      class="cursor-pointer px-3 py-2 rounded-lg ${!selectedDept ? 'bg-sky-100 text-sky-600' : 'hover:bg-gray-100'}"
+      data-dept=""
+    >
+      ทั้งหมด
+    </div>
+  `;
+
+  depts.forEach(dept => {
+    html += `
+      <div 
+        class="cursor-pointer px-3 py-2 rounded-lg ${selectedDept === dept ? 'bg-sky-100 text-sky-600' : 'hover:bg-gray-100'}"
+        data-dept="${dept}"
+      >
+        ${dept}
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function selectDept(dept) {
+  selectedDept = dept;
+  renderDeptFilter();
+  renderCards();
+}
+    
+
+    function applyConfig() {
+      const title = config.portal_title || defaultConfig.portal_title;
+      const placeholder = config.search_placeholder || defaultConfig.search_placeholder;
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+
+      document.getElementById('portal-title').textContent = title;
+      document.getElementById('search-input').placeholder = placeholder;
+
+      // Apply colors
+      document.body.style.background = `linear-gradient(135deg, ${bgColor} 0%, ${surfaceColor} 50%, #fef9e7 100%)`;
+      
+      document.querySelectorAll('.card-surface').forEach(el => {
+        el.style.backgroundColor = surfaceColor;
+      });
+
+      document.querySelectorAll('.text-primary').forEach(el => {
+        el.style.color = textColor;
+      });
+
+      document.querySelectorAll('.btn-primary').forEach(el => {
+        el.style.background = `linear-gradient(to right, ${primaryColor}, ${adjustColor(primaryColor, -10)})`;
+      });
+
+      document.querySelectorAll('.btn-edit').forEach(el => {
+        el.style.backgroundColor = secondaryColor;
+      });
+    }
+
+    function adjustColor(color, percent) {
+      const num = parseInt(color.replace('#', ''), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = (num >> 16) + amt;
+      const G = (num >> 8 & 0x00FF) + amt;
+      const B = (num & 0x0000FF) + amt;
+      return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+    }
+
+    // Data handler for Data SDK
+    const dataHandler = {
+      onDataChanged(data) {
+        allData = data;
+        renderCards();
+      }
+    };
+
+    // Initialize Data SDK
+    async function initDataSdk() {
+      const result = await window.dataSdk.init(dataHandler);
+      if (!result.isOk) {
+        showToast('ไม่สามารถเชื่อมต่อฐานข้อมูลได้', 'error');
+      }
+    }
+
+    // Render cards grouped by department
+    function renderCards() {
+      const container = document.getElementById('cards-container');
+      const emptyState = document.getElementById('empty-state');
+      
+      // Filter by search query
+      const filteredData = allData.filter(item => {
+  const query = searchQuery.toLowerCase();
+
+  const matchSearch = !searchQuery || (
+    item.department?.toLowerCase().includes(query) ||
+    item.link_name?.toLowerCase().includes(query) ||
+    item.description?.toLowerCase().includes(query)
+  );
+
+  const matchDept = !selectedDept || item.department === selectedDept;
+
+  return matchSearch && matchDept;
+});
+
+      // Update stats
+      document.getElementById('total-count').textContent = filteredData.length;
+      const uniqueDepts = [...new Set(filteredData.map(item => item.department))];
+      document.getElementById('dept-count').textContent = uniqueDepts.length;
+
+      if (filteredData.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      // Group by department
+      const grouped = filteredData.reduce((acc, item) => {
+        const dept = item.department || 'ไม่ระบุแผนก';
+        if (!acc[dept]) acc[dept] = [];
+        acc[dept].push(item);
+        return acc;
+      }, {});
+
+      // Build HTML
+      let html = '';
+      const deptColors = ['from-sky-400 to-blue-500', 'from-amber-400 to-orange-500', 'from-emerald-400 to-teal-500', 'from-purple-400 to-indigo-500', 'from-rose-400 to-pink-500'];
+      let colorIndex = 0;
+
+      for (const [dept, items] of Object.entries(grouped)) {
+        const color = deptColors[colorIndex % deptColors.length];
+        colorIndex++;
+
+        html += `
+          <div class="animate-slideUp" style="animation-delay: ${colorIndex * 0.1}s">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-1 h-8 rounded-full bg-gradient-to-b ${color}"></div>
+              <h2 class="text-lg font-semibold text-gray-700">${dept}</h2>
+              <span class="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full">${items.length} รายการ</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              ${items.map(item => createCardHTML(item)).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+      attachCardEvents();
+    }
+
+    function createCardHTML(item) {
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      
+      return `
+        <div class="w-[300px] bg-white rounded-xl card-shadow card-hover btn-transition p-5" data-id="${item.id}">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-gray-400 mb-1">${item.department || ''}</p>
+              <p class="font-semibold text-gray-800 text-primary truncate">${item.link_name || 'ไม่ระบุชื่อ'}</p>
+            </div>
+            <div class="flex items-center gap-1 ml-2">
+              <button 
+                class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center btn-transition hover:scale-110 btn-edit"
+                style="background-color: ${secondaryColor}20; color: ${secondaryColor}"
+                data-id="${item.id}"
+                title="แก้ไข"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+              <button 
+                    class="delete-btn w-8 h-8 rounded-lg bg-red-50 text-red-400 flex items-center justify-center btn-transition hover:bg-red-100 hover:scale-110"
+                    data-id="${item.id}"
+                    title="ลบ"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <a 
+            href="${item.url || '#'}" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="link-item flex items-center gap-3 p-3 rounded-lg -mx-2 btn-transition group"
+          >
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center btn-primary" style="background: linear-gradient(to right, ${primaryColor}, ${adjustColor(primaryColor, -10)})">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-gray-700 truncate group-hover:text-sky-600 btn-transition">${item.link_name || 'ไม่ระบุชื่อ'}</p>
+              <p class="text-xs text-gray-400 truncate">${item.url || ''}</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-300 group-hover:text-sky-400 btn-transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+          
+          ${item.description ? `
+            <p class="mt-3 text-sm text-gray-400 line-clamp-2">${item.description}</p>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function attachCardEvents() {
+      // Edit buttons
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          const item = allData.find(d => d.id === id);
+          if (item) openEditModal(item);
+        });
+      });
+
+      // Delete buttons
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          showDeleteConfirm(btn, id);
+        });
+      });
+    }
+
+    function showDeleteConfirm(btn, id) {
+      // Change button to confirm state
+      const originalContent = btn.innerHTML;
+      btn.innerHTML = `<span class="text-xs font-medium">ลบ?</span>`;
+      btn.classList.add('bg-red-500', 'text-white', 'px-3');
+      btn.classList.remove('bg-red-50', 'text-red-400');
+
+      const confirmHandler = async () => {
+        await deleteItem(id);
+        btn.removeEventListener('click', confirmHandler);
+      };
+
+      const cancelHandler = (e) => {
+        if (!btn.contains(e.target)) {
+          btn.innerHTML = originalContent;
+          btn.classList.remove('bg-red-500', 'text-white', 'px-3');
+          btn.classList.add('bg-red-50', 'text-red-400');
+          btn.removeEventListener('click', confirmHandler);
+          document.removeEventListener('click', cancelHandler);
+        }
+      };
+
+      setTimeout(() => {
+        btn.addEventListener('click', confirmHandler, { once: true });
+        document.addEventListener('click', cancelHandler);
+      }, 10);
+
+      // Auto reset after 3 seconds
+      setTimeout(() => {
+        if (btn.innerHTML.includes('ลบ?')) {
+          btn.innerHTML = originalContent;
+          btn.classList.remove('bg-red-500', 'text-white', 'px-3');
+          btn.classList.add('bg-red-50', 'text-red-400');
+          document.removeEventListener('click', cancelHandler);
+        }
+      }, 3000);
+    }
+
+async function deleteItem(id) {
+  const { error } = await supabaseClient
+    .from('webportal')
+    .update({
+      status: 'inactive',
+      updated_by: getUserId(),
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id); // ✅ ใช้ id ตรง ๆ
+
+  if (error) {
+    console.error('DELETE ERROR FULL:', JSON.stringify(error, null, 2));
+    showToast('ลบข้อมูลไม่สำเร็จ', 'error');
+    return;
+  }
+
+  await logStory('WebPortal-Delete', { id });
+
+  showToast('ลบข้อมูลเรียบร้อยแล้ว', 'success');
+  loadWebPortal();
+}
+    // Modal functions
+    function openModal(mode = 'add') {
+      const modal = document.getElementById('modal');
+      const title = document.getElementById('modal-title');
+      const submitText = document.getElementById('submit-text');
+      
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      if (mode === 'add') {
+        title.textContent = 'เพิ่มข้อมูลใหม่';
+        submitText.textContent = 'บันทึก';
+        document.getElementById('data-form').reset();
+        document.getElementById('edit-id').value = '';
+      } else {
+        title.textContent = 'แก้ไขข้อมูล';
+        submitText.textContent = 'อัปเดต';
+      }
+    }
+
+    function openEditModal(item) {
+      openModal('edit');
+      document.getElementById('edit-id').value = item.id;
+      document.getElementById('department').value = item.department || '';
+      document.getElementById('link-name').value = item.link_name || '';
+      document.getElementById('link-url').value = item.url || '';
+      document.getElementById('description').value = item.description || '';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+    // Form submission
+   async function handleSubmit(e) {
+  e.preventDefault();
+  if (isSubmitting) return;
+
+  const submitBtn = document.getElementById('submit-btn');
+  const submitText = document.getElementById('submit-text');
+  const editId = document.getElementById('edit-id').value;
+
+  isSubmitting = true;
+  submitBtn.disabled = true;
+  submitText.textContent = 'กำลังบันทึก...';
+
+  const formData = {
+    department: document.getElementById('department').value.trim(),
+    link_name: document.getElementById('link-name').value.trim(),
+    url: document.getElementById('link-url').value.trim(),
+    description: document.getElementById('description').value.trim()
+  };
+
+  /* =========================
+     UPDATE
+  ========================= */
+  if (editId) {
+    const { error } = await supabaseClient
+      .from('webportal')
+      .update({
+        department: formData.department,
+        link_name: formData.link_name,
+        url: formData.url,
+        description: formData.description,
+        updated_by: getUserId(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', editId);
+
+    if (error) {
+      console.error(error);
+      showToast('อัปเดตไม่สำเร็จ', 'error');
+      resetSubmit();
+      return;
+    }
+
+    await logStory('WebPortal-Update', {
+      id: editId,
+      department: formData.department,
+      link_name: formData.link_name,
+      url: formData.url
+    });
+
+    showToast('อัปเดตข้อมูลเรียบร้อยแล้ว', 'success');
+  }
+
+  /* =========================
+     CREATE
+  ========================= */
+  else {
+    const { data, error } = await supabaseClient
+  .from('webportal')
+  .insert([{
+    department: formData.department,
+    link_name: formData.link_name,
+    url: formData.url,
+    description: formData.description,
+    created_by: getUserId(),
+    status: 'active'
+  }])
+  .select('id, url, link_name, department')
+  .single();
+
+    if (error) {
+      console.error(error);
+      showToast('เพิ่มข้อมูลไม่สำเร็จ', 'error');
+      resetSubmit();
+      return;
+    }
+
+    await logStory('WebPortal-Create', {
+        id: data.id,
+        url: data.url,
+        link_name: data.link_name,
+        department: data.department
+    });
+
+    showToast('เพิ่มข้อมูลเรียบร้อยแล้ว', 'success');
+  }
+
+  closeModal();
+  loadWebPortal();
+  resetSubmit();
+
+  function resetSubmit() {
+    isSubmitting = false;
+    submitBtn.disabled = false;
+    submitText.textContent = editId ? 'อัปเดต' : 'บันทึก';
+  }
+}
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: 'bg-emerald-500',
+        error: 'bg-red-500',
+        info: 'bg-sky-500'
+      };
+
+      const icons = {
+        success: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>',
+        error: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>',
+        info: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+      };
+
+      toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl text-white text-sm card-shadow animate-slideUp ${colors[type]}`;
+      toast.innerHTML = `${icons[type]}<span>${message}</span>`;
+      
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Search functionality
+    function handleSearch(e) {
+      searchQuery = e.target.value;
+      renderCards();
+    }
+
+    // Event listeners
+    document.getElementById('add-btn').addEventListener('click', () => openModal('add'));
+    document.getElementById('add-btn').addEventListener('click', () => openModal('add'));
+
+const emptyBtn = document.getElementById('empty-add-btn');
+if (emptyBtn) {
+  emptyBtn.addEventListener('click', () => openModal('add'));
+}
+
+document.getElementById('cancel-btn').addEventListener('click', closeModal);
+    document.getElementById('cancel-btn').addEventListener('click', closeModal);
+    document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+    document.getElementById('data-form').addEventListener('submit', handleSubmit);
+    document.getElementById('search-input').addEventListener('input', handleSearch);
+    document.getElementById('dept-filter').addEventListener('click', (e) => {
+      const target = e.target.closest('[data-dept]');
+      if (!target) return;
+      selectDept(target.dataset.dept);
+    });
+
+    // Escape key to close modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Initialize
+    loadWebPortal();
+    applyConfig();
+
+  </script></body>
+</html>

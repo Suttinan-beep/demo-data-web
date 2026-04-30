@@ -1,6 +1,6 @@
-import { getUserId } from "./supabase-client.js";
+﻿import { getAppSessionToken, getUserId } from "./supabase-client.js";
 
-export { getUserId };
+export { getAppSessionToken, getUserId };
 
 export function getNickname() {
   return ["currentNickname", "nickname", "NickName", "nick", "Nick"]
@@ -8,12 +8,23 @@ export function getNickname() {
     .find(Boolean);
 }
 
+export function getDepartment() {
+  return ["department", "Department", "dept", "Dept"]
+    .map((key) => localStorage.getItem(key))
+    .find(Boolean);
+}
+
 export function requireLogin() {
   const uid = localStorage.getItem("userId");
   const alive = sessionStorage.getItem("alive");
+  const appSessionToken = getAppSessionToken();
+  const appSessionExpiresAt = sessionStorage.getItem("appSessionExpiresAt");
+  const appSessionExpiresMs = Date.parse(appSessionExpiresAt || "");
+  const appSessionExpired = !Number.isFinite(appSessionExpiresMs) || appSessionExpiresMs <= Date.now();
 
-  if (!uid || !alive) {
+  if (!uid || !alive || !appSessionToken || appSessionExpired) {
     localStorage.clear();
+    sessionStorage.clear();
     window.location.href = "Index.html";
     return false;
   }
@@ -57,6 +68,23 @@ export function renderUserInfo(elementId, fallbackName = "ผู้ใช้") {
   const el = document.getElementById(elementId);
 
   if (uid && el) {
-    el.textContent = `👤 ${nick || fallbackName} (User ID: ${uid})`;
+    el.textContent = `${nick || fallbackName} (User ID: ${uid})`;
+  }
+}
+
+export function renderUserHeader(userIdElementId, detailElementId, fallbackName = "ผู้ใช้") {
+  const uid = getUserId();
+  const nick = getNickname();
+  const dept = getDepartment();
+  const userIdEl = document.getElementById(userIdElementId);
+  const detailEl = document.getElementById(detailElementId);
+
+  if (userIdEl) {
+    userIdEl.textContent = uid || "-";
+  }
+
+  if (detailEl) {
+    const displayName = nick || fallbackName;
+    detailEl.textContent = dept ? `${displayName} (${dept})` : displayName;
   }
 }

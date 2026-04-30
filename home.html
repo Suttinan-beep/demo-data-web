@@ -1,286 +1,460 @@
 ﻿<!DOCTYPE html>
-<html lang="th">
+<html class="light" lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบค้นหาข้อมูลลูกค้า</title>
-
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>DataNest - DATABASE</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <script>
     tailwind.config = {
+      darkMode: "class",
       theme: {
         extend: {
           colors: {
-            'bright-blue': '#0EA5E9',
-            'bright-orange': '#FB923C',
-            'light-blue': '#E0F2FE',
-            'light-orange': '#FED7AA'
+            "surface-container-high": "#e6e8ea",
+            "on-primary-fixed-variant": "#003ea8",
+            "on-primary-fixed": "#00174b",
+            "background": "#f7f9fb",
+            "on-error": "#ffffff",
+            "tertiary-fixed-dim": "#89ceff",
+            "primary-fixed": "#dbe1ff",
+            "inverse-surface": "#2d3133",
+            "on-secondary-fixed": "#0b1c30",
+            "primary-container": "#2563eb",
+            "secondary-fixed": "#d3e4fe",
+            "inverse-on-surface": "#eff1f3",
+            "on-surface": "#191c1e",
+            "surface-container": "#eceef0",
+            "surface-tint": "#0053db",
+            "on-secondary-fixed-variant": "#38485d",
+            "on-error-container": "#93000a",
+            "on-background": "#191c1e",
+            "inverse-primary": "#b4c5ff",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#54647a",
+            "error": "#ba1a1a",
+            "tertiary-container": "#0074a6",
+            "surface-dim": "#d8dadc",
+            "secondary-fixed-dim": "#b7c8e1",
+            "outline": "#737686",
+            "on-surface-variant": "#434655",
+            "outline-variant": "#c3c6d7",
+            "primary": "#004ac6",
+            "surface-variant": "#e0e3e5",
+            "secondary": "#505f76",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#f2f4f6",
+            "error-container": "#ffdad6",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#d0e1fb",
+            "surface-bright": "#f7f9fb",
+            "on-tertiary-container": "#e4f2ff",
+            "surface": "#f7f9fb",
+            "surface-container-highest": "#e0e3e5",
+            "on-tertiary-fixed-variant": "#004c6e",
+            "primary-fixed-dim": "#b4c5ff",
+            "tertiary-fixed": "#c9e6ff",
+            "tertiary": "#005a82",
+            "on-primary-container": "#eeefff",
+            "on-tertiary-fixed": "#001e2f"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            xl: "48px",
+            md: "16px",
+            lg: "24px",
+            "container-margin": "32px",
+            xs: "4px",
+            sm: "8px",
+            gutter: "20px",
+            "base-unit": "4px"
+          },
+          fontFamily: {
+            "label-uppercase": ["Inter", "IBM Plex Sans Thai"],
+            "body-sm": ["Inter", "IBM Plex Sans Thai"],
+            "display-lg": ["Manrope", "IBM Plex Sans Thai"],
+            "body-base": ["Inter", "IBM Plex Sans Thai"],
+            "headline-md": ["Manrope", "IBM Plex Sans Thai"],
+            "thai": ["IBM Plex Sans Thai", "sans-serif"]
+          },
+          fontSize: {
+            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
+            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }]
           }
         }
       }
-    }
+    };
   </script>
-
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Sarabun', sans-serif; }
-    .gradient-bg { background: linear-gradient(135deg, #0EA5E9 0%, #FB923C 100%); }
-    .table-scroll { max-height: 500px; overflow-y: auto; }
-    .table-scroll::-webkit-scrollbar { width: 8px; }
-    .table-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-    .table-scroll::-webkit-scrollbar-thumb { background: #0EA5E9; border-radius: 4px; }
-    .table-scroll::-webkit-scrollbar-thumb:hover { background: #0284C7; }
-
-/* numberOfInstallations ~ 5 ซม. */
-    table th:nth-child(5),
-    table td:nth-child(5) {
-      min-width: 190px;   /* ~5 ซม. */
-      max-width: 190px;
-      text-align: center;
-}
-/* canter  */
-    table td:nth-child(6),
-    table td:nth-child(6),
-    table td:nth-child(10),
-    table td:nth-child(10),
-    table td:nth-child(11),
-    table td:nth-child(11),
-    table td:nth-child(16),
-    table td:nth-child(16),
-    table td:nth-child(21),
-    table td:nth-child(21)
-    {
-      text-align: center;
-}
-/* technicians & zone = Auto Fit */
-    table th:nth-child(4),
-    table td:nth-child(4),
-    table th:nth-child(7),
-    table td:nth-child(7),
-    table th:nth-child(9),
-    table td:nth-child(9),
-    table th:nth-child(20),
-    table th:nth-child(20),
-    table th:nth-child(22),
-    table td:nth-child(22),
-    table th:nth-child(23),
-    table td:nth-child(23),
-    table td:nth-child(24),
-    table td:nth-child(24) {
-      white-space: nowrap;   /* ไม่ตัดบรรทัด */
-      width: auto;
-}
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .btn-gradient {
+      background: linear-gradient(135deg, #004ac6 0%, #0074a6 100%);
+    }
+    .ambient-shadow {
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04);
+    }
+    [lang="th"], .thai-text {
+      font-family: 'IBM Plex Sans Thai', sans-serif !important;
+    }
+    .results-scroll {
+      overflow-x: auto;
+    }
+    .results-scroll::-webkit-scrollbar {
+      height: 10px;
+      width: 10px;
+    }
+    .results-scroll::-webkit-scrollbar-track {
+      background: #eef2f7;
+      border-radius: 9999px;
+    }
+    .results-scroll::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, #004ac6, #0074a6);
+      border-radius: 9999px;
+    }
+    #tableHead th,
+    #tableBody td {
+      white-space: nowrap;
+    }
+    .search-input {
+      border: 1px solid #bfdbfe !important;
+      border-top: 1.5px solid #3b82f6 !important;
+      background-color: #ffffff !important;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(191, 219, 254, 0.35) !important;
+    }
+    .search-input:focus {
+      border-color: #60a5fa !important;
+      border-top-color: #2563eb !important;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12) !important;
+      outline: none !important;
+    }
   </style>
-
-  <!-- XLSX -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
-<body class="bg-gradient-to-br from-light-blue to-light-orange min-h-screen">
-
-<div class="container mx-auto px-4 py-8">
-
-  <!-- Header -->
-  <div class="text-center mb-8">
-    <h1 class="text-4xl font-bold gradient-bg bg-clip-text text-transparent mb-2">DATABASE</h1>
-    <p id="userInfo" class="text-gray-700 text-sm mt-2"></p>
-  </div>
-  <!-- Search Form (UNCHANGED UI) -->
-  <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-bright-blue/20">
-    <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-      🔍 ค้นหาข้อมูลลูกค้า
-      <span class="text-sm font-normal text-gray-500 ml-2">(สามารถค้นหาได้หลายเงื่อนไขพร้อมกัน)</span>
-    </h3>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">📋 ลำดับสัญญา</label>
-        <input id="contractNumber" class="w-full px-4 py-3 border-2 border-bright-blue/30 rounded-xl" />
+<body class="bg-[#eef2f5] font-body-base text-on-background min-h-screen flex flex-col">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 docked full-width top-0 sticky z-50 shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
+    <div class="flex justify-between items-center w-full px-8 py-3 max-w-full">
+      <div class="flex items-center gap-8">
+        <span class="font-manrope text-lg font-extrabold tracking-widest text-slate-900 dark:text-white">DataNest</span>
       </div>
-      <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">🏠 House Number</label>
-        <input id="houseNumber" class="w-full px-4 py-3 border-2 border-bright-orange/30 rounded-xl" />
-      </div>
-      <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">⚡ Circuit Number</label>
-        <input id="circuitNumber" class="w-full px-4 py-3 border-2 border-bright-blue/30 rounded-xl" />
+      <div class="flex items-center gap-6">
+        <div class="flex items-center border-r border-slate-100 pr-6 mr-2">
+          <img
+            alt="User avatar"
+            class="mr-3 h-8 w-8 rounded-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"
+          />
+          <div class="flex flex-col">
+            <span id="userIdText" class="font-manrope text-sm font-bold text-slate-900">-</span>
+            <span id="userInfo" class="font-inter text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
+          </div>
+        </div>
       </div>
     </div>
+  </header>
 
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <button id="search-btn" class="gradient-bg text-white px-8 py-3 rounded-xl font-semibold">🔎 ค้นหาข้อมูล</button>
-      <button id="clear-btn" class="bg-gray-100 text-gray-700 px-8 py-3 rounded-xl font-semibold">🗑️ ล้างข้อมูล</button>
+  <main class="flex-grow flex flex-col items-center py-12 px-6">
+    <div class="w-full max-w-7xl space-y-8">
+      <section class="bg-surface-container-lowest border border-slate-100 rounded-[10px] ambient-shadow p-8">
+        <div class="mb-8">
+          <h1 class="font-headline-md text-headline-md text-on-surface mb-1 font-thai">DATABASE</h1>
+          <p class="font-body-sm text-body-sm text-on-secondary-container font-thai">ค้นหาข้อมูลลูกค้าตามลำดับสัญญา</p>
+        </div>
+        <form id="search-form" class="space-y-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="space-y-2">
+              <label class="font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant block">Contract Number</label>
+              <div class="relative">
+                <input id="contractNumber" class="search-input w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-[10px] focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-sm placeholder:text-slate-300" placeholder="ลำดับสัญญา" type="text"/>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant block">House Number</label>
+              <div class="relative">
+                <input id="houseNumber" class="search-input w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-[10px] focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-sm placeholder:text-slate-300" placeholder="123/45" type="text"/>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant block">Circuit Number</label>
+              <div class="relative">
+                <input id="circuitNumber" class="search-input w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-[10px] focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-sm placeholder:text-slate-300" placeholder="880XXXXXXX" type="text"/>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-3 pt-4">
+            <button id="clear-btn" class="flex items-center gap-2 px-6 py-3 bg-[#EFF6FF] text-primary font-manrope font-semibold text-sm rounded-[10px] hover:bg-blue-100 transition-all active:scale-95" type="button">
+              <span class="material-symbols-outlined text-lg">restart_alt</span>
+              Clear
+            </button>
+            <button id="search-btn" class="flex items-center gap-2 px-8 py-3 btn-gradient text-white font-manrope font-semibold text-sm rounded-[10px] shadow-lg shadow-primary/20 hover:brightness-110 transition-all active:scale-95" type="submit">
+              <span class="material-symbols-outlined text-lg">search</span>
+              Search
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section id="resultsSection" class="bg-surface-container-lowest border border-slate-100 rounded-[10px] ambient-shadow overflow-hidden hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white">
+          <div>
+            <h2 class="font-headline-md text-lg text-slate-900 font-thai">ผลการค้นหา</h2>
+            <p id="resultCount" class="font-body-sm text-slate-500 mt-1">พบทั้งหมด 0 รายการ</p>
+          </div>
+          <button id="download-btn" class="flex items-center gap-2 px-6 py-3 btn-gradient text-white font-manrope font-semibold text-sm rounded-[10px] shadow-lg shadow-primary/20 hover:brightness-110 transition-all active:scale-95" type="button">
+            <span class="material-symbols-outlined text-lg">download</span>
+            ดาวน์โหลด Excel
+          </button>
+        </div>
+        <div class="results-scroll">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-container-low border-b border-slate-100">
+              <tr id="tableHead"></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <div id="paginationBar" class="hidden items-center justify-between gap-4 px-6 py-4 border-t border-slate-100 bg-white">
+          <p id="paginationInfo" class="text-[12px] text-slate-500">แสดงผล 1-200</p>
+          <div class="flex items-center gap-2">
+            <button id="prev-page-btn" class="px-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed" type="button">ก่อนหน้า</button>
+            <span id="pageIndicator" class="min-w-[96px] text-center text-sm font-semibold text-slate-700">หน้า 1 / 1</span>
+            <button id="next-page-btn" class="px-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed" type="button">ถัดไป</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="emptyState" class="bg-surface-container-lowest border border-slate-100 rounded-[10px] ambient-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-container-low border-b border-slate-100">
+              <tr>
+                <th class="px-6 py-4 font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant">Contract No</th>
+                <th class="px-6 py-4 font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant">House No</th>
+                <th class="px-6 py-4 font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant">Circuit No</th>
+                <th class="px-6 py-4 font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant">Customer Name</th>
+                <th class="px-6 py-4 font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant">Building</th>
+                <th class="px-6 py-4 font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant">Operator</th>
+                <th class="px-6 py-4 font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant">Start Date</th>
+                <th class="px-6 py-4 font-label-uppercase text-label-uppercase text-on-secondary-fixed-variant">Status</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="py-24 flex flex-col items-center justify-center text-center">
+          <div class="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-slate-300 text-4xl">search_off</span>
+          </div>
+          <h3 id="emptyTitle" class="font-headline-md text-lg text-slate-900 mb-2 font-thai">ไม่พบข้อมูล</h3>
+          <p id="emptyDescription" class="font-body-sm text-slate-500 max-w-xs font-thai">กรุณาระบุข้อมูลการค้นหาเพื่อดูผลลัพธ์</p>
+          <div class="mt-8 opacity-40">
+            <svg fill="none" height="8" viewBox="0 0 120 8" width="120" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 4H116" stroke="#E2E8F0" stroke-dasharray="1 12" stroke-linecap="round" stroke-width="8"></path>
+            </svg>
+          </div>
+        </div>
+      </section>
     </div>
-  </div>
+  </main>
 
-  <!-- Results Section (UNCHANGED UI) -->
-  <div id="resultsSection" class="bg-white rounded-2xl shadow-xl border border-bright-orange/20 hidden">
-    <div class="gradient-bg text-white p-6 rounded-t-2xl flex justify-between items-center">
-      <div>
-        <h2 class="text-2xl font-bold">📊 ผลการค้นหา</h2>
-        <p id="resultCount" class="text-white/90 mt-1"></p>
-      </div>
-      <button id="download-btn" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-semibold">📥 ดาวน์โหลด Excel</button>
+  <footer class="w-full py-6 mt-auto border-t border-slate-100 dark:border-slate-800 bg-transparent">
+    <div class="flex justify-between items-center px-12 max-w-7xl mx-auto">
+      <span class="font-manrope text-[10px] uppercase tracking-widest font-medium text-slate-400">© 2024 DATANEST LOGIC</span>
     </div>
+  </footer>
 
-    <div class="p-6">
-      <div class="table-scroll border border-gray-200 rounded-xl">
-        <table class="w-full text-sm">
-          <thead class="bg-gradient-to-r from-bright-blue to-bright-orange text-white sticky top-0">
-            <tr id="tableHead"></tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  <script type="module">
+    import { supabase as supabaseClient } from "./supabase-client.js";
+    import { insertStory, renderUserHeader, requireLogin } from "./app-helpers.js";
 
-  <div id="noResults" class="bg-white rounded-2xl shadow-xl p-8 text-center hidden">
-    <div class="text-6xl mb-4">🔍</div>
-    <h3 class="text-xl font-semibold text-gray-700 mb-2">ไม่พบข้อมูลที่ค้นหา</h3>
-    <p class="text-gray-500">กรุณาตรวจสอบข้อมูลและลองค้นหาใหม่อีกครั้ง</p>
-  </div>
-</div>
-<script type="module">
-import { supabase as supabaseClient } from "./supabase-client.js";
-import { getUserId, insertStory, renderUserInfo, requireLogin } from "./app-helpers.js";
+    if (!requireLogin()) {
+      throw new Error("NOT_LOGIN");
+    }
 
-/******** CONFIG ********/
+    const FIELDS = [
+      "year", "month", "key", "numberOfInstallations", "contractNumber", "buildingName", "bldg_id",
+      "operatorBuildingName", "building", "floor", "houseNumber", "circuitNumber", "startDate", "endDate",
+      "customerStatus", "operator", "projectType", "plugStatus", "dataStatus", "cancelReward", "technicians", "zone", "note"
+    ];
 
-/******** 🔐 CHECK LOGIN (LOCAL STORAGE VERSION) ********/
-if (!requireLogin()) {
-  throw new Error("NOT_LOGIN");
-}
+    const $ = (id) => document.getElementById(id);
+    const PAGE_SIZE = 200;
+    let currentResults = [];
+    let lastSearchOrders = null;
+    let currentPage = 1;
 
-const FIELDS = [
-  'year','month','key','numberOfInstallations','contractNumber','buildingName','bldg_id',
-  'operatorBuildingName','building','floor','houseNumber','circuitNumber','startDate','endDate',
-  'customerStatus','operator','projectType','plugStatus','dataStatus','cancelReward','technicians','zone','note'
-];
+    function fileDateStr() {
+      const d = new Date();
+      const p = (n) => String(n).padStart(2, "0");
+      return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
+    }
 
-const $ = id => document.getElementById(id);
-let currentResults = [];
-let lastSearchOrders = null; // ⭐ เพิ่ม
+    function renderTableHead() {
+      $("tableHead").innerHTML = ["No.", ...FIELDS]
+        .map((header) => `<th class="px-6 py-4 text-[11px] font-semibold tracking-[0.05em] uppercase text-on-secondary-fixed-variant">${header}</th>`)
+        .join("");
+    }
 
-/******** INIT ********/
-$('tableHead').innerHTML = ['No.', ...FIELDS].map(h => `<th class="px-4 py-3 text-left font-semibold">${h}</th>`).join('');
+    function setEmptyState(title, description) {
+      $("emptyTitle").textContent = title;
+      $("emptyDescription").textContent = description;
+      $("emptyState").classList.remove("hidden");
+    }
 
-/******** HELPERS ********/
-function fileDateStr() {   // ⭐ เพิ่มอันนี้
-  const d = new Date();
-  const p = n => String(n).padStart(2, '0');
-  return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()}`;
-}
+    async function logStory(type, orders) {
+      const { error } = await insertStory(supabaseClient, type, orders);
+      if (error) {
+        console.error("Storyline error:", error);
+      }
+    }
 
-window.addEventListener('DOMContentLoaded', () => {
-  renderUserInfo('userInfo');
-});
+    function renderTable(data) {
+      currentResults = data;
+      $("tableBody").innerHTML = "";
+      currentPage = 1;
 
-async function logStory(type, orders) {
-  const { error } = await insertStory(supabaseClient, type, orders);
-  if (error) {
-    console.error('Storyline error:', error);
-  }
-}
+      if (!data.length) {
+        $("resultsSection").classList.add("hidden");
+        $("paginationBar").classList.add("hidden");
+        setEmptyState("ไม่พบข้อมูลที่ค้นหา", "กรุณาตรวจสอบข้อมูลและลองค้นหาใหม่อีกครั้ง");
+        return;
+      }
 
+      $("resultCount").textContent = `พบทั้งหมด ${data.length} รายการ`;
+      $("emptyState").classList.add("hidden");
+      $("resultsSection").classList.remove("hidden");
+      renderCurrentPage();
+    }
 
-/******** CORE ********/
-async function searchContract() {
-  const orders = {
-    contractNumber: $('contractNumber').value.trim() || null,
-    houseNumber: $('houseNumber').value.trim() || null,
-    circuitNumber: $('circuitNumber').value.trim() || null
-  };
+    function renderCurrentPage() {
+      $("tableBody").innerHTML = "";
 
-  if (!orders.contractNumber && !orders.houseNumber && !orders.circuitNumber) {
-    alert('กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง');
-    return;
-  }
+      const totalItems = currentResults.length;
+      const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+      currentPage = Math.min(Math.max(1, currentPage), totalPages);
 
-  lastSearchOrders = orders;           // ⭐ จำเงื่อนไขไว้
-  await logStory('Search', orders);
+      const startIndex = (currentPage - 1) * PAGE_SIZE;
+      const endIndex = Math.min(startIndex + PAGE_SIZE, totalItems);
+      const pageRows = currentResults.slice(startIndex, endIndex);
 
-  let q = supabaseClient.from('DemoDATA').select('*');
-  if (orders.contractNumber) q = q.eq('contractNumber', orders.contractNumber);
-  if (orders.houseNumber) q = q.ilike('houseNumber', `%${orders.houseNumber}%`);
-  if (orders.circuitNumber) q = q.ilike('circuitNumber', `%${orders.circuitNumber}%`);
+      pageRows.forEach((row, index) => {
+        const tr = document.createElement("tr");
+        tr.className = "border-b border-slate-100 hover:bg-slate-50 transition-colors";
+        tr.innerHTML =
+          `<td class="px-6 py-3 text-[12px] text-slate-500 font-medium">${startIndex + index + 1}</td>` +
+          FIELDS.map((field) => `<td class="px-6 py-3 text-[12px] text-slate-700">${row[field] ?? ""}</td>`).join("");
+        $("tableBody").appendChild(tr);
+      });
 
-  const { data, error } = await q;
-  if (error) return alert(error.message);
+      $("paginationBar").classList.toggle("hidden", totalItems <= PAGE_SIZE);
+      $("paginationBar").classList.toggle("flex", totalItems > PAGE_SIZE);
+      $("paginationInfo").textContent = `แสดงผล ${startIndex + 1}-${endIndex} จาก ${totalItems} รายการ`;
+      $("pageIndicator").textContent = `หน้า ${currentPage} / ${totalPages}`;
+      $("prev-page-btn").disabled = currentPage === 1;
+      $("next-page-btn").disabled = currentPage === totalPages;
+    }
 
-  renderTable(data || []);
-}
+    async function searchContract() {
+      const orders = {
+        contractNumber: $("contractNumber").value.trim() || null,
+        houseNumber: $("houseNumber").value.trim() || null,
+        circuitNumber: $("circuitNumber").value.trim() || null
+      };
 
+      if (!orders.contractNumber && !orders.houseNumber && !orders.circuitNumber) {
+        alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+        return;
+      }
 
-function renderTable(data) {
-  currentResults = data;
-  $('tableBody').innerHTML = '';
+      lastSearchOrders = orders;
+      await logStory("Search", orders);
 
-  if (!data.length) {
-    $('resultsSection').classList.add('hidden');
-    $('noResults').classList.remove('hidden');
-    return;
-  }
+      let q = supabaseClient.from("DemoDATA").select("*");
+      if (orders.contractNumber) q = q.eq("contractNumber", orders.contractNumber);
+      if (orders.houseNumber) q = q.ilike("houseNumber", `%${orders.houseNumber}%`);
+      if (orders.circuitNumber) q = q.ilike("circuitNumber", `%${orders.circuitNumber}%`);
 
-  data.forEach((row, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td class="px-4 py-2">${idx+1}</td>` +
-      FIELDS.map(f => `<td class="px-4 py-2">${row[f] ?? ''}</td>`).join('');
-    $('tableBody').appendChild(tr);
-  });
+      const { data, error } = await q;
+      if (error) {
+        alert(error.message);
+        return;
+      }
 
-  $('resultCount').textContent = `พบทั้งหมด ${data.length} รายการ`;
-  $('noResults').classList.add('hidden');
-  $('resultsSection').classList.remove('hidden');
-}
+      renderTable(data || []);
+    }
 
-function clearSearch() {
-  ['contractNumber','houseNumber','circuitNumber'].forEach(id => $(id).value='');
-  $('resultsSection').classList.add('hidden');
-  $('noResults').classList.add('hidden');
-  currentResults = [];
-}
+    function clearSearch() {
+      ["contractNumber", "houseNumber", "circuitNumber"].forEach((id) => {
+        $(id).value = "";
+      });
+      currentResults = [];
+      lastSearchOrders = null;
+      currentPage = 1;
+      $("resultsSection").classList.add("hidden");
+      $("paginationBar").classList.add("hidden");
+      setEmptyState("ไม่พบข้อมูล", "กรุณาระบุข้อมูลการค้นหาเพื่อดูผลลัพธ์");
+    }
 
-async function downloadExcel() {
-  if (!currentResults.length) return alert('ไม่มีข้อมูลสำหรับดาวน์โหลด');
+    async function downloadExcel() {
+      if (!currentResults.length) {
+        alert("ไม่มีข้อมูลสำหรับดาวน์โหลด");
+        return;
+      }
 
-  await logStory(
-    'Download',
-    lastSearchOrders ?? { note: 'download_without_search' }
-  );
+      await logStory("Download", lastSearchOrders ?? { note: "download_without_search" });
 
-  const plain = currentResults.map(r => {
-    const o = {};
-    Object.keys(r).forEach(k => o[k] = r[k] ?? '');
-    return o;
-  });
+      const plain = currentResults.map((row) => {
+        const output = {};
+        Object.keys(row).forEach((key) => {
+          output[key] = row[key] ?? "";
+        });
+        return output;
+      });
 
-  const ws = XLSX.utils.json_to_sheet(plain);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'DemoDATA');
+      const ws = XLSX.utils.json_to_sheet(plain);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "DemoDATA");
 
-  // ⭐ ดึงลำดับสัญญาจากเงื่อนไขค้นหา
-  const contractNo = lastSearchOrders?.contractNumber || 'ALL';
+      const contractNo = lastSearchOrders?.contractNumber || "ALL";
+      const fileName = `Contract_data_${contractNo} ${fileDateStr()}.xlsx`;
+      XLSX.writeFile(wb, fileName);
+    }
 
-  const fileName = `Contract_data_${contractNo} ${fileDateStr()}.xlsx`;
+    window.addEventListener("DOMContentLoaded", () => {
+      renderUserHeader("userIdText", "userInfo");
+      renderTableHead();
+    });
 
-  XLSX.writeFile(wb, fileName);
-}
+    $("search-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await searchContract();
+    });
 
-['contractNumber','houseNumber','circuitNumber'].forEach(id => {
-  $(id).addEventListener('keypress', e => e.key === 'Enter' && searchContract());
-});
+    ["contractNumber", "houseNumber", "circuitNumber"].forEach((id) => {
+      $(id).addEventListener("keypress", (e) => e.key === "Enter" && searchContract());
+    });
 
-$('search-btn').addEventListener('click', searchContract);
-$('clear-btn').addEventListener('click', clearSearch);
-$('download-btn').addEventListener('click', downloadExcel);
-
-function logout() {
-  localStorage.clear();
-  window.location.href = "Index.html";
-}
-
-</script>
-
+    $("clear-btn").addEventListener("click", clearSearch);
+    $("download-btn").addEventListener("click", downloadExcel);
+    $("prev-page-btn").addEventListener("click", () => {
+      currentPage -= 1;
+      renderCurrentPage();
+    });
+    $("next-page-btn").addEventListener("click", () => {
+      currentPage += 1;
+      renderCurrentPage();
+    });
+  </script>
 </body>
 </html>

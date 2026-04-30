@@ -10,3 +10,7 @@ export function getUserId() {
     .map((key) => localStorage.getItem(key))
     .find(Boolean);
 }
+
+export function getAppSessionToken() {
+  return sessionStorage.getItem("appSessionToken");
+}
