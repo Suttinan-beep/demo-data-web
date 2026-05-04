@@ -485,9 +485,18 @@
       document.querySelectorAll("[data-id].card-elevation").forEach((card) => {
         card.addEventListener("click", () => {
           const item = allData.find((entry) => String(entry.id) === String(card.dataset.id));
-          if (item?.url) {
-            window.open(item.url, "_blank", "noopener,noreferrer");
-          }
+          if (!item?.url) return;
+
+          window.open(item.url, "_blank", "noopener,noreferrer");
+
+          logStory("WebPortal-Link-Open", {
+            webportal_id: item.id,
+            link_name: item.link_name,
+            url: item.url,
+            department: item.department
+          }).catch((error) => {
+            console.error("StoryLine log failed:", error);
+          });
         });
       });
 

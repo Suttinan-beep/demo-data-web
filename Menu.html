@@ -308,7 +308,9 @@
         return false;
       }
 
-      return data === true;
+      console.log("PIN result:", data);
+      const result = Array.isArray(data) ? data[0] : data;
+      return result?.is_valid === true;
     }
 
     function showToast(message) {
