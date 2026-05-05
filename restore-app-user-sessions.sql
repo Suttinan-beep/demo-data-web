@@ -6,11 +6,35 @@ create table if not exists public.app_user_sessions (
   id uuid primary key default extensions.gen_random_uuid(),
   user_id text not null,
   token_hash text not null unique,
-  created_at timestamptz not null default now(),
-  last_used_at timestamptz default now(),
-  expires_at timestamptz not null,
-  revoked_at timestamptz
+  created_at timestamp without time zone not null default timezone('Asia/Bangkok', now()),
+  last_used_at timestamp without time zone default timezone('Asia/Bangkok', now()),
+  expires_at timestamp without time zone not null,
+  revoked_at timestamp without time zone
 );
+
+-- Store session timestamps as Thailand local time for easier reading in Supabase table views.
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'app_user_sessions'
+      and column_name = 'created_at'
+      and data_type = 'timestamp with time zone'
+  ) then
+    alter table public.app_user_sessions
+      alter column created_at type timestamp without time zone using timezone('Asia/Bangkok', created_at),
+      alter column last_used_at type timestamp without time zone using timezone('Asia/Bangkok', last_used_at),
+      alter column expires_at type timestamp without time zone using timezone('Asia/Bangkok', expires_at),
+      alter column revoked_at type timestamp without time zone using timezone('Asia/Bangkok', revoked_at);
+  end if;
+end;
+$$;
+
+alter table public.app_user_sessions
+  alter column created_at set default timezone('Asia/Bangkok', now()),
+  alter column last_used_at set default timezone('Asia/Bangkok', now());
 
 -- Create index for faster lookups
 create index if not exists idx_app_user_sessions_user_id on public.app_user_sessions(user_id);
@@ -53,7 +77,7 @@ returns table (
   nickname text,
   department text,
   session_token text,
-  expires_at timestamptz
+  expires_at timestamp without time zone
 )
 language plpgsql
 security definer
@@ -66,7 +90,7 @@ declare
   v_password_hash text;
   v_token text;
   v_token_hash text;
-  v_expires_at timestamptz;
+  v_expires_at timestamp without time zone;
 begin
   -- Verify user credentials
   select u.user_id, u."NicKname", u."Department", u.password_hash
@@ -89,7 +113,7 @@ begin
   v_token_hash := v_token;
   
   -- Set expiration to 24 hours from now
-  v_expires_at := now() + interval '24 hours';
+  v_expires_at := timezone('Asia/Bangkok', now()) + interval '24 hours';
 
   -- Store session in database
   insert into public.app_user_sessions (user_id, token_hash, expires_at)
@@ -129,7 +153,7 @@ as $$
     from public.app_user_sessions as s
     where s.token_hash = p_session_token  -- Direct plaintext comparison
       and s.revoked_at is null
-      and s.expires_at > now()
+      and s.expires_at > timezone('Asia/Bangkok', now())
     limit 1
   )
   select

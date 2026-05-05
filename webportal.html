@@ -461,7 +461,7 @@
               <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-md group-hover:bg-blue-600 group-hover:text-white transition-colors">
                 <span class="material-symbols-outlined text-2xl" data-icon="${icon}">${icon}</span>
               </div>
-              <h3 class="text-headline-md font-headline-md text-slate-900 mb-2 truncate">${escapeHtml(item.link_name || "ไม่ระบุชื่อ")}</h3>
+              <h3 class="font-thai text-[17px] leading-6 font-semibold text-slate-900 mb-2 line-clamp-2">${escapeHtml(item.link_name || "ไม่ระบุชื่อ")}</h3>
               <p class="text-body-sm text-slate-500 mb-4 line-clamp-3">${escapeHtml(desc)}</p>
             </div>
             <div class="flex items-center gap-1 shrink-0">
@@ -609,10 +609,6 @@
       const submitText = document.getElementById("submit-text");
       const editId = document.getElementById("edit-id").value;
 
-      isSubmitting = true;
-      submitBtn.disabled = true;
-      submitText.textContent = "กำลังบันทึก...";
-
       const formData = {
         department: document.getElementById("department").value.trim(),
         link_name: document.getElementById("link-name").value.trim(),
@@ -620,6 +616,15 @@
         icon_name: document.getElementById("icon-name").value,
         description: document.getElementById("description").value.trim()
       };
+
+      if (!formData.department || !formData.link_name || !formData.url) {
+        showToast("กรุณากรอกข้อมูลที่จำเป็นให้ครบ", "error");
+        return;
+      }
+
+      isSubmitting = true;
+      submitBtn.disabled = true;
+      submitText.textContent = "กำลังบันทึก...";
 
       if (editId) {
         const { error } = await supabaseClient
@@ -636,8 +641,8 @@
           .eq("id", editId);
 
         if (error) {
-          console.error(error);
-          showToast("อัปเดตไม่สำเร็จ", "error");
+          console.error("UPDATE ERROR:", error);
+          showToast(`อัปเดตไม่สำเร็จ: ${getErrorMessage(error)}`, "error");
           resetSubmit();
           return;
         }
@@ -666,8 +671,8 @@
           .single();
 
         if (error) {
-          console.error(error);
-          showToast("เพิ่มข้อมูลไม่สำเร็จ", "error");
+          console.error("CREATE ERROR:", error);
+          showToast(`เพิ่มข้อมูลไม่สำเร็จ: ${getErrorMessage(error)}`, "error");
           resetSubmit();
           return;
         }
@@ -691,6 +696,12 @@
         submitBtn.disabled = false;
         submitText.textContent = editId ? "อัปเดต" : "บันทึก";
       }
+    }
+
+    function getErrorMessage(error) {
+      return [error?.code, error?.message, error?.details, error?.hint]
+        .filter(Boolean)
+        .join(" | ") || "ไม่ทราบสาเหตุ";
     }
 
     function isInvalidSessionError(error) {
