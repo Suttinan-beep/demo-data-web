@@ -191,15 +191,15 @@
         <p class="font-headline-md text-sm font-bold text-primary">Workforce tools</p>
       </div>
       <nav class="flex-1 space-y-1 px-1.5">
-        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html">
+        <a id="attendance-checkin-nav-link" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html">
           <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
           <span class="attendance-nav-label transition-all duration-200">Check-in</span>
         </a>
-        <a class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html" aria-current="page">
+        <a id="hr-monitor-nav-link" class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html" aria-current="page">
           <span class="material-symbols-outlined text-[18px]">monitoring</span>
           <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
         </a>
-        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
+        <a id="attendance-history-nav-link" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
           <span class="material-symbols-outlined text-[18px]">history</span>
           <span class="attendance-nav-label transition-all duration-200">My History</span>
         </a>
@@ -407,7 +407,9 @@
 
   <script type="module">
     import { supabase } from "./supabase-client.js";
-    import { getAppSessionToken, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
+    import { getAppSessionToken, hasMenuAccess, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
+
+    const $ = (id) => document.getElementById(id);
 
     if (!requireLogin()) {
       throw new Error("NOT_LOGIN");
@@ -417,9 +419,12 @@
       throw new Error("ACCESS_DENIED");
     }
 
-    renderUserHeader("userIdText", "userInfo");
+    if (await hasMenuAccess("ATTENDANCE")) {
+      $("attendance-checkin-nav-link")?.classList.remove("hidden");
+      $("attendance-history-nav-link")?.classList.remove("hidden");
+    }
 
-    const $ = (id) => document.getElementById(id);
+    renderUserHeader("userIdText", "userInfo");
     const todayKey = new Intl.DateTimeFormat("en-CA", {
       timeZone: "Asia/Bangkok",
       year: "numeric",

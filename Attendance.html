@@ -237,7 +237,7 @@
           <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
           <span class="attendance-nav-label transition-all duration-200">Check-in</span>
         </a>
-        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
+        <a id="hr-monitor-nav-link" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
           <span class="material-symbols-outlined text-[18px]">monitoring</span>
           <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
         </a>
@@ -490,7 +490,9 @@
 
   <script type="module">
     import { supabase } from "./supabase-client.js";
-    import { getAppSessionToken, getUserId, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
+    import { getAppSessionToken, getUserId, hasMenuAccess, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
+
+    const $ = (id) => document.getElementById(id);
 
     if (!requireLogin()) {
       throw new Error("NOT_LOGIN");
@@ -498,6 +500,10 @@
 
     if (!(await requireMenuAccess("ATTENDANCE"))) {
       throw new Error("ACCESS_DENIED");
+    }
+
+    if (await hasMenuAccess("HR_MONITOR")) {
+      $("hr-monitor-nav-link")?.classList.remove("hidden");
     }
 
     const initialStorageDateKey = new Intl.DateTimeFormat("en-CA", {
@@ -524,8 +530,6 @@
       fieldVisits: JSON.parse(localStorage.getItem(fieldVisitStorageKey) || "[]"),
       lastCheckin: JSON.parse(localStorage.getItem("attendanceLastCheckin") || "null")
     };
-
-    const $ = (id) => document.getElementById(id);
 
     function getServerNow() {
       const elapsedMs = performance.now() - state.serverTimeSyncedAtMs;
