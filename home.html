@@ -276,10 +276,14 @@
 
   <script type="module">
     import { supabase as supabaseClient } from "./supabase-client.js";
-    import { insertStory, renderUserHeader, requireLogin } from "./app-helpers.js";
+    import { insertStory, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
 
     if (!requireLogin()) {
       throw new Error("NOT_LOGIN");
+    }
+
+    if (!(await requireMenuAccess("CUSTOMER_SEARCH"))) {
+      throw new Error("ACCESS_DENIED");
     }
 
     const FIELDS = [

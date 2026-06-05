@@ -1,4 +1,4 @@
-﻿import { getAppSessionToken, getUserId } from "./supabase-client.js";
+import { getAppSessionToken, getUserId, supabase } from "./supabase-client.js";
 
 export { getAppSessionToken, getUserId };
 
@@ -44,6 +44,39 @@ export function requirePageFlag(flagName, redirectPath, message) {
   return false;
 }
 
+export async function hasMenuAccess(menuCode) {
+  const sessionToken = getAppSessionToken();
+  if (!sessionToken || !menuCode) return false;
+
+  const { data, error } = await supabase.rpc("check_menu_access_for_session", {
+    p_session_token: sessionToken,
+    p_menu_code: menuCode,
+  });
+
+  if (error) {
+    console.error("Menu access error:", error);
+    return false;
+  }
+
+  const result = Array.isArray(data) ? data[0] : data;
+  return result?.has_access === true;
+}
+
+export async function requireMenuAccess(menuCode, redirectPath = "Menu.html", message = "Access denied") {
+  const allowed = await hasMenuAccess(menuCode);
+
+  if (allowed) {
+    return true;
+  }
+
+  if (message) {
+    alert(message);
+  }
+
+  window.location.href = redirectPath;
+  return false;
+}
+
 export function nowStr() {
   const d = new Date();
   const p = (n) => String(n).padStart(2, "0");
@@ -62,7 +95,7 @@ export async function insertStory(supabaseClient, action, detail) {
   return { payload, error };
 }
 
-export function renderUserInfo(elementId, fallbackName = "ผู้ใช้") {
+export function renderUserInfo(elementId, fallbackName = "User") {
   const uid = getUserId();
   const nick = getNickname();
   const el = document.getElementById(elementId);
@@ -72,7 +105,7 @@ export function renderUserInfo(elementId, fallbackName = "ผู้ใช้") {
   }
 }
 
-export function renderUserHeader(userIdElementId, detailElementId, fallbackName = "ผู้ใช้") {
+export function renderUserHeader(userIdElementId, detailElementId, fallbackName = "User") {
   const uid = getUserId();
   const nick = getNickname();
   const dept = getDepartment();

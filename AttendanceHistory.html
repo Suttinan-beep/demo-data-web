@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html class="light" lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>DataNest - Attendance History</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#004ac6",
+            "primary-fixed": "#dbe1ff",
+            "primary-fixed-dim": "#b4c5ff",
+            tertiary: "#005a82",
+            "tertiary-fixed": "#c9e6ff",
+            "tertiary-container": "#0074a6",
+            background: "#f7f9fb",
+            surface: "#f7f9fb",
+            "surface-container-low": "#f2f4f6",
+            "surface-container": "#eceef0",
+            "surface-container-lowest": "#ffffff",
+            secondary: "#505f76",
+            "secondary-container": "#d0e1fb",
+            "on-surface": "#191c1e",
+            "on-surface-variant": "#434655",
+            "on-secondary-container": "#54647a",
+            "on-primary": "#ffffff",
+            outline: "#737686",
+            "outline-variant": "#c3c6d7",
+            error: "#ba1a1a",
+            "error-container": "#ffdad6"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            gutter: "20px",
+            md: "16px",
+            lg: "24px",
+            xl: "48px",
+            sm: "8px",
+            xs: "4px"
+          },
+          fontFamily: {
+            "body-base": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "headline-md": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
+            "label-uppercase": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "display-lg": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
+            "body-sm": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            thai: ["IBM Plex Sans Thai"]
+          },
+          fontSize: {
+            "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }],
+            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+
+    .soft-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .gradient-primary {
+      background: linear-gradient(135deg, #004ac6 0%, #0074a6 100%);
+    }
+
+    .attendance-sidebar {
+      width: 190px;
+      transition: width 0.25s ease;
+    }
+
+    .attendance-main {
+      margin-left: 190px;
+      transition: margin-left 0.25s ease;
+    }
+
+    body.attendance-nav-collapsed .attendance-sidebar {
+      width: 40px;
+    }
+
+    body.attendance-nav-collapsed .attendance-main {
+      margin-left: 40px;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-label,
+    body.attendance-nav-collapsed .attendance-nav-title {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link {
+      width: 28px;
+      height: 28px;
+      margin-left: auto;
+      margin-right: auto;
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+      gap: 0;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link.active {
+      border-radius: 9999px;
+      padding: 0;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link .material-symbols-outlined {
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 19px;
+      top: 44px;
+      bottom: -28px;
+      width: 2px;
+      background: #e2e8f0;
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    @media print {
+      header,
+      .attendance-sidebar,
+      .no-print {
+        display: none !important;
+      }
+
+      .attendance-main {
+        margin-left: 0 !important;
+        padding: 0 !important;
+      }
+
+      body {
+        background: white !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-background font-body-base text-on-surface min-h-screen">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-4 sm:px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
+    <div class="flex items-center gap-8">
+      <span class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50">DataNest</span>
+      <nav class="hidden md:flex items-center gap-6">
+        <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors duration-200 cursor-pointer" href="Menu.html">Menu</a>
+        <a class="text-primary border-b-2 border-primary py-1 transition-colors duration-200 cursor-pointer" href="Attendance.html">Attendance System</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center border-r border-slate-100 pr-3 sm:pr-6 mr-0 sm:mr-2">
+        <img alt="User avatar" class="mr-3 h-8 w-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"/>
+        <div class="flex flex-col">
+          <span id="userIdText" class="font-headline-md text-sm font-bold text-slate-900">-</span>
+          <span id="userInfo" class="font-body-sm text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <aside id="attendance-sidebar" class="attendance-sidebar fixed left-0 top-[61px] bottom-0 z-40 bg-white border-r border-slate-100 soft-shadow overflow-hidden">
+    <div class="h-full flex flex-col py-4">
+      <div class="attendance-nav-title px-4 mb-4 transition-all duration-200">
+        <p class="font-headline-md text-sm font-bold text-primary">Workforce tools</p>
+      </div>
+      <nav class="flex-1 space-y-1 px-1.5">
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html">
+          <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+          <span class="attendance-nav-label transition-all duration-200">Check-in</span>
+        </a>
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
+          <span class="material-symbols-outlined text-[18px]">monitoring</span>
+          <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
+        </a>
+        <a class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html" aria-current="page">
+          <span class="material-symbols-outlined text-[18px]">history</span>
+          <span class="attendance-nav-label transition-all duration-200">My History</span>
+        </a>
+      </nav>
+      <div class="px-1.5">
+        <button id="attendance-nav-toggle" class="attendance-nav-link w-full flex items-center gap-3 rounded-full bg-surface-container-low text-slate-500 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" type="button" aria-label="Toggle attendance navigation" aria-expanded="true">
+          <span id="attendance-nav-toggle-icon" class="material-symbols-outlined text-[18px]">chevron_left</span>
+          <span class="attendance-nav-label transition-all duration-200">Collapse</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="attendance-main px-4 sm:px-6 lg:px-8 py-6 sm:py-10 min-h-screen">
+    <div class="w-full max-w-[1280px] mx-auto">
+      <section class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div>
+          <h1 class="font-display-lg text-display-lg text-on-surface mb-2">Attendance History</h1>
+          <p class="text-body-sm text-secondary">ดูประวัติการเช็คอินย้อนหลัง Timeline และระยะทางนอกสถานที่</p>
+        </div>
+        <div class="no-print flex flex-wrap items-center gap-3">
+          <div class="flex items-center bg-white border border-outline-variant rounded-xl px-3 py-2 soft-shadow focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+            <span class="material-symbols-outlined text-slate-400 mr-2 text-sm">calendar_today</span>
+            <input id="start-date" class="border-none bg-transparent p-0 focus:ring-0 text-sm font-medium text-on-surface" type="date"/>
+            <span class="mx-2 text-slate-300">-</span>
+            <input id="end-date" class="border-none bg-transparent p-0 focus:ring-0 text-sm font-medium text-on-surface" type="date"/>
+          </div>
+          <button id="search-btn" class="gradient-primary text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[20px]">search</span>
+            Search
+          </button>
+          <button id="print-btn" class="bg-secondary-container text-on-secondary-container px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 hover:bg-blue-200 active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[20px]">print</span>
+            Print
+          </button>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 mb-10">
+        <div class="bg-white p-5 rounded-xl border border-slate-100 soft-shadow">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Selected Period</span>
+          <h3 id="summary-days" class="text-headline-md font-headline-md text-primary">-</h3>
+          <p id="summary-range" class="mt-1 text-body-sm text-secondary">-</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-100 soft-shadow">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Check-in Days</span>
+          <div class="flex items-end justify-between">
+            <h3 id="summary-checkins" class="text-headline-md font-headline-md text-primary">0</h3>
+            <span class="material-symbols-outlined text-primary/40">done_all</span>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-100 soft-shadow">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Missed Days</span>
+          <div class="flex items-end justify-between">
+            <h3 id="summary-missed" class="text-headline-md font-headline-md text-error">0</h3>
+            <span class="material-symbols-outlined text-error/40">event_busy</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-100 soft-shadow px-5 py-5">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Work Mode</span>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs">
+                <span class="text-secondary font-medium">Office</span>
+                <span id="summary-office" class="text-on-surface font-semibold">0d</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5">
+                <div id="office-bar" class="bg-primary h-full rounded-full" style="width: 0%;"></div>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs">
+                <span class="text-secondary font-medium">WFH / On-site</span>
+                <span id="summary-remote" class="text-on-surface font-semibold">0d</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5">
+                <div id="remote-bar" class="bg-tertiary-container h-full rounded-full" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-100 soft-shadow">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Total Distance</span>
+          <div class="flex items-end justify-between">
+            <h3 id="summary-distance" class="text-headline-md font-headline-md">0 km</h3>
+            <span class="material-symbols-outlined text-slate-300">route</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-headline-md font-headline-md mb-6 flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-primary rounded-full"></span>
+          Timeline Activity
+        </h2>
+        <div id="history-timeline" class="relative space-y-6"></div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module">
+    import { getAppSessionToken, renderUserHeader, requireLogin } from "./app-helpers.js";
+    import { supabase } from "./supabase-client.js";
+
+    await requireLogin();
+    renderUserHeader("userIdText", "userInfo");
+
+    const $ = (id) => document.getElementById(id);
+
+    const state = {
+      records: []
+    };
+
+    function formatDateInput(date) {
+      return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(date);
+    }
+
+    function formatTime(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+    }
+
+    function formatThaiDate(value) {
+      const date = new Date(`${value}T00:00:00+07:00`);
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        weekday: "long",
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      }).format(date);
+    }
+
+    function toBangkokIso(value) {
+      if (!value) return null;
+      return String(value).includes("T") ? `${value}+07:00` : `${value}T00:00:00+07:00`;
+    }
+
+    function getNetWorkingMs(checkinAt, checkoutAt) {
+      if (!checkinAt || !checkoutAt) return 0;
+      const start = new Date(checkinAt);
+      const end = new Date(checkoutAt);
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 0;
+      return Math.max(0, end - start);
+    }
+
+    function formatHours(ms) {
+      const hours = Math.floor(ms / 3600000);
+      const minutes = Math.floor((ms % 3600000) / 60000);
+      return `${hours}h ${minutes}m`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function normalizeHistoryRecord(record) {
+      const fieldPoints = Array.isArray(record.field_points) ? record.field_points : [];
+
+      return {
+        date: record.work_date,
+        type: record.checkin_type,
+        checkinAt: toBangkokIso(record.checkin_at),
+        checkoutAt: toBangkokIso(record.checkout_at),
+        address: record.address,
+        note: record.note,
+        fieldPoints: fieldPoints.map((point) => ({
+          locationName: point.location_name || `จุดที่ ${point.sequence_no || "-"}`,
+          time: toBangkokIso(point.checked_at || point.captured_at),
+          distanceKm: Number(point.distance_km) || 0,
+          address: point.address || "",
+          note: point.note || ""
+        }))
+      };
+    }
+
+    function renderSummary(records) {
+      const selectedDays = records.length;
+      const checkins = records.filter((record) => record.checkinAt).length;
+      const missed = records.filter((record) => !record.checkinAt).length;
+      const office = records.filter((record) => record.type === "Office").length;
+      const remote = records.filter((record) => String(record.type || "").toLowerCase().includes("wfh") || String(record.type || "").toLowerCase().includes("on-site")).length;
+      const distance = records.reduce((sum, record) => sum + (record.fieldPoints || []).reduce((pointSum, point) => pointSum + (Number(point.distanceKm) || 0), 0), 0);
+
+      $("summary-days").textContent = `${selectedDays} Days`;
+      $("summary-range").textContent = `${$("start-date").value} - ${$("end-date").value}`;
+      $("summary-checkins").textContent = `${checkins} Days`;
+      $("summary-missed").textContent = `${missed} Days`;
+      $("summary-office").textContent = `${office}d`;
+      $("summary-remote").textContent = `${remote}d`;
+      $("summary-distance").textContent = `${distance.toFixed(1)} km`;
+      $("office-bar").style.width = `${checkins ? (office / checkins) * 100 : 0}%`;
+      $("remote-bar").style.width = `${checkins ? (remote / checkins) * 100 : 0}%`;
+    }
+
+    function renderTimeline(records) {
+      if (!records.length) {
+        $("history-timeline").innerHTML = `
+          <div class="bg-white rounded-xl border border-slate-100 soft-shadow p-8 text-center text-secondary">
+            ไม่พบข้อมูลในช่วงวันที่ที่เลือก
+          </div>
+        `;
+        return;
+      }
+
+      $("history-timeline").innerHTML = records.map((record) => {
+        const absent = !record.checkinAt;
+        const remote = String(record.type || "").toLowerCase().includes("wfh") || String(record.type || "").toLowerCase().includes("on-site");
+        const icon = absent ? "event_busy" : remote ? "near_me" : "business";
+        const markerClass = absent
+          ? "border-error text-error"
+          : remote
+            ? "border-tertiary-container text-tertiary-container"
+            : "border-primary text-primary";
+        const badge = absent ? "ABSENT" : remote ? "WFH / ON-SITE" : "OFFICE";
+        const distance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
+
+        return `
+          <article class="timeline-item relative pl-12">
+            <div class="absolute left-0 top-0 w-10 h-10 bg-white rounded-full border-2 ${markerClass} flex items-center justify-center z-10 shadow-sm">
+              <span class="material-symbols-outlined text-[20px]">${icon}</span>
+            </div>
+            <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-100 soft-shadow hover:-translate-y-0.5 transition-all duration-300">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                  <div class="text-center bg-slate-50 px-3 py-2 rounded-xl min-w-[58px]">
+                    <span class="block text-[10px] font-bold text-secondary uppercase">${new Date(`${record.date}T00:00:00+07:00`).toLocaleString("en-US", { month: "short" })}</span>
+                    <span class="block text-xl font-bold text-on-surface">${new Date(`${record.date}T00:00:00+07:00`).getDate()}</span>
+                  </div>
+                  <div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${absent ? "bg-error-container text-error" : remote ? "bg-tertiary-fixed text-tertiary" : "bg-primary-fixed text-primary"} mb-1">${badge}</span>
+                    <h4 class="font-headline-md text-lg text-on-surface">${formatThaiDate(record.date)}</h4>
+                  </div>
+                </div>
+                ${absent ? `
+                  <div class="bg-error-container/25 border border-error/10 rounded-xl p-3 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-error">notification_important</span>
+                    <span class="text-sm text-error font-medium">No check-in recorded for this date.</span>
+                  </div>
+                ` : `
+                  <div class="flex flex-wrap items-center gap-4">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-slate-400 text-[18px]">schedule</span>
+                      <span class="text-body-sm font-medium">${formatTime(record.checkinAt)} - ${formatTime(record.checkoutAt)}</span>
+                    </div>
+                    <div class="bg-surface-container-low px-4 py-2 rounded-xl">
+                      <span class="text-xs text-secondary block">Working Hours</span>
+                      <span class="font-bold text-on-surface">${formatHours(getNetWorkingMs(record.checkinAt, record.checkoutAt))}</span>
+                    </div>
+                  </div>
+                `}
+              </div>
+              ${remote && record.fieldPoints?.length ? `
+                <div class="mt-5 bg-slate-50 rounded-xl p-4">
+                  <div class="flex items-center gap-3 mb-4">
+                    <span class="material-symbols-outlined text-slate-400 text-[18px]">location_on</span>
+                    <span class="font-label-uppercase text-secondary">Visit Points & Distance (${distance.toFixed(1)} km)</span>
+                  </div>
+                  <div class="space-y-4">
+                    ${record.fieldPoints.map((point) => `
+                      <div class="flex items-center justify-between border-l-2 border-slate-200 ml-2 pl-4">
+                        <div class="flex flex-col">
+                          <span class="font-semibold text-on-surface">${escapeHtml(point.locationName)}</span>
+                          <span class="text-xs text-secondary">Arrived at ${formatTime(point.time)}</span>
+                        </div>
+                        <span class="text-sm font-medium text-slate-500">${Number(point.distanceKm || 0).toFixed(1)} km</span>
+                      </div>
+                    `).join("")}
+                  </div>
+                </div>
+              ` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function render() {
+      renderSummary(state.records);
+      renderTimeline(state.records);
+    }
+
+    async function loadHistory() {
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) {
+        window.location.href = "Login.html";
+        return;
+      }
+
+      const searchButton = $("search-btn");
+      searchButton.disabled = true;
+      searchButton.classList.add("opacity-70", "cursor-wait");
+
+      try {
+        const { data, error } = await supabase.rpc("get_my_attendance_history", {
+          p_session_token: sessionToken,
+          p_start_date: $("start-date").value,
+          p_end_date: $("end-date").value
+        });
+
+        if (error) throw error;
+
+        state.records = (data || []).map(normalizeHistoryRecord);
+        render();
+      } catch (error) {
+        console.error("Load attendance history failed", error);
+        alert(`โหลดประวัติการเช็คอินไม่สำเร็จ: ${error.message || error}`);
+      } finally {
+        searchButton.disabled = false;
+        searchButton.classList.remove("opacity-70", "cursor-wait");
+      }
+    }
+
+    function setAttendanceNavCollapsed(collapsed) {
+      document.body.classList.toggle("attendance-nav-collapsed", collapsed);
+      localStorage.setItem("attendanceNavCollapsed", collapsed ? "true" : "false");
+      $("attendance-nav-toggle")?.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      if ($("attendance-nav-toggle-icon")) {
+        $("attendance-nav-toggle-icon").textContent = collapsed ? "chevron_right" : "chevron_left";
+      }
+    }
+
+    const today = new Date();
+    const start = new Date(today);
+    start.setDate(today.getDate() - 30);
+    $("start-date").value = formatDateInput(start);
+    $("end-date").value = formatDateInput(today);
+    $("search-btn").addEventListener("click", loadHistory);
+    $("print-btn").addEventListener("click", () => window.print());
+    setAttendanceNavCollapsed(localStorage.getItem("attendanceNavCollapsed") === "true");
+    $("attendance-nav-toggle")?.addEventListener("click", () => {
+      setAttendanceNavCollapsed(!document.body.classList.contains("attendance-nav-collapsed"));
+    });
+
+    await loadHistory();
+  </script>
+</body>
+</html>

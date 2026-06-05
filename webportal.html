@@ -189,12 +189,13 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-lg">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-gutter mb-3">
           <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex items-center gap-4">
             <span class="material-symbols-outlined text-primary text-3xl" data-icon="link">link</span>
             <div>
               <p class="text-[10px] font-label-uppercase text-slate-500">Total Resources</p>
               <p id="total-count" class="text-headline-md font-bold">0</p>
+              <p class="text-[11px] text-slate-400">ลิงก์ทั้งหมดในตาราง</p>
             </div>
           </div>
           <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex items-center gap-4">
@@ -202,6 +203,15 @@
             <div>
               <p class="text-[10px] font-label-uppercase text-slate-500">Departments</p>
               <p id="dept-count" class="text-headline-md font-bold">0</p>
+              <p class="text-[11px] text-slate-400">แยกตามแผนก</p>
+            </div>
+          </div>
+          <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex items-center gap-4">
+            <span class="material-symbols-outlined text-primary text-3xl" data-icon="category">category</span>
+            <div>
+              <p class="text-[10px] font-label-uppercase text-slate-500">Icon Types</p>
+              <p id="icon-count" class="text-headline-md font-bold">0</p>
+              <p class="text-[11px] text-slate-400">หมวดหมู่ไอคอน</p>
             </div>
           </div>
           <div class="md:col-span-2 bg-gradient-to-r from-blue-600 to-blue-400 rounded-xl p-4 flex items-center justify-between text-white shadow-lg">
@@ -217,6 +227,7 @@
             <button id="stats-add-btn" class="bg-white text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-50 transition-colors" type="button">ADD LINK</button>
           </div>
         </div>
+        <div id="icon-filter" class="flex flex-wrap items-center gap-2 mb-lg"></div>
 
         <div id="cards-container" class="space-y-10"></div>
 
@@ -299,10 +310,14 @@
 
   <script type="module">
     import { supabase as supabaseClient } from "./supabase-client.js";
-    import { getUserId, insertStory, renderUserHeader, requireLogin, requirePageFlag } from "./app-helpers.js";
+    import { getUserId, insertStory, renderUserHeader, requireLogin, requireMenuAccess, requirePageFlag } from "./app-helpers.js";
 
     if (!requireLogin()) {
       throw new Error("NOT_LOGIN");
+    }
+
+    if (!(await requireMenuAccess("WEBPORTAL"))) {
+      throw new Error("ACCESS_DENIED");
     }
 
     setTimeout(() => {
@@ -319,6 +334,7 @@
     let allData = [];
     let searchQuery = "";
     let selectedDept = "";
+    let selectedIcon = "";
     let isSubmitting = false;
 
     async function logStory(action, detail) {
@@ -360,7 +376,9 @@
           item.description?.toLowerCase().includes(query)
         );
         const matchDept = !selectedDept || item.department === selectedDept;
-        return matchSearch && matchDept;
+        const itemIcon = item.icon_name || iconForDept(item.department);
+        const matchIcon = !selectedIcon || itemIcon === selectedIcon;
+        return matchSearch && matchDept && matchIcon;
       });
     }
 
@@ -397,19 +415,108 @@
 
     function selectDept(dept) {
       selectedDept = dept;
+      const availableIcons = new Set(allData
+        .filter((item) => !selectedDept || item.department === selectedDept)
+        .map((item) => item.icon_name || iconForDept(item.department)));
+      if (selectedIcon && !availableIcons.has(selectedIcon)) {
+        selectedIcon = "";
+      }
       renderDeptFilter();
       renderCards();
+    }
+
+    function selectIcon(iconName) {
+      selectedIcon = iconName;
+      renderCards();
+    }
+
+    function renderIconFilter(sourceData) {
+      const container = document.getElementById("icon-filter");
+      const iconGroups = sourceData.reduce((acc, item) => {
+        const icon = item.icon_name || iconForDept(item.department);
+        acc[icon] = (acc[icon] || 0) + 1;
+        return acc;
+      }, {});
+
+      const iconEntries = Object.entries(iconGroups).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+      document.getElementById("icon-count").textContent = iconEntries.length;
+
+      if (!iconEntries.length) {
+        container.innerHTML = "";
+        return;
+      }
+
+      const allClass = !selectedIcon
+        ? "bg-blue-600 text-white border-blue-600"
+        : "bg-white text-slate-500 border-slate-200 hover:border-blue-200 hover:text-blue-600";
+
+      container.innerHTML = `
+        <button class="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${allClass}" data-icon-filter="" type="button">
+          <span class="material-symbols-outlined text-lg">apps</span>
+          <span>Category</span>
+        </button>
+        ${iconEntries.map(([icon, count]) => {
+          const active = selectedIcon === icon;
+          const label = iconLabel(icon);
+          const itemClass = active
+            ? "bg-blue-600 text-white border-blue-600"
+            : "bg-white text-slate-500 border-slate-200 hover:border-blue-200 hover:text-blue-600";
+          return `
+            <button class="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${itemClass}" data-icon-filter="${escapeAttr(icon)}" type="button" title="${escapeAttr(label)}">
+              <span class="material-symbols-outlined text-lg">${escapeHtml(icon)}</span>
+              <span>${escapeHtml(label)}</span>
+              <span>${count}</span>
+            </button>
+          `;
+        }).join("")}
+      `;
+    }
+
+    function iconLabel(icon = "") {
+      const labels = {
+        link: "Link",
+        dashboard: "Dashboard",
+        table_chart: "Table",
+        bar_chart: "Report",
+        monitoring: "Monitoring",
+        assignment: "Task",
+        description: "Document",
+        public: "Portal",
+        cloud_done: "Cloud",
+        vpn_key: "Security",
+        groups: "People",
+        terminal: "IT / Dev",
+        settings_suggest: "Operations",
+        campaign: "Marketing",
+        trending_up: "Sales",
+        admin_panel_settings: "Admin"
+      };
+
+      return labels[icon] || icon.replaceAll("_", " ");
     }
 
     function renderCards() {
       const container = document.getElementById("cards-container");
       const emptyState = document.getElementById("empty-state");
+      const baseFilteredData = allData.filter((item) => {
+        const query = searchQuery.toLowerCase();
+        const matchSearch = !query || (
+          item.department?.toLowerCase().includes(query) ||
+          item.link_name?.toLowerCase().includes(query) ||
+          item.description?.toLowerCase().includes(query)
+        );
+        const matchDept = !selectedDept || item.department === selectedDept;
+        return matchSearch && matchDept;
+      });
       const filteredData = getFilteredData();
       const uniqueDepts = [...new Set(filteredData.map((item) => item.department || "ไม่ระบุ"))];
 
+      renderIconFilter(baseFilteredData);
       document.getElementById("total-count").textContent = filteredData.length;
       document.getElementById("dept-count").textContent = uniqueDepts.length;
-      document.getElementById("active-dept-label").textContent = selectedDept || "ทั้งหมด";
+      document.getElementById("active-dept-label").textContent = selectedIcon
+        ? `${selectedDept || "ทั้งหมด"} / ${selectedIcon}`
+        : selectedDept || "ทั้งหมด";
 
       if (!filteredData.length) {
         container.innerHTML = "";
@@ -436,7 +543,7 @@
                 <span class="material-symbols-outlined text-xl">${iconForDept(dept)}</span>
               </div>
               <div>
-                <h2 class="text-headline-md font-headline-md text-slate-900">${escapeHtml(dept)}</h2>
+                <h2 class="font-thai text-[24px] leading-8 font-semibold text-slate-900">${escapeHtml(dept)}</h2>
                 <p class="text-body-sm text-slate-500">${items.length} รายการ</p>
               </div>
             </div>
@@ -461,7 +568,7 @@
               <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-md group-hover:bg-blue-600 group-hover:text-white transition-colors">
                 <span class="material-symbols-outlined text-2xl" data-icon="${icon}">${icon}</span>
               </div>
-              <h3 class="font-thai text-[17px] leading-6 font-semibold text-slate-900 mb-2 line-clamp-2">${escapeHtml(item.link_name || "ไม่ระบุชื่อ")}</h3>
+              <h3 class="font-thai text-[20px] leading-7 font-semibold text-slate-900 mb-2 line-clamp-2">${escapeHtml(item.link_name || "ไม่ระบุชื่อ")}</h3>
               <p class="text-body-sm text-slate-500 mb-4 line-clamp-3">${escapeHtml(desc)}</p>
             </div>
             <div class="flex items-center gap-1 shrink-0">
@@ -781,6 +888,11 @@
       const target = event.target.closest("[data-dept]");
       if (!target) return;
       selectDept(target.dataset.dept);
+    });
+    document.getElementById("icon-filter").addEventListener("click", (event) => {
+      const target = event.target.closest("[data-icon-filter]");
+      if (!target) return;
+      selectIcon(target.dataset.iconFilter);
     });
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeModal();

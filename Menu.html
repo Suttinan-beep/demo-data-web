@@ -151,7 +151,7 @@
       <span class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50">DataNest</span>
       <nav class="hidden md:flex items-center gap-6">
         <a class="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 py-1 transition-colors duration-200 cursor-pointer" href="#">Menu</a>
-        <a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer" href="#">Attendance System</a>
+        <a data-menu-code="ATTENDANCE" class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer" href="Attendance.html">Attendance System</a>
       </nav>
     </div>
 
@@ -177,8 +177,8 @@
         <p id="welcome-text" class="text-body-base text-secondary max-w-lg mx-auto thai-text">เข้าถึงเครื่องมือฐานข้อมูลและระบบจัดการ</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
-        <button id="menu-search" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+      <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+        <button id="menu-search" data-menu-code="CUSTOMER_SEARCH" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
           <div class="w-16 h-16 rounded-2xl bg-secondary-container flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
             <span class="material-symbols-outlined text-primary text-3xl" data-icon="person_search">person_search</span>
           </div>
@@ -193,7 +193,7 @@
           </div>
         </button>
 
-        <button id="menu-webportal" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+        <button id="menu-webportal" data-menu-code="WEBPORTAL" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
           <div class="w-16 h-16 rounded-2xl bg-tertiary-container flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
             <span class="material-symbols-outlined text-on-tertiary-container text-3xl" data-icon="public">public</span>
           </div>
@@ -208,7 +208,7 @@
           </div>
         </button>
 
-        <button id="menu-update" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+        <button id="menu-update" data-menu-code="CLEARPORT" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
           <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
             <span class="material-symbols-outlined text-blue-600 text-3xl" data-icon="update">update</span>
           </div>
@@ -222,6 +222,10 @@
             </span>
           </div>
         </button>
+      </div>
+
+      <div id="empty-menu-message" class="hidden bg-white border border-slate-100 rounded-xl p-lg text-center text-secondary thai-text shadow-sm">
+        ยังไม่มีเมนูที่เปิดสิทธิ์ให้ผู้ใช้นี้ กรุณาติดต่อผู้ดูแลระบบ
       </div>
 
       <div class="mt-xl flex flex-col md:flex-row items-center justify-between gap-md py-lg border-t border-slate-200/60">
@@ -311,6 +315,72 @@
       console.log("PIN result:", data);
       const result = Array.isArray(data) ? data[0] : data;
       return result?.is_valid === true;
+    }
+
+    function normalizeMenuCode(menuCode) {
+      return String(menuCode || "").trim().toUpperCase();
+    }
+
+    function expandMenuAliases(menuCodes) {
+      const allowed = new Set();
+
+      menuCodes.forEach((code) => {
+        const normalized = normalizeMenuCode(code);
+        if (!normalized) return;
+
+        allowed.add(normalized);
+
+        if (["SEARCH", "CUSTOMER", "HOME"].includes(normalized)) {
+          allowed.add("CUSTOMER_SEARCH");
+        }
+
+        if (["UPDATE_CLEARPORT", "UPDATE"].includes(normalized)) {
+          allowed.add("CLEARPORT");
+        }
+
+        if (["ATTENDANCE_SYSTEM", "TIME_ATTENDANCE"].includes(normalized)) {
+          allowed.add("ATTENDANCE");
+        }
+      });
+
+      return allowed;
+    }
+
+    async function loadAllowedMenus() {
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) return null;
+
+      const { data, error } = await supabase.rpc("get_allowed_menus_for_session", {
+        p_session_token: sessionToken,
+      });
+
+      if (error) {
+        console.error("Allowed menu error:", error);
+        showToast("ไม่สามารถโหลดสิทธิ์เมนูได้");
+        return null;
+      }
+
+      const rows = Array.isArray(data) ? data : [];
+      return rows.map((row) => row.menu_code);
+    }
+
+    function applyMenuAccess(menuCodes) {
+      const allowed = expandMenuAliases(menuCodes || []);
+      const menuItems = [...document.querySelectorAll("[data-menu-code]")];
+      let visibleCards = 0;
+
+      menuItems.forEach((item) => {
+        const menuCode = normalizeMenuCode(item.dataset.menuCode);
+        const isAllowed = allowed.has(menuCode);
+        item.classList.toggle("hidden", !isAllowed);
+
+        if (isAllowed && item.tagName === "BUTTON") {
+          visibleCards += 1;
+        }
+      });
+
+      document.getElementById("menu-grid").classList.toggle("hidden", visibleCards === 0);
+      document.getElementById("empty-menu-message").classList.toggle("hidden", visibleCards > 0);
     }
 
     function showToast(message) {
@@ -406,6 +476,7 @@
           showPasswordModal();
         });
       }
+
     }
 
     document.getElementById("cancel-btn").addEventListener("click", () => {
@@ -464,6 +535,10 @@
     applyConfig(defaultConfig);
     renderCurrentUser();
     bindMenuEvents();
+    const allowedMenus = await loadAllowedMenus();
+    if (allowedMenus) {
+      applyMenuAccess(allowedMenus);
+    }
   </script>
 </body>
 </html>

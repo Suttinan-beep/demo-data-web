@@ -1,0 +1,1732 @@
+﻿<!DOCTYPE html>
+<html class="light" lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>DataNest - Attendance System</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-container": "#0074a6",
+            "tertiary": "#005a82",
+            "tertiary-container": "#0074a6",
+            "on-tertiary-container": "#e4f2ff",
+            "on-tertiary": "#ffffff",
+            "background": "#f7f9fb",
+            "inverse-on-surface": "#eff1f3",
+            "on-surface": "#191c1e",
+            "primary": "#004ac6",
+            "on-secondary-fixed": "#0b1c30",
+            "surface-dim": "#d8dadc",
+            "on-secondary-fixed-variant": "#38485d",
+            "surface-container-low": "#f2f4f6",
+            "surface-container": "#eceef0",
+            "on-primary-fixed-variant": "#003ea8",
+            "inverse-primary": "#b4c5ff",
+            "surface": "#f7f9fb",
+            "error-container": "#ffdad6",
+            "error": "#ba1a1a",
+            "on-secondary-container": "#54647a",
+            "primary-fixed": "#dbe1ff",
+            "secondary-fixed": "#d3e4fe",
+            "secondary": "#505f76",
+            "on-background": "#191c1e",
+            "surface-bright": "#f7f9fb",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e0e3e5",
+            "secondary-container": "#d0e1fb",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c3c6d7",
+            "inverse-surface": "#2d3133",
+            "surface-variant": "#e0e3e5",
+            "surface-container-high": "#e6e8ea",
+            "primary-fixed-dim": "#b4c5ff",
+            "on-surface-variant": "#434655",
+            "surface-tint": "#0053db",
+            "outline": "#737686",
+            "on-primary-fixed": "#00174b",
+            "on-primary": "#ffffff"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            gutter: "20px",
+            lg: "24px",
+            xs: "4px",
+            xl: "48px",
+            sm: "8px",
+            md: "16px"
+          },
+          fontFamily: {
+            "body-base": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "headline-md": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
+            "label-uppercase": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "display-lg": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
+            "body-sm": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            thai: ["IBM Plex Sans Thai"]
+          },
+          fontSize: {
+            "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+            "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
+            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+
+    .thai-text {
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+    }
+
+    .gradient-primary {
+      background: linear-gradient(90deg, #004ac6 0%, #0074a6 100%);
+    }
+
+    .soft-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-interaction {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card-interaction:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .attendance-card {
+      display: grid;
+      grid-template-rows: 80px 72px 96px auto;
+      justify-items: center;
+    }
+
+    .attendance-sidebar {
+      width: 190px;
+      transition: width 0.25s ease;
+    }
+
+    .attendance-main {
+      margin-left: 190px;
+      transition: margin-left 0.25s ease;
+    }
+
+    body.attendance-nav-collapsed .attendance-sidebar {
+      width: 40px;
+    }
+
+    body.attendance-nav-collapsed .attendance-main {
+      margin-left: 40px;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-label,
+    body.attendance-nav-collapsed .attendance-nav-title {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link {
+      width: 28px;
+      height: 28px;
+      margin-left: auto;
+      margin-right: auto;
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+      gap: 0;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link.active {
+      border-radius: 9999px;
+      padding: 0;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link .material-symbols-outlined {
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 767px) {
+      .attendance-sidebar {
+        width: 40px;
+      }
+
+      .attendance-main {
+        margin-left: 40px;
+      }
+
+      .attendance-nav-label,
+      .attendance-nav-title {
+        display: none;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .attendance-card {
+        grid-template-rows: 80px auto auto auto;
+      }
+    }
+  </style>
+</head>
+<body class="bg-background font-body-base text-on-surface min-h-screen flex flex-col">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-4 sm:px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
+    <div class="flex items-center gap-8">
+      <span class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50">DataNest</span>
+      <nav class="hidden md:flex items-center gap-6">
+        <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors duration-200 cursor-pointer" href="Menu.html">Menu</a>
+        <a class="text-primary border-b-2 border-primary py-1 transition-colors duration-200 cursor-pointer" href="Attendance.html">Attendance System</a>
+      </nav>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <div class="flex items-center border-r border-slate-100 pr-3 sm:pr-6 mr-0 sm:mr-2">
+          <img
+            alt="User avatar"
+            class="mr-3 h-8 w-8 rounded-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"
+          />
+          <div class="flex flex-col">
+            <span id="userIdText" class="font-manrope text-sm font-bold text-slate-900">-</span>
+            <span id="userInfo" class="font-inter text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
+          </div>
+        </div>
+    </div>
+  </header>
+
+  <aside id="attendance-sidebar" class="attendance-sidebar fixed left-0 top-[61px] bottom-0 z-40 bg-white border-r border-slate-100 soft-shadow overflow-hidden">
+    <div class="h-full flex flex-col py-4">
+      <div class="attendance-nav-title px-4 mb-4 transition-all duration-200">
+        <p class="font-headline-md text-sm font-bold text-primary">Workforce tools</p>
+      </div>
+      <nav class="flex-1 space-y-1 px-1.5">
+        <a class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html" aria-current="page">
+          <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+          <span class="attendance-nav-label transition-all duration-200">Check-in</span>
+        </a>
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
+          <span class="material-symbols-outlined text-[18px]">monitoring</span>
+          <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
+        </a>
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
+          <span class="material-symbols-outlined text-[18px]">history</span>
+          <span class="attendance-nav-label transition-all duration-200">My History</span>
+        </a>
+      </nav>
+      <div class="px-1.5">
+        <button id="attendance-nav-toggle" class="attendance-nav-link w-full flex items-center gap-3 rounded-full bg-surface-container-low text-slate-500 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" type="button" aria-label="Toggle attendance navigation" aria-expanded="true">
+          <span id="attendance-nav-toggle-icon" class="material-symbols-outlined text-[18px]">chevron_left</span>
+          <span class="attendance-nav-label transition-all duration-200">Collapse</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main id="attendance-main" class="attendance-main flex-grow px-4 sm:px-6 py-6 sm:py-10">
+    <div class="w-full max-w-[1440px] mx-auto">
+      <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] gap-6 items-start">
+        <div class="space-y-6">
+          <section class="bg-white rounded-xl border border-slate-100 soft-shadow px-4 sm:px-6 py-4">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div>
+                <p class="font-label-uppercase text-label-uppercase text-primary mb-1">Attendance System</p>
+                <h1 class="font-headline-md text-headline-md text-on-surface">ลงทะเบียนเข้างาน (Check-in)</h1>
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <span class="text-body-base text-secondary flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                  <span id="today-label">-</span>
+                </span>
+                <span class="hidden sm:block text-outline-variant">|</span>
+                <span id="time-label" class="text-[28px] leading-9 font-bold text-primary">--:--</span>
+              </div>
+            </div>
+          </section>
+          <section class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-white rounded-xl border border-slate-100 soft-shadow px-4 py-3">
+              <p class="text-[10px] font-label-uppercase text-slate-500">Status</p>
+              <p id="summary-status" class="font-bold text-slate-900">Not Checked In</p>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-100 soft-shadow px-4 py-3">
+              <p class="text-[10px] font-label-uppercase text-slate-500">Shift</p>
+              <p class="font-bold text-slate-900">09:00 - 18:00</p>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-100 soft-shadow px-4 py-3 col-span-2 sm:col-span-1">
+              <p class="text-[10px] font-label-uppercase text-slate-500">Working Hours</p>
+              <p id="hours-label" class="font-bold text-slate-900">0 hrs</p>
+            </div>
+          </section>
+          <section class="grid grid-cols-1 md:grid-cols-2 gap-lg items-stretch">
+        <div class="attendance-card bg-surface-container-lowest p-6 sm:p-8 rounded-xl border border-slate-100 soft-shadow card-interaction text-center">
+          <div class="w-20 h-20 rounded-2xl bg-tertiary-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-tertiary-container text-[40px]">corporate_fare</span>
+          </div>
+          <h2 class="font-headline-md text-headline-md text-on-surface flex items-center justify-center">เช็คอินที่สำนักงาน (Office)</h2>
+          <p class="text-body-sm text-secondary max-w-xs flex items-start justify-center">ระบบจะตรวจสอบสถานะเครือข่ายสำนักงานและบันทึกเวลาเข้างานโดยไม่ต้องถ่ายภาพ</p>
+          <div class="w-full self-start">
+            <button id="office-checkin-btn" class="gradient-primary text-on-primary w-full py-4 rounded-xl font-body-base font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group" type="button">
+              <span data-office-button-label>Check-in Now</span>
+              <span data-office-button-icon class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+            <div class="mt-md p-sm bg-surface-container-low rounded-lg flex items-center justify-center gap-sm">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span id="office-status" class="text-label-uppercase text-on-secondary-container">Check-in เพื่อเข้างาน</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="attendance-card bg-surface-container-lowest p-6 sm:p-8 rounded-xl border border-slate-100 soft-shadow card-interaction text-center">
+          <div class="w-20 h-20 rounded-2xl bg-tertiary-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-tertiary-container text-[40px]">distance</span>
+          </div>
+          <h2 class="font-headline-md text-headline-md text-on-surface flex items-center justify-center">เช็คอินนอกสถานที่ (WFH / On-site)</h2>
+          <p class="text-body-sm text-secondary max-w-xs flex items-start justify-center">ยืนยันตัวตนด้วยกล้องและระบุตำแหน่ง GPS แบบเรียลไทม์ก่อนบันทึกเวลา</p>
+          <div class="w-full self-start">
+            <button id="field-checkin-btn" class="gradient-primary text-on-primary w-full py-4 rounded-xl font-body-base font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group" type="button">
+              <span data-field-button-icon class="material-symbols-outlined text-[20px]">location_on</span>
+              <span data-field-button-label>On-site check-in</span>
+            </button>
+            <button id="field-checkout-btn" class="hidden mt-3 bg-slate-900 text-white w-full py-4 rounded-xl font-body-base font-semibold shadow-lg shadow-slate-900/10 hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 items-center justify-center gap-2" type="button">
+              <span class="material-symbols-outlined text-[20px]">logout</span>
+              <span>Check-out</span>
+            </button>
+            <div class="mt-md p-sm bg-surface-container-low rounded-lg flex items-center justify-center gap-sm text-left">
+              <span class="material-symbols-outlined text-[16px] text-primary">route</span>
+              <span id="field-action-status" class="text-label-uppercase text-on-secondary-container break-words min-w-0">พร้อมเช็คอินนอกสถานที่</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="camera-panel" class="hidden bg-white rounded-xl border border-slate-100 soft-shadow overflow-hidden">
+        <div class="px-4 sm:px-6 py-4 border-b border-slate-100 flex items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="font-headline-md text-body-base font-bold text-on-surface">Camera Verification</h3>
+            <p id="location-label" class="text-body-sm text-secondary mt-1">เตรียมถ่ายรูปพร้อมไทม์สแตมป์</p>
+          </div>
+          <button id="close-camera-btn" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-500 hover:text-error hover:bg-red-50 flex items-center justify-center transition-colors" type="button">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-0">
+          <div class="bg-slate-950">
+            <div class="aspect-video min-h-[220px] max-h-[420px] flex items-center justify-center relative overflow-hidden">
+              <video id="camera-preview" class="hidden w-full h-full object-cover" autoplay playsinline muted></video>
+              <img id="captured-photo" class="hidden w-full h-full object-cover" alt="Captured attendance timestamp"/>
+              <div id="stamp-overlay" class="hidden absolute left-4 right-4 bottom-4 rounded-lg bg-black/65 p-3 text-left text-white shadow-lg">
+                <p id="stamp-time" class="text-sm font-bold leading-5">-</p>
+                <p id="stamp-address" class="text-xs leading-5">-</p>
+                <p id="stamp-gps" class="text-xs leading-5">-</p>
+              </div>
+              <div id="camera-empty" class="text-center text-white/70 p-8">
+                <span class="material-symbols-outlined text-[56px] mb-3">photo_camera</span>
+                <p class="text-body-sm">กล้องจะแสดงที่นี่หลังจากอนุญาตการใช้งาน</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 sm:p-6 flex flex-col justify-between gap-6">
+            <div class="space-y-3">
+              <div id="field-location-panel" class="hidden p-3 bg-surface-container-low rounded-lg text-left">
+                <div class="flex items-center gap-3 text-body-sm text-slate-600 mb-3">
+                  <span class="material-symbols-outlined text-primary">my_location</span>
+                  <span class="font-semibold">ล็อคพิกัดจุดนอกสถานที่</span>
+                </div>
+                <div id="field-location-lock-preview" class="rounded-lg border border-primary/20 bg-white p-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <p id="field-lock-title" class="font-semibold text-slate-800">จุดที่ 1</p>
+                      <p id="field-lock-coords" class="mt-1 text-xs text-slate-500">กำลังรอ GPS</p>
+                    </div>
+                    <div class="text-right">
+                      <p id="field-lock-distance" class="font-bold text-primary">-</p>
+                      <span class="mt-1 inline-flex rounded-full bg-sky-50 px-2 py-1 text-[11px] font-semibold text-sky-700">Auto lock</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
+                <span class="material-symbols-outlined text-primary">event</span>
+                <span id="capture-date-detail" class="text-body-sm text-slate-600">วันที่ถ่ายรูป: -</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
+                <span class="material-symbols-outlined text-primary">schedule</span>
+                <span id="capture-time-detail" class="text-body-sm text-slate-600">เวลาถ่ายรูป: -</span>
+              </div>
+              <label class="block p-3 bg-surface-container-low rounded-lg text-left">
+                <span class="flex items-center gap-3 text-body-sm text-slate-600 mb-2">
+                  <span class="material-symbols-outlined text-primary">edit_note</span>
+                  หมายเหตุ
+                </span>
+                <textarea id="field-note" class="w-full min-h-24 rounded-lg border-slate-200 bg-white text-body-sm text-slate-700 focus:border-primary focus:ring-primary/20" placeholder="ระบุรายละเอียด เช่น WFH, พบลูกค้า, หรือสถานที่ปฏิบัติงาน"></textarea>
+              </label>
+            </div>
+            <div class="space-y-3">
+              <button id="capture-photo-btn" class="bg-secondary-container text-primary w-full py-md rounded-xl font-body-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-sm" type="button" disabled>
+                <span class="material-symbols-outlined">camera</span>
+                ถ่ายรูปพร้อมไทม์สแตมป์
+              </button>
+              <button id="retake-photo-btn" class="hidden bg-slate-100 text-slate-700 w-full py-md rounded-xl font-body-base font-semibold flex items-center justify-center gap-sm" type="button">
+                <span class="material-symbols-outlined">refresh</span>
+                ถ่ายใหม่
+              </button>
+              <button id="confirm-field-btn" class="gradient-primary text-white w-full py-md rounded-xl font-body-base font-semibold shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed" type="button" disabled>
+                Save Field Check-in
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        </div>
+
+        <aside class="xl:sticky xl:top-24">
+          <section class="bg-white rounded-xl border border-slate-100 soft-shadow overflow-hidden">
+            <div class="px-4 sm:px-6 py-4 border-b border-slate-100 flex flex-col gap-4">
+              <div>
+                <p class="font-label-uppercase text-label-uppercase text-primary mb-1">Today Timeline</p>
+                <h3 class="font-headline-md text-headline-md text-on-surface">ไทม์ไลน์การเช็คอินวันนี้</h3>
+              </div>
+            </div>
+            <div id="daily-timeline" class="max-h-none xl:max-h-[calc(100vh-180px)] overflow-y-auto p-4 sm:p-6 space-y-4"></div>
+          </section>
+        </aside>
+      </div>
+
+      <section class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-md">
+        <div class="md:col-span-2 bg-white p-4 sm:p-lg rounded-xl soft-shadow border border-slate-50 flex items-start gap-md">
+          <div class="p-sm bg-secondary-container rounded-lg">
+            <span class="material-symbols-outlined text-primary">info</span>
+          </div>
+          <div>
+            <h3 class="font-headline-md text-body-base font-bold text-on-surface">ข้อควรระวัง</h3>
+            <p class="text-body-sm text-secondary mt-xs leading-relaxed">กรุณาตรวจสอบสถานที่ก่อนกดเช็คอิน ระบบจะบันทึกเวลา วิธีเช็คอิน สถานที่จริง และหมายเหตุเพื่อความโปร่งใสในการปฏิบัติงาน</p>
+          </div>
+        </div>
+        <div class="gradient-primary p-4 sm:p-lg rounded-xl soft-shadow text-white flex flex-col justify-center overflow-hidden relative">
+          <div class="relative z-10">
+            <p class="text-label-uppercase opacity-80">Last Check-in</p>
+            <p id="last-checkin-label" class="text-[28px] leading-9 font-bold">-</p>
+            <p id="last-checkin-type" class="text-body-sm mt-xs opacity-90">ยังไม่มีรายการวันนี้</p>
+            <button id="checkout-btn" class="hidden mt-md w-full rounded-xl bg-white/15 px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/25 active:scale-[0.98]" type="button">
+              Check-out
+            </button>
+          </div>
+          <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-[100px] opacity-10">schedule</span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="checkin-summary-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-lg rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+        <div>
+          <p class="text-label-uppercase text-primary">Attendance Summary</p>
+          <h3 id="summary-modal-title" class="mt-1 font-headline-md text-headline-md text-on-surface">สรุปการเช็คอิน</h3>
+        </div>
+        <button id="close-summary-modal-btn" class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-50 text-slate-500 transition-colors hover:bg-red-50 hover:text-error" type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div id="summary-modal-content" class="space-y-3 py-5 text-body-sm text-slate-700"></div>
+      <button id="summary-modal-ok-btn" class="gradient-primary w-full rounded-xl py-3 font-semibold text-white shadow-lg shadow-primary/20" type="button">
+        รับทราบ
+      </button>
+    </div>
+  </div>
+
+  <div id="attendance-alert-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+        <div>
+          <p id="alert-modal-eyebrow" class="text-label-uppercase text-primary">Attendance</p>
+          <h3 id="alert-modal-title" class="mt-1 font-headline-md text-headline-md text-on-surface">แจ้งเตือน</h3>
+        </div>
+        <button id="close-alert-modal-btn" class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-50 text-slate-500 transition-colors hover:bg-red-50 hover:text-error" type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div id="alert-modal-content" class="py-5 text-body-sm leading-relaxed text-slate-700"></div>
+      <button id="alert-modal-ok-btn" class="gradient-primary w-full rounded-xl py-3 font-semibold text-white shadow-lg shadow-primary/20" type="button">
+        รับทราบ
+      </button>
+    </div>
+  </div>
+
+  <div id="toast-container" class="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-6 z-50 space-y-3"></div>
+
+  <script type="module">
+    import { supabase } from "./supabase-client.js";
+    import { getAppSessionToken, getUserId, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
+
+    if (!requireLogin()) {
+      throw new Error("NOT_LOGIN");
+    }
+
+    if (!(await requireMenuAccess("ATTENDANCE"))) {
+      throw new Error("ACCESS_DENIED");
+    }
+
+    const initialStorageDateKey = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Bangkok",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date());
+    let fieldVisitStorageKey = `attendanceFieldVisits:${initialStorageDateKey}`;
+
+    const state = {
+      stream: null,
+      position: null,
+      address: "",
+      capturedPhoto: null,
+      capturedAt: null,
+      fieldNote: "",
+      stampTimer: null,
+      serverTimeBaseMs: Date.now(),
+      serverTimeSyncedAtMs: performance.now(),
+      serverTimeReady: false,
+      attendanceMode: "checkin",
+      verificationMode: "checkin",
+      fieldVisits: JSON.parse(localStorage.getItem(fieldVisitStorageKey) || "[]"),
+      lastCheckin: JSON.parse(localStorage.getItem("attendanceLastCheckin") || "null")
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function getServerNow() {
+      const elapsedMs = performance.now() - state.serverTimeSyncedAtMs;
+      return new Date(state.serverTimeBaseMs + elapsedMs);
+    }
+
+    async function syncServerTime() {
+      const { data, error } = await supabase.rpc("get_attendance_server_time");
+      if (error) {
+        console.error("Server time sync error:", error);
+        showToast("ไม่สามารถซิงก์เวลา server ได้ ระบบจะแสดงเวลาเครื่องชั่วคราว", "error");
+        return false;
+      }
+
+      const record = Array.isArray(data) ? data[0] : data;
+      const serverDate = new Date(record?.server_time_iso || record?.server_time);
+      if (Number.isNaN(serverDate.getTime())) {
+        console.error("Invalid server time:", record);
+        return false;
+      }
+
+      state.serverTimeBaseMs = serverDate.getTime();
+      state.serverTimeSyncedAtMs = performance.now();
+      state.serverTimeReady = true;
+      if (record?.work_date) {
+        const nextFieldVisitStorageKey = `attendanceFieldVisits:${record.work_date}`;
+        if (nextFieldVisitStorageKey !== fieldVisitStorageKey) {
+          fieldVisitStorageKey = nextFieldVisitStorageKey;
+          state.fieldVisits = JSON.parse(localStorage.getItem(fieldVisitStorageKey) || "[]");
+          renderDailyTimeline();
+        }
+      }
+      updateClock();
+      return true;
+    }
+
+    function getBangkokTimeParts(date = new Date()) {
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).formatToParts(date);
+
+      return Object.fromEntries(parts.map((part) => [part.type, Number(part.value)]));
+    }
+
+    function updateOfficeStatus(now = getServerNow()) {
+      if (state.attendanceMode === "completed") {
+        $("office-status").textContent = `บันทึกข้อมูลวันที่ ${formatThaiShortDate(getServerNow())} เรียบร้อย`;
+        return;
+      }
+
+      if (state.attendanceMode === "checkout") {
+        $("office-status").textContent = "พร้อมบันทึกเวลาออกงาน";
+        return;
+      }
+
+      const bangkokTime = getBangkokTimeParts(now);
+      const isLate = bangkokTime.hour > 9 || (bangkokTime.hour === 9 && (bangkokTime.minute > 0 || bangkokTime.second > 0));
+      $("office-status").textContent = isLate ? "เข้างานสาย" : "Check-in เพื่อเข้างาน";
+    }
+
+    function updateClock() {
+      const now = getServerNow();
+      $("today-label").textContent = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }).format(now);
+      $("time-label").textContent = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).format(now);
+
+      if (!state.lastCheckin?.time || state.lastCheckin.checkoutAt) {
+        if (state.lastCheckin?.time && state.lastCheckin?.checkoutAt) {
+          const checkinDate = new Date(state.lastCheckin.time);
+          const checkoutDate = new Date(state.lastCheckin.checkoutAt);
+          const finalDiffMs = Number.isNaN(checkinDate.getTime()) || Number.isNaN(checkoutDate.getTime())
+            ? 0
+            : getNetWorkingMs(checkinDate, checkoutDate);
+          const hours = Math.floor(finalDiffMs / 3600000);
+          const minutes = Math.floor((finalDiffMs % 3600000) / 60000);
+          $("hours-label").textContent = `${hours}h ${minutes}m`;
+        } else {
+          $("hours-label").textContent = "0h 0m";
+        }
+      } else {
+        const checkinDate = new Date(state.lastCheckin.time);
+        const workingDiffMs = Number.isNaN(checkinDate.getTime()) ? 0 : getNetWorkingMs(checkinDate, now);
+        const hours = Math.floor(workingDiffMs / 3600000);
+        const minutes = Math.floor((workingDiffMs % 3600000) / 60000);
+        $("hours-label").textContent = `${hours}h ${minutes}m`;
+      }
+      updateOfficeStatus(now);
+    }
+
+    function showToast(message, type = "info") {
+      const colors = {
+        success: "bg-emerald-500",
+        error: "bg-red-500",
+        info: "bg-sky-500"
+      };
+      const icons = {
+        success: "check_circle",
+        error: "error",
+        info: "info"
+      };
+      const toast = document.createElement("div");
+      toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl text-white text-sm soft-shadow ${colors[type]}`;
+      toast.innerHTML = `<span class="material-symbols-outlined text-lg">${icons[type]}</span><span>${escapeHtml(message)}</span>`;
+      $("toast-container").appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateX(80px)";
+        toast.style.transition = "all 0.25s ease";
+        setTimeout(() => toast.remove(), 280);
+      }, 3000);
+    }
+
+    function setAttendanceMode(mode) {
+      state.attendanceMode = mode;
+      const isCheckout = mode === "checkout";
+      const isCompleted = mode === "completed";
+      const officeButton = $("office-checkin-btn");
+      const fieldButton = $("field-checkin-btn");
+      const fieldCheckoutButton = $("field-checkout-btn");
+
+      officeButton.disabled = isCompleted;
+      fieldButton.disabled = isCompleted;
+      fieldCheckoutButton.disabled = isCompleted;
+      officeButton.classList.toggle("opacity-60", isCompleted);
+      fieldButton.classList.toggle("opacity-60", isCompleted);
+      fieldCheckoutButton.classList.toggle("opacity-60", isCompleted);
+      officeButton.classList.toggle("cursor-not-allowed", isCompleted);
+      fieldButton.classList.toggle("cursor-not-allowed", isCompleted);
+      fieldCheckoutButton.classList.toggle("cursor-not-allowed", isCompleted);
+
+      officeButton.querySelector("[data-office-button-label]").textContent = isCompleted
+        ? "Completed Today"
+        : isCheckout ? "Check-out" : "Check-in Now";
+      officeButton.querySelector("[data-office-button-icon]").textContent = isCompleted
+        ? "task_alt"
+        : isCheckout ? "logout" : "arrow_forward";
+      fieldButton.querySelector("[data-field-button-label]").textContent = isCompleted
+        ? "See you tomorrow"
+        : isCheckout ? "เพิ่มจุดนอกสถานที่" : "On-site check-in";
+      fieldButton.querySelector("[data-field-button-icon]").textContent = isCompleted
+        ? "event_available"
+        : isCheckout ? "add_location_alt" : "location_on";
+      fieldCheckoutButton.classList.toggle("hidden", !isCheckout);
+      fieldCheckoutButton.classList.toggle("flex", isCheckout);
+      $("field-action-status").textContent = isCompleted
+        ? "บันทึกข้อมูลวันนี้ครบแล้ว"
+        : isCheckout ? `จุดถัดไป: ${getNextFieldPointName()}` : "พร้อมเช็คอินนอกสถานที่";
+      $("summary-status").textContent = isCompleted ? "Check Out" : isCheckout ? "Working" : "Not Checked In";
+      updateOfficeStatus();
+      renderDailyTimeline();
+    }
+
+    function showCompletedTodayMessage() {
+      showToast(`บันทึกข้อมูลวันที่ ${formatThaiShortDate(getServerNow())} เรียบร้อย พบกันใหม่วันถัดไป`, "success");
+    }
+
+    function formatThaiShortDate(date = new Date()) {
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      }).format(date);
+    }
+
+    function getCheckinStatus(date = new Date()) {
+      const { hour, minute } = getBangkokTimeParts(date);
+      const totalMinutes = hour * 60 + minute;
+      if (totalMinutes <= 9 * 60) {
+        return "เช็คอินปกติ";
+      }
+      if (totalMinutes <= 9 * 60 + 15) {
+        return "เข้างานสาย";
+      }
+      return "เข้างานสายเกิน 15 นาที";
+    }
+
+    function getBangkokDateKey(date = new Date()) {
+      return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(date);
+    }
+
+    function getNetWorkingMs(startDate, endDate) {
+      const elapsedMs = Math.max(0, endDate - startDate);
+      const dateKey = getBangkokDateKey(startDate);
+      const lunchStart = new Date(`${dateKey}T12:00:00+07:00`);
+      const lunchEnd = new Date(`${dateKey}T13:00:00+07:00`);
+      const overlapStart = startDate > lunchStart ? startDate : lunchStart;
+      const overlapEnd = endDate < lunchEnd ? endDate : lunchEnd;
+      const lunchOverlapMs = Math.max(0, overlapEnd - overlapStart);
+      return Math.max(0, elapsedMs - lunchOverlapMs);
+    }
+
+    function getDisplayUserName() {
+      return $("userInfo")?.textContent || $("userIdText")?.textContent || "-";
+    }
+
+    function getCheckinPlace(type, payload) {
+      return type === "Office" ? "Office" : payload.address || state.address || "สถานที่: -";
+    }
+
+    function calculateDistanceKm(lat1, lon1, lat2, lon2) {
+      const earthRadiusKm = 6371;
+      const toRad = (value) => value * Math.PI / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+      return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function formatDistance(distanceKm) {
+      if (!Number.isFinite(distanceKm)) return "-";
+      return distanceKm < 1 ? `${Math.round(distanceKm * 1000)} m` : `${distanceKm.toFixed(1)} km`;
+    }
+
+    function getNextFieldPointName() {
+      return `จุดที่ ${state.fieldVisits.length + 1}`;
+    }
+
+    function getPreviousLockedPoint() {
+      const previousVisit = state.fieldVisits.at(-1);
+      if (previousVisit?.latitude != null && previousVisit?.longitude != null) {
+        return previousVisit;
+      }
+      if (state.lastCheckin?.latitude != null && state.lastCheckin?.longitude != null) {
+        return state.lastCheckin;
+      }
+      return null;
+    }
+
+    function getDistanceFromPreviousPoint(position = state.position) {
+      const previousPoint = getPreviousLockedPoint();
+      if (!previousPoint || !position?.coords) return null;
+      return calculateDistanceKm(
+        previousPoint.latitude,
+        previousPoint.longitude,
+        position.coords.latitude,
+        position.coords.longitude
+      );
+    }
+
+    function renderFieldLockPreview() {
+      if (!$("field-lock-title")) return;
+
+      const position = state.position;
+      const distanceKm = getDistanceFromPreviousPoint(position);
+      $("field-lock-title").textContent = getNextFieldPointName();
+      $("field-lock-distance").textContent = Number.isFinite(distanceKm)
+        ? formatDistance(distanceKm)
+        : "จุดแรก";
+      $("field-lock-coords").textContent = position?.coords
+        ? `Lat ${position.coords.latitude.toFixed(6)}, Lng ${position.coords.longitude.toFixed(6)}`
+        : "กำลังรอ GPS";
+    }
+
+    function saveFieldVisits() {
+      localStorage.setItem(fieldVisitStorageKey, JSON.stringify(state.fieldVisits));
+    }
+
+    function mapFieldVisitRecord(record) {
+      if (!record?.id) return null;
+
+      const checkedDate = record.checked_at ? new Date(record.checked_at) : getServerNow();
+      const sequenceNo = Number(record.sequence_no) || state.fieldVisits.length + 1;
+      return {
+        id: record.id,
+        attendanceId: record.attendance_id,
+        locationId: null,
+        sequenceNo,
+        locationName: record.location_name || `จุดที่ ${sequenceNo}`,
+        time: Number.isNaN(checkedDate.getTime()) ? getServerNow().toISOString() : checkedDate.toISOString(),
+        capturedAt: record.captured_at || null,
+        latitude: record.latitude ?? null,
+        longitude: record.longitude ?? null,
+        accuracyMeters: record.accuracy_meters ?? null,
+        distanceKm: record.distance_km == null ? null : Number(record.distance_km),
+        address: record.address || null,
+        note: record.note || null,
+        photoDataUrl: record.photo_data_url || null
+      };
+    }
+
+    function renderDailyTimeline() {
+      const timeline = $("daily-timeline");
+      if (!timeline) return;
+
+      const items = [];
+      if (state.lastCheckin?.time) {
+        items.push({
+          icon: "login",
+          title: "เริ่มงาน",
+          detail: state.lastCheckin.type || "Check-in",
+          time: state.lastCheckin.time,
+          meta: state.lastCheckin.address || null
+        });
+      }
+      state.fieldVisits.forEach((visit) => {
+        items.push({
+          icon: "add_location_alt",
+          title: visit.locationName,
+          detail: `Field check-in | ${formatDistance(visit.distanceKm)}`,
+          time: visit.time,
+          meta: visit.note || visit.address || null
+        });
+      });
+      if (state.lastCheckin?.checkoutAt) {
+        items.push({
+          icon: "logout",
+          title: "เลิกงาน",
+          detail: "Check-out",
+          time: state.lastCheckin.checkoutAt,
+          meta: state.lastCheckin.checkoutNote || null
+        });
+      }
+
+      if (!items.length) {
+        timeline.innerHTML = `
+          <div class="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center">
+            <p class="font-semibold text-slate-700">ยังไม่มีรายการวันนี้</p>
+            <p class="mt-1 text-body-sm text-slate-500">เมื่อเริ่มงานหรือเพิ่มจุดนอกสถานที่ รายการจะแสดงตรงนี้</p>
+          </div>
+        `;
+        return;
+      }
+
+      timeline.innerHTML = items
+        .sort((first, second) => new Date(first.time) - new Date(second.time))
+        .map((item, index) => {
+          const itemDate = new Date(item.time);
+          const timeText = Number.isNaN(itemDate.getTime())
+            ? "-"
+            : new Intl.DateTimeFormat("th-TH", {
+                timeZone: "Asia/Bangkok",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+              }).format(itemDate);
+
+          return `
+            <div class="grid grid-cols-[56px_1fr] gap-3">
+              <div class="text-right">
+                <p class="text-sm font-bold text-slate-800">${escapeHtml(timeText)}</p>
+                ${index < items.length - 1 ? '<div class="ml-auto mr-3 mt-2 h-12 w-px bg-slate-200"></div>' : ""}
+              </div>
+              <div class="rounded-lg border border-slate-100 bg-surface-container-lowest p-4">
+                <div class="flex items-start gap-3">
+                  <span class="material-symbols-outlined flex h-9 w-9 shrink-0 items-center justify-center text-[26px] text-tertiary">${item.icon}</span>
+                  <div class="min-w-0">
+                    <p class="font-semibold text-slate-900">${escapeHtml(item.title)}</p>
+                    <p class="text-body-sm text-slate-600">${escapeHtml(item.detail)}</p>
+                    ${item.meta ? `<p class="mt-1 text-xs text-slate-500 break-words">${escapeHtml(item.meta)}</p>` : ""}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+    }
+
+    function createSummaryRow(label, value) {
+      return `
+        <div class="flex items-start justify-between gap-4 rounded-lg bg-surface-container-low px-4 py-3">
+          <span class="text-slate-500">${escapeHtml(label)}</span>
+          <span class="max-w-[65%] text-right font-semibold text-slate-800">${escapeHtml(value || "-")}</span>
+        </div>
+      `;
+    }
+
+    function showCheckinSummary(payload) {
+      const checkinDate = new Date(payload.time);
+      const status = getCheckinStatus(checkinDate);
+      const dateText = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }).format(checkinDate);
+      const timeText = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).format(checkinDate);
+
+      $("summary-modal-title").textContent = status;
+      $("summary-modal-content").innerHTML = [
+        createSummaryRow("ชื่อ User", getDisplayUserName()),
+        createSummaryRow("ประเภท", payload.type),
+        createSummaryRow("สถานะ", status),
+        createSummaryRow("สถานที่เช็คอิน", getCheckinPlace(payload.type, payload)),
+        createSummaryRow("วันที่", dateText),
+        createSummaryRow("เวลา", timeText),
+        createSummaryRow("หมายเหตุ", payload.note || "-")
+      ].join("");
+      $("checkin-summary-modal").classList.remove("hidden");
+      $("checkin-summary-modal").classList.add("flex");
+    }
+
+    function closeCheckinSummary() {
+      $("checkin-summary-modal").classList.add("hidden");
+      $("checkin-summary-modal").classList.remove("flex");
+    }
+
+    function showAttendanceAlert({ eyebrow = "Attendance", title = "แจ้งเตือน", message = "" } = {}) {
+      $("alert-modal-eyebrow").textContent = eyebrow;
+      $("alert-modal-title").textContent = title;
+      $("alert-modal-content").innerHTML = String(message)
+        .split("\n")
+        .map((line) => `<p>${escapeHtml(line)}</p>`)
+        .join("");
+      $("attendance-alert-modal").classList.remove("hidden");
+      $("attendance-alert-modal").classList.add("flex");
+    }
+
+    function closeAttendanceAlert() {
+      $("attendance-alert-modal").classList.add("hidden");
+      $("attendance-alert-modal").classList.remove("flex");
+    }
+
+    function dataUrlToBlob(dataUrl) {
+      const [header, base64] = String(dataUrl).split(",");
+      const mime = header.match(/data:(.*?);base64/)?.[1] || "image/jpeg";
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let index = 0; index < binary.length; index += 1) {
+        bytes[index] = binary.charCodeAt(index);
+      }
+      return new Blob([bytes], { type: mime });
+    }
+
+    function getPhotoPath(kind, date = new Date()) {
+      const userId = getUserId() || "unknown-user";
+      const stamp = formatBangkokSqlDateTime(date).replaceAll(" ", "-").replaceAll(":", "");
+      return `${userId}/${stamp}-${kind}.jpg`;
+    }
+
+    async function uploadAttendancePhoto(dataUrl, kind, date = new Date()) {
+      if (!dataUrl) return null;
+      if (!String(dataUrl).startsWith("data:image/")) return dataUrl;
+
+      const path = getPhotoPath(kind, date);
+      const { error } = await supabase.storage
+        .from("attendance-photos")
+        .upload(path, dataUrlToBlob(dataUrl), {
+          contentType: "image/jpeg",
+          upsert: true
+        });
+
+      if (error) {
+        console.error("Attendance photo upload error:", error);
+        throw new Error("ไม่สามารถอัปโหลดรูปไปยัง Storage ได้");
+      }
+
+      const { data } = supabase.storage
+        .from("attendance-photos")
+        .getPublicUrl(path);
+
+      return data.publicUrl;
+    }
+
+    async function recordCheckin(type, photoDataUrl = null, note = "") {
+      const now = getServerNow();
+      const capturedAt = state.capturedAt || now;
+      const isOffice = type === "Office";
+      const payload = {
+        type,
+        time: now.toISOString(),
+        capturedAt: capturedAt.toISOString(),
+        captureDate: formatCaptureDate(capturedAt),
+        captureTime: formatCaptureTime(capturedAt),
+        latitude: isOffice ? null : state.position?.coords?.latitude ?? null,
+        longitude: isOffice ? null : state.position?.coords?.longitude ?? null,
+        address: isOffice ? "Office" : state.address || null,
+        note: note.trim() || null,
+        photoDataUrl: null
+      };
+
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) {
+        showToast("ไม่พบ session กรุณาเข้าสู่ระบบใหม่", "error");
+        return false;
+      }
+
+      try {
+        payload.photoDataUrl = isOffice ? null : await uploadAttendancePhoto(photoDataUrl, "checkin", capturedAt);
+      } catch (error) {
+        showToast(error.message, "error");
+        return false;
+      }
+
+      const { data, error } = await supabase.rpc("record_attendance_checkin", {
+        p_session_token: sessionToken,
+        p_checkin_type: type,
+        p_captured_at: formatBangkokSqlDateTime(capturedAt),
+        p_capture_date: payload.captureDate,
+        p_capture_time: payload.captureTime,
+        p_latitude: payload.latitude,
+        p_longitude: payload.longitude,
+        p_address: payload.address,
+        p_note: payload.note,
+        p_photo_data_url: payload.photoDataUrl
+      });
+
+      if (error) {
+        console.error("Attendance check-in error:", error);
+        const alreadyRecorded = String(error.message || "").includes("already been recorded");
+        showToast(
+          alreadyRecorded
+            ? "วันนี้มีการบันทึกข้อมูลแล้วค่ะ พบกันใหม่วันถัดไป"
+            : "ไม่สามารถบันทึก Check-in ลงฐานข้อมูลได้",
+          alreadyRecorded ? "info" : "error"
+        );
+        if (alreadyRecorded) {
+          await loadTodayAttendanceStatus();
+        }
+        return false;
+      }
+
+      const savedRecord = Array.isArray(data) ? data[0] : data;
+      payload.id = savedRecord?.id || null;
+      if (savedRecord?.checkin_at) {
+        const serverCheckinDate = new Date(savedRecord.checkin_at);
+        if (!Number.isNaN(serverCheckinDate.getTime())) {
+          payload.time = serverCheckinDate.toISOString();
+          payload.capturedAt = serverCheckinDate.toISOString();
+        }
+      }
+      payload.checkoutAt = savedRecord?.checkout_at || null;
+      state.lastCheckin = payload;
+      state.fieldVisits = [];
+      saveFieldVisits();
+      localStorage.setItem("attendanceLastCheckin", JSON.stringify(payload));
+      renderLastCheckin();
+      renderDailyTimeline();
+      setAttendanceMode("checkout");
+      showCheckinSummary(payload);
+      showToast(`บันทึกเวลาเข้างานแบบ ${type} เรียบร้อยแล้ว`, "success");
+      return true;
+    }
+
+    async function recordCheckout(photoDataUrl = null, note = "", checkoutType = "Office") {
+      if (!state.lastCheckin?.id) {
+        showAttendanceAlert({
+          eyebrow: "Check-out",
+          title: "ไม่พบรายการเข้างาน",
+          message: "ไม่พบรายการ Check-in ที่เปิดอยู่สำหรับการบันทึกเวลาออกงาน กรุณาตรวจสอบสถานะการเข้างานก่อนดำเนินการ"
+        });
+        return;
+      }
+
+      const capturedAt = state.capturedAt || getServerNow();
+      const isOffice = checkoutType === "Office";
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) {
+        showToast("ไม่พบ session กรุณาเข้าสู่ระบบใหม่", "error");
+        return;
+      }
+
+      let photoUrl = null;
+      try {
+        photoUrl = isOffice ? null : await uploadAttendancePhoto(photoDataUrl, "checkout", capturedAt);
+      } catch (error) {
+        showToast(error.message, "error");
+        return false;
+      }
+
+      const { data, error } = await supabase.rpc("record_attendance_checkout", {
+        p_session_token: sessionToken,
+        p_attendance_id: state.lastCheckin.id,
+        p_checkout_note: note.trim() || null,
+        p_checkout_captured_at: formatBangkokSqlDateTime(capturedAt),
+        p_checkout_capture_date: formatCaptureDate(capturedAt),
+        p_checkout_capture_time: formatCaptureTime(capturedAt),
+        p_checkout_latitude: isOffice ? null : state.position?.coords?.latitude ?? null,
+        p_checkout_longitude: isOffice ? null : state.position?.coords?.longitude ?? null,
+        p_checkout_address: isOffice ? "Office" : state.address || null,
+        p_checkout_photo_data_url: photoUrl
+      });
+
+      if (error) {
+        console.error("Attendance check-out error:", error);
+        showAttendanceAlert({
+          eyebrow: "Check-out",
+          title: "บันทึกเวลาออกงานไม่สำเร็จ",
+          message: "ระบบไม่สามารถบันทึกเวลาออกงานได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง"
+        });
+        return;
+      }
+
+      const savedRecord = Array.isArray(data) ? data[0] : data;
+      state.lastCheckin.checkoutAt = savedRecord?.checkout_at || formatBangkokSqlDateTime();
+      state.lastCheckin.checkoutNote = note.trim() || null;
+      state.lastCheckin.checkoutPhotoDataUrl = photoUrl;
+      localStorage.setItem("attendanceLastCheckin", JSON.stringify(state.lastCheckin));
+      renderLastCheckin();
+      renderDailyTimeline();
+      setAttendanceMode("completed");
+      showAttendanceAlert({
+        eyebrow: "Check-out",
+        title: "บันทึกเวลาออกงานสำเร็จ",
+        message: `ระบบบันทึกเวลาออกงานประจำวันที่ ${formatThaiShortDate(getServerNow())} เรียบร้อยแล้ว`
+      });
+      return true;
+    }
+
+    function renderLastCheckin() {
+      if (!state.lastCheckin?.time) return;
+
+      const date = new Date(state.lastCheckin.time);
+      const timeText = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+      $("last-checkin-label").textContent = `${formatThaiShortDate(date)} ${timeText}`;
+      $("last-checkin-type").textContent = state.lastCheckin.type;
+      if (state.lastCheckin.checkoutAt) {
+        const checkoutDate = new Date(state.lastCheckin.checkoutAt);
+        const checkoutTime = Number.isNaN(checkoutDate.getTime())
+          ? state.lastCheckin.checkoutAt
+          : new Intl.DateTimeFormat("th-TH", {
+              timeZone: "Asia/Bangkok",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false
+            }).format(checkoutDate);
+        $("last-checkin-type").textContent = `${state.lastCheckin.type} | Check-out ${checkoutTime}`;
+      }
+      if ($("checkout-btn")) {
+        $("checkout-btn").classList.add("hidden");
+      }
+    }
+
+    function mapAttendanceRecord(record) {
+      if (!record?.id) return null;
+
+      const checkinDate = record.checkin_at ? new Date(record.checkin_at) : getServerNow();
+      const capturedAt = record.captured_at ? new Date(record.captured_at) : checkinDate;
+      return {
+        id: record.id,
+        type: record.checkin_type || "Office",
+        time: Number.isNaN(checkinDate.getTime()) ? getServerNow().toISOString() : checkinDate.toISOString(),
+        capturedAt: Number.isNaN(capturedAt.getTime()) ? null : capturedAt.toISOString(),
+        captureDate: record.capture_date || null,
+        captureTime: record.capture_time || null,
+        latitude: record.latitude ?? null,
+        longitude: record.longitude ?? null,
+        address: record.address || null,
+        note: record.note || null,
+        checkoutAt: record.checkout_at || null
+      };
+    }
+
+    async function loadTodayAttendanceStatus() {
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) return;
+
+      const { data, error } = await supabase.rpc("get_today_attendance_status", {
+        p_session_token: sessionToken
+      });
+
+      if (error) {
+        console.error("Load attendance status error:", error);
+        return;
+      }
+
+      const record = Array.isArray(data) ? data[0] : data;
+      const mappedRecord = mapAttendanceRecord(record);
+      if (!mappedRecord) {
+        state.lastCheckin = null;
+        state.fieldVisits = [];
+        saveFieldVisits();
+        localStorage.removeItem("attendanceLastCheckin");
+        $("last-checkin-label").textContent = "-";
+        $("last-checkin-type").textContent = "ยังไม่มีรายการวันนี้";
+        renderDailyTimeline();
+        setAttendanceMode("checkin");
+        return;
+      }
+
+      state.lastCheckin = mappedRecord;
+      localStorage.setItem("attendanceLastCheckin", JSON.stringify(mappedRecord));
+      await loadTodayFieldVisits();
+      renderLastCheckin();
+      renderDailyTimeline();
+      setAttendanceMode(mappedRecord.checkoutAt ? "completed" : "checkout");
+    }
+
+    async function loadTodayFieldVisits() {
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) return;
+
+      const { data, error } = await supabase.rpc("get_today_attendance_field_checkins", {
+        p_session_token: sessionToken
+      });
+
+      if (error) {
+        console.error("Load field visits error:", error);
+        return;
+      }
+
+      state.fieldVisits = (data || [])
+        .map(mapFieldVisitRecord)
+        .filter(Boolean)
+        .sort((first, second) => (first.sequenceNo || 0) - (second.sequenceNo || 0));
+      saveFieldVisits();
+      renderDailyTimeline();
+      if ($("field-action-status")) {
+        $("field-action-status").textContent = `จุดถัดไป: ${getNextFieldPointName()}`;
+      }
+    }
+
+    function requestPosition() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("อุปกรณ์นี้ไม่รองรับ GPS"));
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 12000,
+          maximumAge: 0
+        });
+      });
+    }
+
+    function formatStampTime(date = getServerNow()) {
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        dateStyle: "medium",
+        timeStyle: "medium"
+      }).format(date);
+    }
+
+    function formatCaptureDate(date = getServerNow()) {
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(date);
+    }
+
+    function formatCaptureTime(date = getServerNow()) {
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).format(date);
+    }
+
+    function formatBangkokSqlDateTime(date = getServerNow()) {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).formatToParts(date);
+      const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+      return `${values.year}-${values.month}-${values.day} ${values.hour}:${values.minute}:${values.second}`;
+    }
+
+    function getPlaceText() {
+      return state.address ? `สถานที่: ${state.address}` : "สถานที่: -";
+    }
+
+    function getGpsText(position = state.position) {
+      if (!position?.coords) return "ความแม่นยำ GPS: -";
+
+      const accuracy = Number.isFinite(position.coords.accuracy)
+        ? `${Math.round(position.coords.accuracy)} เมตร`
+        : "-";
+      return `ความแม่นยำ GPS: ${accuracy}`;
+    }
+
+    function setGpsStatus(message) {
+      const gpsStatus = $("gps-status");
+      if (gpsStatus) {
+        gpsStatus.textContent = message;
+      }
+    }
+
+    async function resolveAddress(position) {
+      if (!position?.coords) return "";
+
+      const { latitude, longitude } = position.coords;
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&zoom=18&accept-language=th,en`,
+        {
+          headers: {
+            Accept: "application/json"
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("ไม่สามารถค้นหาสถานที่จริงจาก GPS ได้");
+      }
+
+      const data = await response.json();
+      return data.display_name || data.name || "";
+    }
+
+    function renderLocationStamp() {
+      const placeText = getPlaceText();
+      const gpsText = getGpsText();
+      const displayDate = state.capturedAt ? formatCaptureDate(state.capturedAt) : formatCaptureDate();
+      const displayTime = state.capturedAt ? formatCaptureTime(state.capturedAt) : formatCaptureTime();
+
+      $("stamp-time").textContent = `เวลา: ${formatStampTime(getServerNow())}`;
+      $("stamp-address").textContent = placeText;
+      $("stamp-gps").textContent = gpsText;
+      $("capture-date-detail").textContent = `วันที่ถ่ายรูป: ${displayDate}`;
+      $("capture-time-detail").textContent = `เวลาถ่ายรูป: ${displayTime}`;
+      $("location-label").textContent = state.stream ? "กล้องพร้อมสำหรับถ่ายรูป" : "เตรียมถ่ายรูปพร้อมไทม์สแตมป์";
+    }
+
+    async function loadCurrentLocation(forceRefresh = false) {
+      setGpsStatus("กำลังตรวจสอบตำแหน่ง...");
+
+      try {
+        const position = forceRefresh || !state.position ? await requestPosition() : state.position;
+        state.position = position;
+        setGpsStatus("กำลังค้นหาสถานที่จริง...");
+        state.address = await resolveAddress(position);
+        setGpsStatus(getPlaceText());
+        renderFieldLockPreview();
+        renderLocationStamp();
+        return position;
+      } catch (error) {
+        console.error("Location permission error:", error);
+        setGpsStatus("กรุณาอนุญาตตำแหน่งเพื่อค้นหาสถานที่จริง");
+        $("location-label").textContent = "ไม่สามารถยืนยันสถานที่ได้";
+        throw error;
+      }
+    }
+
+    function startStampTimer() {
+      clearInterval(state.stampTimer);
+      renderLocationStamp();
+      state.stampTimer = setInterval(renderLocationStamp, 1000);
+    }
+
+    function stopStampTimer() {
+      clearInterval(state.stampTimer);
+      state.stampTimer = null;
+    }
+
+    function wrapCanvasText(context, text, x, y, maxWidth, lineHeight) {
+      const words = String(text).split(" ");
+      let line = "";
+      let currentY = y;
+
+      words.forEach((word) => {
+        const testLine = line ? `${line} ${word}` : word;
+        if (context.measureText(testLine).width > maxWidth && line) {
+          context.fillText(line, x, currentY);
+          line = word;
+          currentY += lineHeight;
+        } else {
+          line = testLine;
+        }
+      });
+
+      context.fillText(line, x, currentY);
+      return currentY + lineHeight;
+    }
+
+    function captureStampedPhoto() {
+      const video = $("camera-preview");
+      if (!video.videoWidth || !video.videoHeight) {
+        showToast("กล้องยังไม่พร้อม กรุณารอสักครู่", "error");
+        return;
+      }
+
+      state.capturedAt = getServerNow();
+      $("capture-date-detail").textContent = `วันที่ถ่ายรูป: ${formatCaptureDate(state.capturedAt)}`;
+      $("capture-time-detail").textContent = `เวลาถ่ายรูป: ${formatCaptureTime(state.capturedAt)}`;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext("2d");
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const padding = Math.max(20, Math.round(canvas.width * 0.035));
+      const lineHeight = Math.max(28, Math.round(canvas.width * 0.035));
+      const maxWidth = canvas.width - padding * 2;
+      const boxHeight = lineHeight * 4.2;
+      const boxY = canvas.height - boxHeight - padding;
+
+      context.fillStyle = "rgba(0, 0, 0, 0.68)";
+      context.fillRect(padding, boxY, maxWidth, boxHeight);
+      context.fillStyle = "#ffffff";
+      context.font = `700 ${Math.max(20, Math.round(canvas.width * 0.028))}px IBM Plex Sans Thai, sans-serif`;
+      let y = boxY + lineHeight;
+      y = wrapCanvasText(context, `เวลา: ${formatStampTime(state.capturedAt)}`, padding * 1.5, y, maxWidth - padding, lineHeight);
+      context.font = `500 ${Math.max(18, Math.round(canvas.width * 0.024))}px IBM Plex Sans Thai, sans-serif`;
+      y = wrapCanvasText(context, getPlaceText(), padding * 1.5, y, maxWidth - padding, lineHeight);
+      wrapCanvasText(context, getGpsText(), padding * 1.5, y, maxWidth - padding, lineHeight);
+
+      state.capturedPhoto = canvas.toDataURL("image/jpeg", 0.92);
+      $("captured-photo").src = state.capturedPhoto;
+      $("captured-photo").classList.remove("hidden");
+      video.classList.add("hidden");
+      $("stamp-overlay").classList.add("hidden");
+      $("capture-photo-btn").classList.add("hidden");
+      $("retake-photo-btn").classList.remove("hidden");
+      $("confirm-field-btn").disabled = false;
+      stopStampTimer();
+      showToast("ถ่ายรูปพร้อมไทม์สแตมป์แล้ว", "success");
+    }
+
+    function retakePhoto() {
+      state.capturedPhoto = null;
+      state.capturedAt = null;
+      $("captured-photo").removeAttribute("src");
+      $("captured-photo").classList.add("hidden");
+      $("camera-preview").classList.remove("hidden");
+      $("stamp-overlay").classList.remove("hidden");
+      $("capture-photo-btn").classList.remove("hidden");
+      $("retake-photo-btn").classList.add("hidden");
+      $("confirm-field-btn").disabled = true;
+      startStampTimer();
+    }
+
+    async function openCameraAndGps(mode = "checkin") {
+      state.verificationMode = mode;
+      $("camera-panel").classList.remove("hidden");
+      $("location-label").textContent = "กำลังตรวจสอบตำแหน่ง";
+      $("captured-photo").classList.add("hidden");
+      $("capture-photo-btn").classList.remove("hidden");
+      $("retake-photo-btn").classList.add("hidden");
+      $("capture-photo-btn").disabled = true;
+      $("confirm-field-btn").disabled = true;
+      $("field-location-panel").classList.toggle("hidden", mode !== "field-visit");
+      $("confirm-field-btn").textContent = mode === "checkout"
+        ? "Save On-site Check-out"
+        : mode === "field-visit" ? "Save Field Visit" : "Save Field Check-in";
+      renderFieldLockPreview();
+
+      try {
+        const [position, stream] = await Promise.all([
+          loadCurrentLocation(mode === "field-visit"),
+          navigator.mediaDevices?.getUserMedia
+            ? navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+            : Promise.reject(new Error("เบราว์เซอร์นี้ไม่รองรับกล้อง"))
+        ]);
+
+        state.position = position;
+        if (!state.address) {
+          state.address = await resolveAddress(position);
+          setGpsStatus(getPlaceText());
+        }
+        renderFieldLockPreview();
+        state.stream = stream;
+        $("camera-preview").srcObject = stream;
+        $("camera-preview").classList.remove("hidden");
+        $("camera-empty").classList.add("hidden");
+        $("stamp-overlay").classList.remove("hidden");
+
+        $("capture-photo-btn").disabled = false;
+        startStampTimer();
+        showToast("กล้องและ GPS พร้อมใช้งาน", "success");
+      } catch (error) {
+        console.error("Attendance verification error:", error);
+        setGpsStatus(state.address ? getPlaceText() : "กรุณาอนุญาตกล้องและตำแหน่ง");
+        $("location-label").textContent = "ไม่สามารถยืนยันกล้องหรือสถานที่ได้";
+        showToast(error.message || "ไม่สามารถเปิดกล้องหรือ GPS ได้", "error");
+      }
+    }
+    function closeCamera() {
+      if (state.stream) {
+        state.stream.getTracks().forEach((track) => track.stop());
+      }
+      stopStampTimer();
+      state.capturedPhoto = null;
+      state.capturedAt = null;
+      state.stream = null;
+      state.fieldNote = "";
+      state.verificationMode = "checkin";
+      $("field-note").value = "";
+      $("field-location-panel").classList.add("hidden");
+      $("camera-preview").srcObject = null;
+      $("camera-preview").classList.add("hidden");
+      $("captured-photo").classList.add("hidden");
+      $("stamp-overlay").classList.add("hidden");
+      $("capture-photo-btn").classList.remove("hidden");
+      $("retake-photo-btn").classList.add("hidden");
+      $("capture-date-detail").textContent = "วันที่ถ่ายรูป: -";
+      $("capture-time-detail").textContent = "เวลาถ่ายรูป: -";
+      $("confirm-field-btn").textContent = "Save Field Check-in";
+      $("camera-empty").classList.remove("hidden");
+      $("camera-panel").classList.add("hidden");
+    }
+
+    function escapeHtml(value = "") {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function recordFieldVisit(photoDataUrl = null, note = "") {
+      if (!state.lastCheckin?.id) {
+        showToast("กรุณา Check-in เริ่มงานก่อนเพิ่มจุดนอกสถานที่", "info");
+        return false;
+      }
+
+      if (!state.position?.coords) {
+        showToast("ยังไม่พบพิกัด GPS สำหรับล็อคจุด", "error");
+        return false;
+      }
+
+      const now = getServerNow();
+      const locationName = getNextFieldPointName();
+      const distanceKm = getDistanceFromPreviousPoint();
+
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) {
+        showToast("ไม่พบ session กรุณาเข้าสู่ระบบใหม่", "error");
+        return false;
+      }
+
+      let photoUrl = null;
+      try {
+        photoUrl = await uploadAttendancePhoto(photoDataUrl, "field-visit", now);
+      } catch (error) {
+        showToast(error.message, "error");
+        return false;
+      }
+
+      const { data, error } = await supabase.rpc("record_attendance_field_checkin", {
+        p_session_token: sessionToken,
+        p_attendance_id: state.lastCheckin.id,
+        p_captured_at: formatBangkokSqlDateTime(now),
+        p_capture_date: formatCaptureDate(now),
+        p_capture_time: formatCaptureTime(now),
+        p_latitude: state.position.coords.latitude,
+        p_longitude: state.position.coords.longitude,
+        p_accuracy_meters: state.position.coords.accuracy ?? null,
+        p_distance_km: Number.isFinite(distanceKm) ? Number(distanceKm.toFixed(3)) : null,
+        p_address: state.address || null,
+        p_note: note.trim() || null,
+        p_photo_data_url: photoUrl
+      });
+
+      if (error) {
+        console.error("Field visit check-in error:", error);
+        showToast("ไม่สามารถบันทึกจุดนอกสถานที่ลงฐานข้อมูลได้", "error");
+        return false;
+      }
+
+      const savedRecord = Array.isArray(data) ? data[0] : data;
+      const savedVisit = mapFieldVisitRecord(savedRecord) || {
+        id: `${Date.now()}`,
+        attendanceId: state.lastCheckin.id,
+        locationId: null,
+        locationName,
+        time: now.toISOString(),
+        latitude: state.position.coords.latitude,
+        longitude: state.position.coords.longitude,
+        accuracyMeters: state.position.coords.accuracy ?? null,
+        distanceKm,
+        address: state.address || null,
+        note: note.trim() || null,
+        photoDataUrl: photoUrl
+      };
+
+      state.fieldVisits.push(savedVisit);
+      saveFieldVisits();
+      renderDailyTimeline();
+      $("field-action-status").textContent = `จุดถัดไป: ${getNextFieldPointName()}`;
+      showAttendanceAlert({
+        eyebrow: "Field Check-in",
+        title: `บันทึก${savedVisit.locationName} สำเร็จ`,
+        message: `ระบบบันทึก${savedVisit.locationName} เรียบร้อยแล้ว\nระยะทางจากจุดก่อนหน้า: ${formatDistance(savedVisit.distanceKm)}`
+      });
+      return true;
+    }
+
+    $("office-checkin-btn").addEventListener("click", async () => {
+      if (state.attendanceMode === "completed") {
+        showCompletedTodayMessage();
+        return;
+      }
+
+      if (state.attendanceMode === "checkout") {
+        await recordCheckout(null, "", "Office");
+        return;
+      }
+
+      updateOfficeStatus();
+      await recordCheckin("Office");
+    });
+
+    $("field-checkin-btn").addEventListener("click", async () => {
+      if (state.attendanceMode === "completed") {
+        showCompletedTodayMessage();
+        return;
+      }
+
+      if (state.attendanceMode === "checkout") {
+        openCameraAndGps("field-visit");
+        return;
+      }
+
+      openCameraAndGps("checkin");
+    });
+    $("field-checkout-btn").addEventListener("click", () => recordCheckout(null, "", "Office"));
+    $("close-camera-btn").addEventListener("click", closeCamera);
+    $("capture-photo-btn").addEventListener("click", captureStampedPhoto);
+    $("retake-photo-btn").addEventListener("click", retakePhoto);
+    $("checkout-btn").addEventListener("click", () => recordCheckout(null, "", "Office"));
+    $("close-summary-modal-btn").addEventListener("click", closeCheckinSummary);
+    $("summary-modal-ok-btn").addEventListener("click", closeCheckinSummary);
+    $("checkin-summary-modal").addEventListener("click", (event) => {
+      if (event.target.id === "checkin-summary-modal") {
+        closeCheckinSummary();
+      }
+    });
+    $("close-alert-modal-btn").addEventListener("click", closeAttendanceAlert);
+    $("alert-modal-ok-btn").addEventListener("click", closeAttendanceAlert);
+    $("attendance-alert-modal").addEventListener("click", (event) => {
+      if (event.target.id === "attendance-alert-modal") {
+        closeAttendanceAlert();
+      }
+    });
+    $("confirm-field-btn").addEventListener("click", async () => {
+      if (!state.capturedPhoto) {
+        showToast("กรุณาถ่ายรูปพร้อมไทม์สแตมป์ก่อนบันทึก", "error");
+        return;
+      }
+
+      state.fieldNote = $("field-note").value;
+      const saved = state.verificationMode === "checkout"
+        ? await recordCheckout(state.capturedPhoto, state.fieldNote, "WFH / On-site")
+        : state.verificationMode === "field-visit"
+          ? await recordFieldVisit(state.capturedPhoto, state.fieldNote)
+          : await recordCheckin("WFH / On-site", state.capturedPhoto, state.fieldNote);
+      if (saved) {
+        closeCamera();
+      }
+    });
+
+    function setAttendanceNavCollapsed(collapsed) {
+      document.body.classList.toggle("attendance-nav-collapsed", collapsed);
+      localStorage.setItem("attendanceNavCollapsed", collapsed ? "true" : "false");
+      $("attendance-nav-toggle")?.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      if ($("attendance-nav-toggle-icon")) {
+        $("attendance-nav-toggle-icon").textContent = collapsed ? "chevron_right" : "chevron_left";
+      }
+    }
+
+    setAttendanceNavCollapsed(localStorage.getItem("attendanceNavCollapsed") === "true");
+    $("attendance-nav-toggle")?.addEventListener("click", () => {
+      setAttendanceNavCollapsed(!document.body.classList.contains("attendance-nav-collapsed"));
+    });
+
+    renderUserHeader("userIdText", "userInfo");
+    renderLastCheckin();
+    renderDailyTimeline();
+    syncServerTime();
+    setInterval(syncServerTime, 5 * 60 * 1000);
+    loadTodayAttendanceStatus();
+    updateClock();
+    loadCurrentLocation().catch(() => {});
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html class="light" lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>DataNest - HR Monitor</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-bright": "#f7f9fb",
+            "primary-container": "#2563eb",
+            "surface-container-highest": "#e0e3e5",
+            "surface-dim": "#d8dadc",
+            "secondary": "#505f76",
+            "surface": "#f7f9fb",
+            "on-surface-variant": "#434655",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#d3e4fe",
+            "primary-fixed": "#dbe1ff",
+            "inverse-on-surface": "#eff1f3",
+            "on-primary-fixed": "#00174b",
+            "inverse-surface": "#2d3133",
+            "surface-container-high": "#e6e8ea",
+            "on-primary-container": "#eeefff",
+            "on-secondary-container": "#54647a",
+            "background": "#f7f9fb",
+            "outline-variant": "#c3c6d7",
+            "on-tertiary-container": "#e4f2ff",
+            "surface-variant": "#e0e3e5",
+            "tertiary": "#005a82",
+            "on-surface": "#191c1e",
+            "inverse-primary": "#b4c5ff",
+            "tertiary-container": "#0074a6",
+            "surface-container-low": "#f2f4f6",
+            "primary-fixed-dim": "#b4c5ff",
+            "tertiary-fixed": "#c9e6ff",
+            "secondary-container": "#d0e1fb",
+            "error-container": "#ffdad6",
+            "outline": "#737686",
+            "primary": "#004ac6",
+            "surface-container": "#eceef0",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-background": "#191c1e"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            "body-base": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "headline-md": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
+            "label-uppercase": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "display-lg": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
+            "body-sm": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            thai: ["IBM Plex Sans Thai"]
+          },
+          fontSize: {
+            "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0em", fontWeight: "600" }],
+            "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
+            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+    .thai-text { font-family: 'IBM Plex Sans Thai', sans-serif; }
+    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .primary-gradient { background: linear-gradient(135deg, #004ac6 0%, #0074a6 100%); }
+    .stat-card { min-height: 118px; }
+    .thai-label { letter-spacing: 0; text-transform: none; }
+    .attendance-sidebar {
+      width: 190px;
+      transition: width 0.25s ease;
+    }
+
+    .main-shell {
+      margin-left: 190px;
+      transition: margin-left 0.25s ease;
+    }
+
+    body.attendance-nav-collapsed .attendance-sidebar {
+      width: 40px;
+    }
+
+    body.attendance-nav-collapsed .main-shell {
+      margin-left: 40px;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-label,
+    body.attendance-nav-collapsed .attendance-nav-title {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link {
+      width: 28px;
+      height: 28px;
+      margin-left: auto;
+      margin-right: auto;
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+      gap: 0;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link.active {
+      border-radius: 9999px;
+      padding: 0;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link .material-symbols-outlined {
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 767px) {
+      .attendance-sidebar {
+        width: 40px;
+      }
+
+      .main-shell {
+        margin-left: 40px;
+      }
+
+      .attendance-nav-label,
+      .attendance-nav-title {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-surface-bright text-on-surface min-h-screen">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-4 sm:px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
+    <div class="flex items-center gap-8">
+      <span class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50">DataNest</span>
+      <nav class="hidden md:flex items-center gap-6">
+        <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors duration-200 cursor-pointer" href="Menu.html">Menu</a>
+        <a class="text-primary border-b-2 border-primary py-1 transition-colors duration-200 cursor-pointer" href="Attendance.html">Attendance System</a>
+      </nav>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <div class="flex items-center border-r border-slate-100 pr-3 sm:pr-6 mr-0 sm:mr-2">
+        <img
+          alt="User avatar"
+          class="mr-3 h-8 w-8 rounded-full object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"
+        />
+        <div class="flex flex-col">
+          <span id="userIdText" class="font-headline-md text-sm font-bold text-slate-900">-</span>
+          <span id="userInfo" class="font-body-sm text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <aside id="attendance-sidebar" class="attendance-sidebar fixed left-0 top-[61px] bottom-0 z-40 bg-white border-r border-slate-100 ambient-shadow overflow-hidden">
+    <div class="h-full flex flex-col py-4">
+      <div class="attendance-nav-title px-4 mb-4 transition-all duration-200">
+        <p class="font-headline-md text-sm font-bold text-primary">Workforce tools</p>
+      </div>
+      <nav class="flex-1 space-y-1 px-1.5">
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html">
+          <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+          <span class="attendance-nav-label transition-all duration-200">Check-in</span>
+        </a>
+        <a class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html" aria-current="page">
+          <span class="material-symbols-outlined text-[18px]">monitoring</span>
+          <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
+        </a>
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
+          <span class="material-symbols-outlined text-[18px]">history</span>
+          <span class="attendance-nav-label transition-all duration-200">My History</span>
+        </a>
+      </nav>
+      <div class="px-1.5">
+        <button id="attendance-nav-toggle" class="attendance-nav-link w-full flex items-center gap-3 rounded-full bg-surface-container-low text-slate-500 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" type="button" aria-label="Toggle attendance navigation" aria-expanded="true">
+          <span id="attendance-nav-toggle-icon" class="material-symbols-outlined text-[18px]">chevron_left</span>
+          <span class="attendance-nav-label transition-all duration-200">Collapse</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-shell px-4 sm:px-6 lg:px-8 py-6 sm:py-10 min-h-screen">
+    <header class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <h1 class="text-display-lg font-display-lg text-on-surface">HR Monitor</h1>
+        <div class="flex flex-wrap items-center gap-2 text-on-secondary-container mt-2">
+          <span class="material-symbols-outlined text-lg">calendar_today</span>
+          <span class="font-body-sm" id="current-date">-</span>
+          <span class="mx-2 text-slate-300">|</span>
+          <span class="material-symbols-outlined text-lg">schedule</span>
+          <span class="font-body-sm" id="current-time">-</span>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <button id="refresh-btn" class="px-4 py-2 bg-white border border-outline-variant/60 text-on-surface-variant font-semibold rounded-lg text-body-sm flex items-center gap-2 hover:bg-surface-container-low transition-colors" type="button">
+          <span class="material-symbols-outlined text-lg">refresh</span> Refresh
+        </button>
+      </div>
+    </header>
+
+    <section class="mb-8 bg-white p-4 rounded-xl border border-slate-100 ambient-shadow flex flex-wrap items-center gap-4">
+      <div class="flex flex-col gap-1 min-w-[150px]">
+        <label class="thai-label text-[10px] font-bold text-slate-400 px-1" for="date-filter">วันที่</label>
+        <input id="date-filter" class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-body-sm focus:ring-1 focus:ring-primary/20" type="date"/>
+      </div>
+      <div class="flex flex-col gap-1 min-w-[150px]">
+        <label class="thai-label text-[10px] font-bold text-slate-400 px-1" for="department-filter">แผนก</label>
+        <select id="department-filter" class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-body-sm focus:ring-1 focus:ring-primary/20">
+          <option value="all">ทุกแผนก</option>
+        </select>
+      </div>
+      <div class="flex flex-col gap-1 min-w-[150px]">
+        <label class="thai-label text-[10px] font-bold text-slate-400 px-1" for="status-filter">สถานะ</label>
+        <select id="status-filter" class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-body-sm focus:ring-1 focus:ring-primary/20">
+          <option value="all">All Status</option>
+          <option value="working">Working</option>
+          <option value="completed">Checked-out</option>
+          <option value="pending">Not checked-in</option>
+          <option value="late">Late</option>
+        </select>
+      </div>
+      <div class="flex flex-col gap-1 min-w-[150px]">
+        <label class="thai-label text-[10px] font-bold text-slate-400 px-1" for="type-filter">Work Type</label>
+        <select id="type-filter" class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-body-sm focus:ring-1 focus:ring-primary/20">
+          <option value="all">All Types</option>
+          <option value="Office">Office</option>
+          <option value="Remote">WFH / On-site</option>
+        </select>
+      </div>
+      <label class="flex items-center gap-2 cursor-pointer group pt-5">
+        <input id="attention-only" class="rounded text-primary focus:ring-primary/20 border-slate-300" type="checkbox"/>
+        <span class="text-body-sm text-slate-600 group-hover:text-primary transition-colors">Attention only</span>
+      </label>
+      <div class="flex-1 min-w-[220px] pt-5">
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+          <input id="employee-search" class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-body-sm focus:ring-1 focus:ring-primary/20" placeholder="Search employee, ID, department..." type="text"/>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 xl:grid-cols-12 gap-6 mb-10">
+      <div class="xl:col-span-3 flex flex-col gap-3">
+        <button class="primary-gradient relative overflow-hidden text-left rounded-xl p-4 text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/25 active:scale-[0.98] group" data-quick-status="pending" type="button">
+          <div class="relative z-10 flex items-center justify-between gap-3">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-wide text-white/75">Attention</p>
+              <p class="mt-1 font-bold text-sm leading-5">Not checked-in after 09:00</p>
+            </div>
+            <span id="attention-pending" class="text-3xl font-bold leading-none">0</span>
+          </div>
+          <span class="material-symbols-outlined absolute -right-3 -bottom-4 text-[76px] opacity-15 transition-transform duration-300 group-hover:scale-110">person_off</span>
+        </button>
+        <button class="relative overflow-hidden text-left rounded-xl border border-primary/15 bg-white p-4 text-primary shadow-lg shadow-primary/10 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:bg-primary-fixed/40 hover:shadow-xl hover:shadow-primary/15 active:scale-[0.98] group" data-quick-status="late" type="button">
+          <div class="relative z-10 flex items-center justify-between gap-3">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-wide text-primary/60">Time Alert</p>
+              <p class="mt-1 font-bold text-sm leading-5">Late check-ins</p>
+            </div>
+            <span id="attention-late" class="text-3xl font-bold leading-none">0</span>
+          </div>
+          <span class="material-symbols-outlined absolute -right-3 -bottom-4 text-[76px] opacity-10 transition-transform duration-300 group-hover:scale-110">timer_off</span>
+        </button>
+      </div>
+      <div class="xl:col-span-9">
+        <div id="stats-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full"></div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div>
+        <div class="bg-white rounded-xl border border-slate-100 ambient-shadow overflow-hidden h-full">
+          <div class="p-5 sm:p-6 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">corporate_fare</span>
+              <h3 class="font-headline-md text-headline-md">OFFICE</h3>
+            </div>
+            <span id="office-count-pill" class="self-start sm:self-auto px-3 py-1 bg-primary-fixed text-primary rounded-full text-xs font-semibold">0 Active</span>
+          </div>
+          <div class="max-h-[620px] overflow-auto">
+            <table class="min-w-[720px] w-full table-fixed text-left">
+              <colgroup>
+                <col class="w-[28%]"/>
+                <col class="w-[18%]"/>
+                <col class="w-[15%]"/>
+                <col class="w-[15%]"/>
+                <col class="w-[24%]"/>
+              </colgroup>
+              <thead class="bg-primary-fixed/30 border-y border-primary-fixed-dim/40">
+                <tr>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Employee</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Department</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Check-in</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Check-out</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="office-table-body" class="divide-y divide-slate-50"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bg-white rounded-xl border border-slate-100 ambient-shadow overflow-hidden h-full">
+          <div class="p-5 sm:p-6 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-tertiary">distance</span>
+              <h3 class="font-headline-md text-headline-md">WFH / On-site</h3>
+            </div>
+            <span id="remote-count-pill" class="self-start sm:self-auto px-3 py-1 bg-tertiary-fixed text-tertiary rounded-full text-xs font-semibold">0 Active</span>
+          </div>
+          <div class="max-h-[420px] overflow-auto">
+            <table class="min-w-[700px] w-full table-fixed text-left">
+              <colgroup>
+                <col class="w-[28%]"/>
+                <col class="w-[16%]"/>
+                <col class="w-[16%]"/>
+                <col class="w-[40%]"/>
+              </colgroup>
+              <thead class="bg-primary-fixed/30 border-y border-primary-fixed-dim/40">
+                <tr>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Employee</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Department</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold text-center">Status</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Latest Location</th>
+                </tr>
+              </thead>
+              <tbody id="remote-list" class="divide-y divide-slate-50"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-10 bg-white p-6 sm:p-8 rounded-xl border border-slate-100 ambient-shadow">
+      <div class="flex flex-col md:flex-row md:items-center gap-8">
+        <div class="flex-1">
+          <div class="flex justify-between mb-4">
+            <h4 class="thai-label text-label-uppercase font-bold text-on-surface">Check-in Completion</h4>
+            <span id="completion-percent" class="text-body-sm font-bold text-primary">0%</span>
+          </div>
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="completion-bar" class="primary-gradient h-full w-0 rounded-full transition-all duration-300"></div>
+          </div>
+          <p id="completion-note" class="mt-3 text-xs text-slate-400">-</p>
+        </div>
+        <div class="h-16 w-px bg-slate-100 hidden md:block"></div>
+        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <button id="footer-attention-btn" class="group relative overflow-hidden rounded-xl border border-primary/15 bg-white p-4 text-left shadow-lg shadow-primary/10 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:bg-primary-fixed/40 hover:shadow-xl hover:shadow-primary/15 active:scale-[0.98]" type="button">
+            <div class="relative z-10 flex items-center justify-between gap-4">
+              <div>
+                <p class="thai-label text-[10px] font-bold uppercase tracking-wide text-primary/60 mb-1">Attention Required</p>
+                <p id="footer-late-text" class="text-body-base font-bold text-on-surface">0 Late Check-ins</p>
+              </div>
+              <span class="material-symbols-outlined text-primary text-[32px] transition-transform duration-300 group-hover:scale-110">rule</span>
+            </div>
+          </button>
+          <button id="footer-remote-btn" class="group primary-gradient relative overflow-hidden rounded-xl p-4 text-left text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/25 active:scale-[0.98]" type="button">
+            <div class="relative z-10 flex items-center justify-between gap-4">
+              <div>
+                <p class="thai-label text-[10px] font-bold uppercase tracking-wide text-white/70 mb-1">WFH / On-site</p>
+                <p id="footer-remote-text" class="text-body-base font-bold">0 Active</p>
+              </div>
+              <span class="material-symbols-outlined text-white text-[32px] transition-transform duration-300 group-hover:scale-110">distance</span>
+            </div>
+            <span class="material-symbols-outlined absolute -right-3 -bottom-4 text-[76px] opacity-10 transition-transform duration-300 group-hover:scale-110">distance</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { supabase } from "./supabase-client.js";
+    import { getAppSessionToken, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
+
+    if (!requireLogin()) {
+      throw new Error("NOT_LOGIN");
+    }
+
+    if (!(await requireMenuAccess("HR_MONITOR"))) {
+      throw new Error("ACCESS_DENIED");
+    }
+
+    renderUserHeader("userIdText", "userInfo");
+
+    const $ = (id) => document.getElementById(id);
+    const todayKey = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Bangkok",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date());
+
+    const fallbackEmployees = [
+      { id: "DN-014", name: "Anan Srisuwan", department: "Operations", role: "Operations Lead", type: "Office", checkinAt: `${todayKey}T08:54:00+07:00`, checkoutAt: null, fieldPoints: [], address: "Office", status: "on-time" },
+      { id: "DN-022", name: "Preeya Mongkol", department: "HR", role: "HR Executive", type: "Office", checkinAt: `${todayKey}T09:02:00+07:00`, checkoutAt: null, fieldPoints: [], address: "Office", status: "late" },
+      { id: "DN-041", name: "Somchai Dee", department: "Sales", role: "Sales Supervisor", type: "Office", checkinAt: `${todayKey}T09:18:00+07:00`, checkoutAt: null, fieldPoints: [], address: "Office", status: "late-over" },
+      { id: "DN-063", name: "Kanya Wattana", department: "Sales", role: "Account Executive", type: "On-site", checkinAt: `${todayKey}T08:48:00+07:00`, checkoutAt: null, fieldPoints: [{ sequenceNo: 1, locationName: "ลูกค้า A", time: `${todayKey}T10:25:00+07:00`, address: "Sathorn, Bangkok", distanceKm: 8.4 }, { sequenceNo: 2, locationName: "Empire Tower", time: `${todayKey}T13:20:00+07:00`, address: "Sathorn, Bangkok", distanceKm: 2.4 }], address: "On-site", status: "on-time" },
+      { id: "DN-088", name: "Teerak S.", department: "IT", role: "Senior IT Developer", type: "WFH", checkinAt: `${todayKey}T09:05:00+07:00`, checkoutAt: null, fieldPoints: [], address: "Residence", status: "late" },
+      { id: "DN-101", name: "Mali Chan", department: "Operations", role: "Coordinator", type: "Office", checkinAt: `${todayKey}T08:42:00+07:00`, checkoutAt: `${todayKey}T18:03:00+07:00`, fieldPoints: [], address: "Office", status: "completed" },
+      { id: "DN-117", name: "Napat K.", department: "IT", role: "Support Engineer", type: null, checkinAt: null, checkoutAt: null, fieldPoints: [], address: null, status: "pending" }
+    ];
+
+    const state = {
+      employees: fallbackEmployees,
+      filtered: fallbackEmployees,
+      department: "all",
+      status: "all",
+      type: "all",
+      search: "",
+      attentionOnly: false
+    };
+
+    function formatDateInput(date = new Date()) {
+      return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(date);
+    }
+
+    function formatThaiTime(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+    }
+
+    function escapeHtml(value) {
+      const text = String(value ?? "").includes("เธ") ? "Customer A" : String(value ?? "");
+      return text.replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function getInitials(name) {
+      return String(name || "-").split(/\s+/).slice(0, 2).map((part) => part[0] || "").join("").toUpperCase();
+    }
+
+    function formatEmployeeName(name) {
+      const parts = String(name || "-").trim().split(/\s+/).filter(Boolean);
+      if (parts.length < 2) return parts[0] || "-";
+      return `${parts[0]} ${parts[parts.length - 1][0].toUpperCase()}.`;
+    }
+
+    function getStatus(record) {
+      if (!record.checkinAt) return "pending";
+      if (record.checkoutAt || record.status === "completed") return "completed";
+      if (record.status === "late-over" || record.status === "late") return "late";
+      return "working";
+    }
+
+    function isRemoteType(type) {
+      const normalized = String(type || "").toLowerCase();
+      return normalized.includes("wfh") || normalized.includes("on-site") || normalized.includes("onsite");
+    }
+
+    function getStatusBadge(record) {
+      const status = getStatus(record);
+      if (status === "pending") return `<span class="text-xs font-semibold text-error bg-error-container px-2.5 py-1 rounded-full">Not checked-in</span>`;
+      if (status === "completed") return `<span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">Checked-out</span>`;
+      if (record.status === "late-over") return `<span class="text-xs font-semibold text-error bg-error-container px-2.5 py-1 rounded-full">Late &gt;15m</span>`;
+      if (record.status === "late") return `<span class="text-xs font-semibold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full">Late</span>`;
+      return `<span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">On-time</span>`;
+    }
+
+    function normalizeMonitorRecord(record) {
+      const fieldPoints = Array.isArray(record.field_points)
+        ? record.field_points
+        : Array.isArray(record.fieldPoints)
+          ? record.fieldPoints
+          : [];
+      return {
+        id: record.employee_id || record.id || "-",
+        name: record.employee_name || record.name || "-",
+        department: record.department || "-",
+        role: record.role || record.position || "-",
+        type: record.checkin_type || record.type || null,
+        checkinAt: record.checkin_at || record.checkinAt || null,
+        checkoutAt: record.checkout_at || record.checkoutAt || null,
+        address: record.address || null,
+        status: record.status || null,
+        fieldPoints: fieldPoints.map((point) => ({
+          id: point.id,
+          attendanceId: point.attendance_id || point.attendanceId,
+          sequenceNo: point.sequence_no || point.sequenceNo,
+          locationName: point.location_name || point.locationName,
+          time: point.checked_at || point.time,
+          capturedAt: point.captured_at || point.capturedAt,
+          latitude: point.latitude,
+          longitude: point.longitude,
+          accuracyMeters: point.accuracy_meters || point.accuracyMeters,
+          distanceKm: point.distance_km == null ? null : Number(point.distance_km),
+          address: point.address || null,
+          note: point.note || null,
+          photoDataUrl: point.photo_data_url || point.photoDataUrl || null
+        }))
+      };
+    }
+
+    async function loadMonitorData() {
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) {
+        state.employees = [];
+        populateDepartments();
+        applyFilters();
+        return;
+      }
+
+      const { data, error } = await supabase.rpc("get_hr_attendance_monitor", {
+        p_session_token: sessionToken,
+        p_work_date: $("date-filter").value || formatDateInput()
+      });
+
+      if (error) {
+        console.error("Load HR attendance monitor error:", error);
+        state.employees = [];
+        populateDepartments();
+        applyFilters();
+        alert("ไม่สามารถโหลดข้อมูล HR Monitor ได้ กรุณาตรวจสอบว่าได้รัน SQL RPC และมีสิทธิ์ HR_MONITOR แล้ว");
+        return;
+      }
+
+      state.employees = (data || []).map(normalizeMonitorRecord);
+      if ($("last-sync-label")) {
+        $("last-sync-label").textContent = new Intl.DateTimeFormat("th-TH", {
+          timeZone: "Asia/Bangkok",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false
+        }).format(new Date());
+      }
+      populateDepartments();
+      applyFilters();
+    }
+
+    function populateDepartments() {
+      const departments = [...new Set(state.employees.map((item) => item.department).filter(Boolean))].sort();
+      const departmentFilter = $("department-filter");
+      const selected = departmentFilter.value || "all";
+      departmentFilter.innerHTML = `<option value="all">ทุกแผนก</option>` + departments.map((department) => `<option value="${escapeHtml(department)}">${escapeHtml(department)}</option>`).join("");
+      departmentFilter.options[0].textContent = "All Departments";
+      departmentFilter.value = departments.includes(selected) ? selected : "all";
+    }
+
+    function applyFilters() {
+      const query = state.search.trim().toLowerCase();
+      state.filtered = state.employees.filter((record) => {
+        const status = getStatus(record);
+        const isRemote = isRemoteType(record.type);
+        const haystack = `${record.id} ${record.name} ${record.department} ${record.role}`.toLowerCase();
+        if (state.department !== "all" && record.department !== state.department) return false;
+        if (state.status !== "all" && status !== state.status) return false;
+        if (state.type === "Office" && record.type !== "Office") return false;
+        if (state.type === "Remote" && !isRemote) return false;
+        if (state.attentionOnly && !["pending", "late"].includes(status)) return false;
+        if (query && !haystack.includes(query)) return false;
+        return true;
+      });
+      render();
+    }
+
+    function getStats() {
+      const rows = state.filtered;
+      const total = rows.length;
+      const checkedIn = rows.filter((item) => item.checkinAt).length;
+      const pending = rows.filter((item) => !item.checkinAt).length;
+      const isLateRecord = (item) => item.status === "late" || item.status === "late-over";
+      const office = rows.filter((item) => item.type === "Office" && item.checkinAt && !item.checkoutAt).length;
+      const remote = rows.filter((item) => isRemoteType(item.type) && item.checkinAt && !item.checkoutAt).length;
+      const checkedOut = rows.filter((item) => item.checkoutAt).length;
+      const late = rows.filter(isLateRecord).length;
+      const fieldPoints = rows.reduce((sum, item) => sum + (item.fieldPoints?.length || 0), 0);
+      return { total, checkedIn, pending, office, remote, checkedOut, late, fieldPoints };
+    }
+
+    function renderStats(stats) {
+      const cards = [
+        ["corporate_fare", "At Office", stats.office, "text-primary"],
+        ["distance", "WFH / On-site", stats.remote, "bg-sky-50 text-sky-600"]
+      ];
+      $("stats-grid").innerHTML = cards.map(([icon, label, value, color]) => `
+        <div class="stat-card bg-white p-5 rounded-xl border border-slate-100 ambient-shadow flex items-center gap-5">
+          <span class="${color} bg-transparent shrink-0 material-symbols-outlined flex items-center justify-center text-[42px]">${icon}</span>
+          <div class="min-w-0">
+            <span class="block text-slate-500 text-[11px] font-bold uppercase leading-4">${label}</span>
+            <span class="block text-[36px] leading-10 font-bold mt-2 text-slate-900">${value}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderOfficeTable() {
+      const rows = state.filtered.filter((record) => record.type === "Office");
+      $("office-count-pill").textContent = `${rows.filter((item) => item.checkinAt && !item.checkoutAt).length} Active`;
+      $("office-table-body").innerHTML = rows.length ? rows.map((record) => `
+        <tr class="hover:bg-slate-50/60 transition-colors">
+          <td class="px-4 py-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="h-8 w-8 shrink-0 rounded-full bg-primary-fixed text-primary text-xs font-bold flex items-center justify-center">${escapeHtml(getInitials(record.name))}</div>
+              <div class="min-w-0">
+                <p class="font-body-base font-semibold whitespace-nowrap">${escapeHtml(formatEmployeeName(record.name))}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-4 py-3 text-body-sm text-on-secondary-container truncate">${escapeHtml(record.department)}</td>
+          <td class="px-4 py-3 text-body-sm font-medium">${formatThaiTime(record.checkinAt)}</td>
+          <td class="px-4 py-3 text-body-sm font-medium">${formatThaiTime(record.checkoutAt)}</td>
+          <td class="px-4 py-3 text-center align-middle"><div class="flex justify-center">${getStatusBadge(record)}</div></td>
+        </tr>
+      `).join("") : `
+        <tr><td class="px-5 py-8 text-center text-slate-400" colspan="5">No Office records match the current filters.</td></tr>
+      `;
+    }
+
+    function renderRemoteCards() {
+      const rows = state.filtered.filter((record) => isRemoteType(record.type));
+      $("remote-count-pill").textContent = `${rows.filter((item) => item.checkinAt && !item.checkoutAt).length} Active`;
+      $("remote-list").innerHTML = rows.length ? rows.map((record) => {
+        const latestPoint = record.fieldPoints?.at(-1);
+        const latestLabel = latestPoint?.address || record.address || latestPoint?.locationName || record.type || "-";
+        return `
+          <tr class="hover:bg-slate-50/60 transition-colors">
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="h-8 w-8 shrink-0 rounded-full bg-primary-fixed text-primary text-xs font-bold flex items-center justify-center">${escapeHtml(getInitials(record.name))}</div>
+                <div class="min-w-0">
+                  <p class="font-body-base font-semibold truncate">${escapeHtml(formatEmployeeName(record.name))}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3 text-body-sm text-on-secondary-container truncate">${escapeHtml(record.department)}</td>
+            <td class="px-4 py-3 text-center align-middle"><div class="flex justify-center">${getStatusBadge(record)}</div></td>
+            <td class="px-4 py-3">
+              <p class="text-body-sm font-medium text-slate-700">${escapeHtml(latestLabel)} <span class="text-xs text-slate-400">(${formatThaiTime(latestPoint?.time || record.checkinAt)})</span></p>
+            </td>
+          </tr>
+        `;
+      }).join("") : `<tr><td class="px-5 py-8 text-center text-slate-400" colspan="4">No WFH / On-site records match the current filters.</td></tr>`;
+    }
+
+    function renderFooter(stats) {
+      const percent = stats.total ? Math.round((stats.checkedIn / stats.total) * 1000) / 10 : 0;
+      $("completion-percent").textContent = `${percent}% Completed`;
+      $("completion-bar").style.width = `${percent}%`;
+      $("completion-note").textContent = `${stats.checkedIn} checked in from ${stats.total} employees in the current filters.`;
+      $("footer-late-text").textContent = `${stats.late} Late Check-ins`;
+      $("footer-remote-text").textContent = `${stats.remote} Active`;
+    }
+
+    function render() {
+      const stats = getStats();
+      $("attention-pending").textContent = stats.pending;
+      $("attention-late").textContent = stats.late;
+      renderStats(stats);
+      renderOfficeTable();
+      renderRemoteCards();
+      renderFooter(stats);
+    }
+
+    function updateClock() {
+      const now = new Date();
+      $("current-date").textContent = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }).format(now);
+      $("current-time").textContent = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).format(now);
+    }
+
+    $("date-filter").value = formatDateInput();
+    $("department-filter").addEventListener("change", (event) => {
+      state.department = event.target.value;
+      applyFilters();
+    });
+    $("status-filter").addEventListener("change", (event) => {
+      state.status = event.target.value;
+      applyFilters();
+    });
+    $("type-filter").addEventListener("change", (event) => {
+      state.type = event.target.value;
+      applyFilters();
+    });
+    $("employee-search").addEventListener("input", (event) => {
+      state.search = event.target.value;
+      if ($("top-search")) {
+        $("top-search").value = event.target.value;
+      }
+      applyFilters();
+    });
+    $("top-search")?.addEventListener("input", (event) => {
+      state.search = event.target.value;
+      $("employee-search").value = event.target.value;
+      applyFilters();
+    });
+    $("attention-only").addEventListener("change", (event) => {
+      state.attentionOnly = event.target.checked;
+      applyFilters();
+    });
+    $("refresh-btn").addEventListener("click", loadMonitorData);
+    $("date-filter").addEventListener("change", loadMonitorData);
+    $("footer-attention-btn").addEventListener("click", () => {
+      state.attentionOnly = !state.attentionOnly;
+      $("attention-only").checked = state.attentionOnly;
+      if (state.attentionOnly) {
+        state.status = "all";
+        $("status-filter").value = "all";
+      }
+      applyFilters();
+    });
+    $("footer-remote-btn").addEventListener("click", () => {
+      state.type = state.type === "Remote" ? "all" : "Remote";
+      $("type-filter").value = state.type;
+      applyFilters();
+    });
+    document.querySelectorAll("[data-quick-status]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.status = state.status === button.dataset.quickStatus ? "all" : button.dataset.quickStatus;
+        $("status-filter").value = state.status;
+        state.attentionOnly = false;
+        $("attention-only").checked = false;
+        applyFilters();
+      });
+    });
+    document.querySelectorAll(".dept-filter").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.department = button.dataset.dept;
+        $("department-filter").value = state.department;
+        document.querySelectorAll(".dept-filter").forEach((item) => {
+          item.className = "dept-filter text-slate-500 flex items-center gap-3 px-3 py-3 w-full text-left hover:bg-slate-50 transition-colors font-body-sm";
+        });
+        button.className = "dept-filter bg-blue-50 text-primary border-r-4 border-primary flex items-center gap-3 px-3 py-3 w-full text-left font-body-sm font-semibold";
+        applyFilters();
+      });
+    });
+
+    function setAttendanceNavCollapsed(collapsed) {
+      document.body.classList.toggle("attendance-nav-collapsed", collapsed);
+      localStorage.setItem("attendanceNavCollapsed", collapsed ? "true" : "false");
+      $("attendance-nav-toggle")?.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      if ($("attendance-nav-toggle-icon")) {
+        $("attendance-nav-toggle-icon").textContent = collapsed ? "chevron_right" : "chevron_left";
+      }
+    }
+
+    setAttendanceNavCollapsed(localStorage.getItem("attendanceNavCollapsed") === "true");
+    $("attendance-nav-toggle")?.addEventListener("click", () => {
+      setAttendanceNavCollapsed(!document.body.classList.contains("attendance-nav-collapsed"));
+    });
+
+    updateClock();
+    setInterval(updateClock, 1000);
+    await loadMonitorData();
+  </script>
+</body>
+</html>

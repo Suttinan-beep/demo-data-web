@@ -461,11 +461,15 @@
   </div>
   <script type="module">
     import { supabase as supabaseClient } from "./supabase-client.js";
-    import { getUserId, insertStory, renderUserInfo, requireLogin, requirePageFlag } from "./app-helpers.js";
+    import { getUserId, insertStory, renderUserInfo, requireLogin, requireMenuAccess, requirePageFlag } from "./app-helpers.js";
 
   /******** 🔐 CHECK LOGIN (เหมือน home.html) ********/
   if (!requireLogin()) {
     throw new Error("NOT_LOGIN");
+  }
+
+  if (!(await requireMenuAccess("CLEARPORT"))) {
+    throw new Error("ACCESS_DENIED");
   }
 
   /******** 🔐 CHECK CLEARPORT PIN ********/

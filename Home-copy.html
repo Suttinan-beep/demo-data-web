@@ -1,761 +1,795 @@
-﻿<!doctype html>
-<html lang="th" class="h-full">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Web Portal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>DataNest - Web Portal</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c3c6d7",
+            "on-surface-variant": "#434655",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-highest": "#e0e3e5",
+            "surface-container-high": "#e6e8ea",
+            "secondary-fixed-dim": "#b7c8e1",
+            "on-tertiary-fixed": "#001e2f",
+            error: "#ba1a1a",
+            "surface-container-low": "#f2f4f6",
+            "on-tertiary-container": "#e4f2ff",
+            "tertiary-fixed": "#c9e6ff",
+            "on-surface": "#191c1e",
+            surface: "#f7f9fb",
+            "primary-container": "#2563eb",
+            "on-background": "#191c1e",
+            "surface-variant": "#e0e3e5",
+            "surface-dim": "#d8dadc",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#89ceff",
+            "on-primary": "#ffffff",
+            "tertiary-container": "#0074a6",
+            "surface-bright": "#f7f9fb",
+            primary: "#004ac6",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#b4c5ff",
+            tertiary: "#005a82",
+            "on-primary-fixed-variant": "#003ea8",
+            "error-container": "#ffdad6",
+            "surface-container": "#eceef0",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#54647a",
+            "secondary-container": "#d0e1fb",
+            "on-error-container": "#93000a",
+            "inverse-primary": "#b4c5ff",
+            "primary-fixed": "#dbe1ff",
+            outline: "#737686",
+            secondary: "#505f76",
+            "on-primary-fixed": "#00174b",
+            background: "#f7f9fb",
+            "on-tertiary-fixed-variant": "#004c6e",
+            "on-secondary-fixed-variant": "#38485d",
+            "on-secondary-fixed": "#0b1c30",
+            "inverse-surface": "#2d3133",
+            "surface-tint": "#0053db",
+            "on-primary-container": "#eeefff",
+            "secondary-fixed": "#d3e4fe"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            lg: "24px",
+            gutter: "20px",
+            xs: "4px",
+            xl: "48px",
+            sm: "8px",
+            md: "16px",
+            "container-margin": "32px",
+            "base-unit": "4px"
+          },
+          fontFamily: {
+            "display-lg": ["Manrope"],
+            "body-sm": ["Inter"],
+            "body-base": ["Inter"],
+            "label-uppercase": ["Inter"],
+            "headline-md": ["Manrope"],
+            thai: ["IBM Plex Sans Thai", "sans-serif"]
+          },
+          fontSize: {
+            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
+            "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+            "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }]
+          }
+        }
+      }
+    };
+  </script>
   <style>
     body {
-      box-sizing: border-box;
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+      background-color: #f7f9fb;
     }
-    
-    * {
-      font-family: 'Kanit', 'Inter', sans-serif;
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
-    
-    .gradient-bg {
-      background: linear-gradient(135deg, #e8f4fc 0%, #faf8f0 50%, #fef9e7 100%);
+
+    .card-elevation {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f1f5f9;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    
-    .card-shadow {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    }
-    
-    .card-hover:hover {
+
+    .card-elevation:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
     }
-    
-    .btn-transition {
-      transition: all 0.25s ease;
+
+    .primary-gradient {
+      background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
     }
-    
+
     .modal-overlay {
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(4px);
     }
-    
-    .input-focus:focus {
-      outline: none;
-      border-color: #7ec8e3;
-      box-shadow: 0 0 0 3px rgba(126, 200, 227, 0.2);
-    }
-    
-    .link-item:hover {
-      background: linear-gradient(90deg, #e8f4fc 0%, transparent 100%);
-    }
-    
-    .scrollbar-thin::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    .scrollbar-thin::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 3px;
-    }
-    
-    .scrollbar-thin::-webkit-scrollbar-thumb {
-      background: #c5d8e8;
-      border-radius: 3px;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    
+
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    .animate-fadeIn {
-      animation: fadeIn 0.3s ease forwards;
-    }
-    
+
     .animate-slideUp {
-      animation: slideUp 0.4s ease forwards;
+      animation: slideUp 0.3s ease forwards;
     }
   </style>
-  <style>@view-transition { navigation: auto; }</style>
- </head>
- <body class="h-full gradient-bg">
-  <div id="app" class="h-full overflow-auto scrollbar-thin"><!-- Header -->
-   <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100">
-    <div class="w-full px-8">
-     <div class="flex items-center h-16 gap-6">
-
-  <!-- LEFT -->
-  <div class="flex items-center gap-3 shrink-0">
-    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center shadow-lg">
-      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-        </path>
-      </svg>
+</head>
+<body class="bg-surface text-on-surface antialiased overflow-hidden">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm fixed top-0 z-50 h-16 w-full grid grid-cols-[1fr_auto_1fr] items-center px-6">
+    <div class="flex items-center gap-4 justify-self-start">
+      <span id="portal-title" class="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white font-display-lg">DataNest</span>
     </div>
-
-    <h1 id="portal-title" class="text-xl font-semibold text-gray-800">
-    Enterprise Web Portal
-</h1>
-  </div>
-
-  <!-- CENTER GROUP -->
-  <div class="flex-1 flex items-center justify-center gap-4">
-
-    <!-- SEARCH -->
-    <div class="w-full max-w-xl relative">
-      <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-      <input
-        type="text"
-        id="search-input"
-        placeholder="ค้นหาแผนก, หรือคีย์เวิร์ด..."
-        class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm"
-      >
+    <div class="hidden md:flex relative group justify-self-center">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">search</span>
+        <input id="search-input" class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-body-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all w-80" placeholder="Search resources..." type="text"/>
     </div>
-
-    <!-- ADD BUTTON -->
-    <button id="add-btn"
-      class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-sky-400 to-blue-400 text-white rounded-full text-sm shadow-md hover:scale-105 transition whitespace-nowrap">
-      <span>+</span>
-      <span>เพิ่มข้อมูล</span>
-    </button>
-
-  </div>
-
-  <!-- RIGHT -->
-  <div class="flex items-center pr-4 shrink-0">
-    <div id="userInfo"
-      class="text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded-full whitespace-nowrap shadow-sm">
-    </div>
-  </div>
-
-</div>
-</header>
-
-<!-- Main Content -->
-<main class="w-full px-6 py-8">
-  <div class="flex gap-8">
-
-    <!-- Sidebar -->
-    <div class="w-64 fixed top-16 left-0 h-[calc(100vh-64px)] bg-white p-4 card-shadow overflow-auto">
-      <h3 class="font-semibold text-gray-700 mb-3">แผนก</h3>
-      <div id="dept-filter" class="space-y-2"></div>
-    </div>
-
-    <!-- Content -->
-    <div class="flex-1" style="margin-left: 280px;">
-
-      <!-- Stats -->
-      <div class="flex items-center gap-6 mb-8">
-        <div class="flex items-center gap-2 text-sm text-gray-500">
-          <span class="w-2 h-2 rounded-full bg-green-400"></span>
-          <span>ทั้งหมด <span id="total-count" class="font-semibold text-gray-700">0</span> รายการ</span>
-        </div>
-        <div class="flex items-center gap-2 text-sm text-gray-500">
-          <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-          <span><span id="dept-count" class="font-semibold text-gray-700">0</span> แผนก</span>
+    <div class="flex items-center gap-md justify-self-end">
+      <div class="flex items-center border-l border-slate-100 pl-4 ml-1">
+        <img
+          alt="User avatar"
+          class="mr-3 h-8 w-8 rounded-full object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"
+        />
+        <div class="flex flex-col">
+          <span id="userIdText" class="font-display-lg text-sm font-bold text-slate-900">-</span>
+          <span id="userInfo" class="font-body-sm text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
         </div>
       </div>
-
-      <!-- Cards -->
-      <div id="cards-container" class="flex flex-wrap gap-6"></div>
-
-      <!-- Empty -->
-      <div id="empty-state" class="hidden text-center py-20">
-        <p class="text-gray-400 mb-4">ยังไม่มีข้อมูล</p>
-
-        <button 
-          id="empty-add-btn"
-          class="px-5 py-2 bg-sky-400 text-white rounded-lg hover:bg-sky-500">
-          + เพิ่มข้อมูล
-        </button>
-      </div>
-
     </div>
+  </header>
+
+  <div class="flex h-screen pt-16">
+    <aside class="bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_20px_rgba(0,0,0,0.02)] fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col py-4 overflow-y-auto">
+      <div class="px-6 py-4 mb-4">
+        <div class="flex items-center gap-3 mb-1">
+          <div class="w-10 h-10 rounded-lg primary-gradient flex items-center justify-center text-white shadow-lg">
+            <span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Departments</h3>
+            <p class="text-[10px] text-slate-500 uppercase tracking-wider">Enterprise Hub</p>
+          </div>
+        </div>
+      </div>
+      <nav id="dept-filter" class="space-y-1 px-3"></nav>
+    </aside>
+
+    <main class="flex-1 ml-64 overflow-y-auto bg-surface">
+      <div class="px-lg pt-lg pb-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-md mb-8">
+          <div>
+            <nav class="flex items-center gap-2 text-slate-400 text-xs font-label-uppercase mb-2">
+              <span>DEPARTMENTS</span>
+              <span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+              <span id="active-dept-label" class="text-primary font-bold">ทั้งหมด</span>
+            </nav>
+            <h1 class="text-display-lg font-display-lg text-slate-900">Web Portal</h1>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-lg">
+          <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex items-center gap-4">
+            <span class="material-symbols-outlined text-primary text-3xl" data-icon="link">link</span>
+            <div>
+              <p class="text-[10px] font-label-uppercase text-slate-500">Total Resources</p>
+              <p id="total-count" class="text-headline-md font-bold">0</p>
+            </div>
+          </div>
+          <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex items-center gap-4">
+            <span class="material-symbols-outlined text-primary text-3xl" data-icon="groups">groups</span>
+            <div>
+              <p class="text-[10px] font-label-uppercase text-slate-500">Departments</p>
+              <p id="dept-count" class="text-headline-md font-bold">0</p>
+            </div>
+          </div>
+          <div class="md:col-span-2 bg-gradient-to-r from-blue-600 to-blue-400 rounded-xl p-4 flex items-center justify-between text-white shadow-lg">
+            <div class="flex items-center gap-4">
+              <div class="p-2 bg-white/20 rounded-lg">
+                <span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+              </div>
+              <div>
+                <p class="text-sm font-bold">ต้องการเพิ่มแหล่งข้อมูลใหม่?</p>
+                <p class="text-xs text-white/80">จัดเก็บลิงก์สำคัญแยกตามแผนกเพื่อให้ทีมเข้าถึงได้รวดเร็ว</p>
+              </div>
+            </div>
+            <button id="stats-add-btn" class="bg-white text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-50 transition-colors" type="button">ADD LINK</button>
+          </div>
+        </div>
+
+        <div id="cards-container" class="space-y-10"></div>
+
+        <div id="empty-state" class="hidden text-center py-20">
+          <div class="mx-auto mb-4 w-16 h-16 rounded-2xl bg-surface-container-low flex items-center justify-center">
+            <span class="material-symbols-outlined text-3xl text-slate-300">link_off</span>
+          </div>
+          <p class="text-gray-400 mb-4">ยังไม่มีข้อมูล</p>
+          <button id="empty-add-btn" class="px-5 py-2 primary-gradient text-white rounded-lg hover:opacity-90">เพิ่มข้อมูล</button>
+        </div>
+
+        <div class="h-24"></div>
+      </div>
+    </main>
   </div>
-</main>
-  </div><!-- Modal -->
+
   <div id="modal" class="fixed inset-0 z-50 hidden">
-   <div class="modal-overlay absolute inset-0" id="modal-backdrop"></div>
-   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-lg card-shadow animate-fadeIn overflow-hidden"><!-- Modal Header -->
-     <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-sky-50 to-blue-50">
-      <h2 id="modal-title" class="text-lg font-semibold text-gray-800">เพิ่มข้อมูลใหม่</h2>
-     </div><!-- Modal Body -->
-     <form id="data-form" class="p-6 space-y-5"><input type="hidden" id="edit-id">
-      <div><label class="block text-sm font-medium text-gray-600 mb-1.5">แผนก</label> <input type="text" id="department" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm input-focus btn-transition" placeholder="เช่น ฝ่ายบุคคล, ฝ่ายไอที, ฝ่ายการเงิน">
+    <div class="modal-overlay absolute inset-0" id="modal-backdrop"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl w-full max-w-lg card-elevation animate-slideUp overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-cyan-50">
+          <h2 id="modal-title" class="text-lg font-semibold text-gray-800">เพิ่มข้อมูลใหม่</h2>
+        </div>
+        <form id="data-form" class="p-6 space-y-5">
+          <input type="hidden" id="edit-id">
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1.5">แผนก</label>
+            <input type="text" id="department" required class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="เช่น IT, Sales, HR">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1.5">ชื่อลิงก์</label>
+            <input type="text" id="link-name" required class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="ระบบจัดการพนักงาน">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1.5">URL</label>
+            <input type="url" id="link-url" required class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="https://example.com/system">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1.5">ไอคอน</label>
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                <span id="icon-preview" class="material-symbols-outlined text-2xl">link</span>
+              </div>
+              <select id="icon-name" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                <option value="link">Link / ลิงก์ทั่วไป</option>
+                <option value="dashboard">Dashboard</option>
+                <option value="table_chart">Table / ตารางข้อมูล</option>
+                <option value="bar_chart">Report / รายงาน</option>
+                <option value="monitoring">Monitoring</option>
+                <option value="assignment">Task / แบบฟอร์มงาน</option>
+                <option value="description">Document</option>
+                <option value="public">Portal / Website</option>
+                <option value="cloud_done">Cloud</option>
+                <option value="vpn_key">VPN / Security</option>
+                <option value="groups">People / HR</option>
+                <option value="terminal">IT / Dev</option>
+                <option value="settings_suggest">Operations</option>
+                <option value="campaign">Marketing</option>
+                <option value="trending_up">Sales</option>
+                <option value="admin_panel_settings">Admin</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1.5">หมายเหตุ / คำอธิบาย</label>
+            <textarea id="description" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
+          </div>
+        </form>
+        <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
+          <button type="button" id="cancel-btn" class="px-5 py-2.5 text-gray-600 bg-white border border-gray-200 rounded-lg font-medium text-sm hover:bg-gray-50">ยกเลิก</button>
+          <button type="submit" form="data-form" id="submit-btn" class="px-5 py-2.5 primary-gradient text-white rounded-lg font-medium text-sm hover:shadow-lg disabled:opacity-50">
+            <span id="submit-text">บันทึก</span>
+          </button>
+        </div>
       </div>
-      <div><label class="block text-sm font-medium text-gray-600 mb-1.5">ชื่อลิงก์</label> <input type="text" id="link-name" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm input-focus btn-transition" placeholder="ระบบจัดการพนักงาน">
-      </div>
-      <div><label class="block text-sm font-medium text-gray-600 mb-1.5">URL</label> <input type="url" id="link-url" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm input-focus btn-transition" placeholder="https://example.com/system">
-      </div>
-      <div><label class="block text-sm font-medium text-gray-600 mb-1.5">หมายเหตุ / คำอธิบาย</label> <textarea id="description" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm input-focus btn-transition resize-none" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
-      </div>
-     </form><!-- Modal Footer -->
-     <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3"><button type="button" id="cancel-btn" class="px-5 py-2.5 text-gray-600 bg-white border border-gray-200 rounded-xl font-medium text-sm btn-transition hover:bg-gray-50"> ยกเลิก </button> <button type="submit" form="data-form" id="submit-btn" class="px-5 py-2.5 bg-gradient-to-r from-sky-400 to-blue-400 text-white rounded-xl font-medium text-sm btn-transition hover:shadow-lg disabled:opacity-50"> <span id="submit-text">บันทึก</span> </button>
-     </div>
     </div>
-   </div>
-  </div><!-- Toast Container -->
+  </div>
+
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
+
   <script type="module">
     import { supabase as supabaseClient } from "./supabase-client.js";
-    import { getUserId, insertStory, renderUserInfo, requireLogin, requirePageFlag } from "./app-helpers.js";
-/******** 🔐 CHECK LOGIN  ********/
-window.addEventListener('DOMContentLoaded', () => {
-  renderUserInfo('userInfo', 'User');
-});
+    import { getUserId, insertStory, renderUserHeader, requireLogin, requirePageFlag } from "./app-helpers.js";
 
-async function logStory(action, detail) {
-  const { error } = await insertStory(supabaseClient, action, detail);
-  if (error) {
-    console.error('StoryLine error:', error);
-  }
-}
-
-if (!requireLogin()) {
-  throw new Error("NOT_LOGIN"); // 🔥 หยุด script ตรงนี้
-}
-setTimeout(() => {
-  requirePageFlag('WEBPORTAL_OK', 'Menu.html');
-}, 300);
-
-        async function loadWebPortal() {
-    const { data, error } = await supabaseClient
-        .from('webportal')
-        .select('*')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
-        if (error) {
-        console.error('INSERT ERROR:', error?.message, error);
-        showToast('โหลดข้อมูลไม่สำเร็จ', 'error');
-        return;
+    if (!requireLogin()) {
+      throw new Error("NOT_LOGIN");
     }
 
-      allData = data;
-      renderDeptFilter(); // ✅ เพิ่มตรงนี้
-      renderCards();
-    }
-    
+    setTimeout(() => {
+      requirePageFlag("WEBPORTAL_OK", "Menu.html");
+    }, 300);
 
-
-    // Default configuration
     const defaultConfig = {
-      portal_title: 'Enterprise Web Portal',
-      search_placeholder: 'ค้นหาแผนก, หรือคีย์เวิร์ด...',
-      background_color: '#e8f4fc',
-      surface_color: '#ffffff',
-      text_color: '#1f2937',
-      primary_action_color: '#38bdf8',
-      secondary_action_color: '#fbbf24'
+      portal_title: "DataNest",
+      search_placeholder: "Search resources...",
+      primary_action_color: "#2563eb"
     };
 
     let config = { ...defaultConfig };
     let allData = [];
-    let searchQuery = '';
+    let searchQuery = "";
+    let selectedDept = "";
     let isSubmitting = false;
-    let selectedDept = ''; // ✅ เพิ่มตรงนี้
 
-    function renderDeptFilter() {
-  const container = document.getElementById('dept-filter');
-
-  const depts = [...new Set(allData.map(item => item.department || 'ไม่ระบุ'))];
-
-  let html = `
-    <div 
-      class="cursor-pointer px-3 py-2 rounded-lg ${!selectedDept ? 'bg-sky-100 text-sky-600' : 'hover:bg-gray-100'}"
-      data-dept=""
-    >
-      ทั้งหมด
-    </div>
-  `;
-
-  depts.forEach(dept => {
-    html += `
-      <div 
-        class="cursor-pointer px-3 py-2 rounded-lg ${selectedDept === dept ? 'bg-sky-100 text-sky-600' : 'hover:bg-gray-100'}"
-        data-dept="${dept}"
-      >
-        ${dept}
-      </div>
-    `;
-  });
-
-  container.innerHTML = html;
-}
-
-function selectDept(dept) {
-  selectedDept = dept;
-  renderDeptFilter();
-  renderCards();
-}
-    
-
-    function applyConfig() {
-      const title = config.portal_title || defaultConfig.portal_title;
-      const placeholder = config.search_placeholder || defaultConfig.search_placeholder;
-      const bgColor = config.background_color || defaultConfig.background_color;
-      const surfaceColor = config.surface_color || defaultConfig.surface_color;
-      const textColor = config.text_color || defaultConfig.text_color;
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
-
-      document.getElementById('portal-title').textContent = title;
-      document.getElementById('search-input').placeholder = placeholder;
-
-      // Apply colors
-      document.body.style.background = `linear-gradient(135deg, ${bgColor} 0%, ${surfaceColor} 50%, #fef9e7 100%)`;
-      
-      document.querySelectorAll('.card-surface').forEach(el => {
-        el.style.backgroundColor = surfaceColor;
-      });
-
-      document.querySelectorAll('.text-primary').forEach(el => {
-        el.style.color = textColor;
-      });
-
-      document.querySelectorAll('.btn-primary').forEach(el => {
-        el.style.background = `linear-gradient(to right, ${primaryColor}, ${adjustColor(primaryColor, -10)})`;
-      });
-
-      document.querySelectorAll('.btn-edit').forEach(el => {
-        el.style.backgroundColor = secondaryColor;
-      });
-    }
-
-    function adjustColor(color, percent) {
-      const num = parseInt(color.replace('#', ''), 16);
-      const amt = Math.round(2.55 * percent);
-      const R = (num >> 16) + amt;
-      const G = (num >> 8 & 0x00FF) + amt;
-      const B = (num & 0x0000FF) + amt;
-      return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
-    }
-
-    // Data handler for Data SDK
-    const dataHandler = {
-      onDataChanged(data) {
-        allData = data;
-        renderCards();
-      }
-    };
-
-    // Initialize Data SDK
-    async function initDataSdk() {
-      const result = await window.dataSdk.init(dataHandler);
-      if (!result.isOk) {
-        showToast('ไม่สามารถเชื่อมต่อฐานข้อมูลได้', 'error');
+    async function logStory(action, detail) {
+      const { error } = await insertStory(supabaseClient, action, detail);
+      if (error) {
+        console.error("StoryLine error:", error);
       }
     }
 
-    // Render cards grouped by department
-    function renderCards() {
-      const container = document.getElementById('cards-container');
-      const emptyState = document.getElementById('empty-state');
-      
-      // Filter by search query
-      const filteredData = allData.filter(item => {
-  const query = searchQuery.toLowerCase();
+    async function loadWebPortal() {
+      const { data, error } = await supabaseClient
+        .from("webportal")
+        .select("*")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
 
-  const matchSearch = !searchQuery || (
-    item.department?.toLowerCase().includes(query) ||
-    item.link_name?.toLowerCase().includes(query) ||
-    item.description?.toLowerCase().includes(query)
-  );
-
-  const matchDept = !selectedDept || item.department === selectedDept;
-
-  return matchSearch && matchDept;
-});
-
-      // Update stats
-      document.getElementById('total-count').textContent = filteredData.length;
-      const uniqueDepts = [...new Set(filteredData.map(item => item.department))];
-      document.getElementById('dept-count').textContent = uniqueDepts.length;
-
-      if (filteredData.length === 0) {
-        container.innerHTML = '';
-        emptyState.classList.remove('hidden');
+      if (error) {
+        console.error("LOAD ERROR:", error?.message, error);
+        showToast("โหลดข้อมูลไม่สำเร็จ", "error");
         return;
       }
 
-      emptyState.classList.add('hidden');
+      allData = data || [];
+      renderDeptFilter();
+      renderCards();
+    }
 
-      // Group by department
+    function applyConfig() {
+      document.getElementById("portal-title").textContent = config.portal_title || defaultConfig.portal_title;
+      document.getElementById("search-input").placeholder = config.search_placeholder || defaultConfig.search_placeholder;
+    }
+
+    function getFilteredData() {
+      const query = searchQuery.toLowerCase();
+      return allData.filter((item) => {
+        const matchSearch = !query || (
+          item.department?.toLowerCase().includes(query) ||
+          item.link_name?.toLowerCase().includes(query) ||
+          item.description?.toLowerCase().includes(query)
+        );
+        const matchDept = !selectedDept || item.department === selectedDept;
+        return matchSearch && matchDept;
+      });
+    }
+
+    function renderDeptFilter() {
+      const container = document.getElementById("dept-filter");
+      const depts = [...new Set(allData.map((item) => item.department || "ไม่ระบุ"))];
+
+      const allClass = !selectedDept
+        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 rounded-lg"
+        : "text-slate-500 hover:bg-slate-50 rounded-xl";
+
+      let html = `
+        <button class="w-full flex items-center gap-3 px-4 py-3 ${allClass} transition-colors text-left" data-dept="" type="button">
+          <span class="material-symbols-outlined text-xl" data-icon="apps">apps</span>
+          <span class="font-medium text-body-sm">ทั้งหมด</span>
+        </button>
+      `;
+
+      depts.forEach((dept) => {
+        const active = selectedDept === dept;
+        const itemClass = active
+          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 rounded-lg"
+          : "text-slate-500 hover:bg-slate-50 rounded-xl";
+        html += `
+          <button class="w-full flex items-center gap-3 px-4 py-3 ${itemClass} transition-colors text-left" data-dept="${escapeAttr(dept)}" type="button">
+            <span class="material-symbols-outlined text-xl" data-icon="folder">folder</span>
+            <span class="font-medium text-body-sm truncate">${escapeHtml(dept)}</span>
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function selectDept(dept) {
+      selectedDept = dept;
+      renderDeptFilter();
+      renderCards();
+    }
+
+    function renderCards() {
+      const container = document.getElementById("cards-container");
+      const emptyState = document.getElementById("empty-state");
+      const filteredData = getFilteredData();
+      const uniqueDepts = [...new Set(filteredData.map((item) => item.department || "ไม่ระบุ"))];
+
+      document.getElementById("total-count").textContent = filteredData.length;
+      document.getElementById("dept-count").textContent = uniqueDepts.length;
+      document.getElementById("active-dept-label").textContent = selectedDept || "ทั้งหมด";
+
+      if (!filteredData.length) {
+        container.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+
       const grouped = filteredData.reduce((acc, item) => {
-        const dept = item.department || 'ไม่ระบุแผนก';
+        const dept = item.department || "ไม่ระบุ";
         if (!acc[dept]) acc[dept] = [];
         acc[dept].push(item);
         return acc;
       }, {});
 
-      // Build HTML
-      let html = '';
-      const deptColors = ['from-sky-400 to-blue-500', 'from-amber-400 to-orange-500', 'from-emerald-400 to-teal-500', 'from-purple-400 to-indigo-500', 'from-rose-400 to-pink-500'];
-      let colorIndex = 0;
-
-      for (const [dept, items] of Object.entries(grouped)) {
-        const color = deptColors[colorIndex % deptColors.length];
-        colorIndex++;
-
-        html += `
-          <div class="animate-slideUp" style="animation-delay: ${colorIndex * 0.1}s">
+      let cardIndex = 0;
+      container.innerHTML = Object.entries(grouped).map(([dept, items]) => {
+        const cards = items.map((item) => createCardHTML(item, cardIndex++)).join("");
+        return `
+          <section>
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-1 h-8 rounded-full bg-gradient-to-b ${color}"></div>
-              <h2 class="text-lg font-semibold text-gray-700">${dept}</h2>
-              <span class="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full">${items.length} รายการ</span>
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-xl">${iconForDept(dept)}</span>
+              </div>
+              <div>
+                <h2 class="text-headline-md font-headline-md text-slate-900">${escapeHtml(dept)}</h2>
+                <p class="text-body-sm text-slate-500">${items.length} รายการ</p>
+              </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              ${items.map(item => createCardHTML(item)).join('')}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+              ${cards}
             </div>
-          </div>
+          </section>
         `;
-      }
+      }).join("");
 
-      container.innerHTML = html;
       attachCardEvents();
     }
 
-    function createCardHTML(item) {
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
-      
+    function createCardHTML(item, index) {
+      const icon = item.icon_name || iconForDept(item.department);
+      const desc = item.description || "เปิดใช้งานลิงก์ทรัพยากรภายในองค์กร";
+
       return `
-        <div class="w-[300px] bg-white rounded-xl card-shadow card-hover btn-transition p-5" data-id="${item.id}">
-          <div class="flex items-start justify-between mb-3">
-            <div class="flex-1 min-w-0">
-              <p class="text-sm text-gray-400 mb-1">${item.department || ''}</p>
-              <p class="font-semibold text-gray-800 text-primary truncate">${item.link_name || 'ไม่ระบุชื่อ'}</p>
+        <div class="bg-white card-elevation rounded-xl p-6 group cursor-pointer animate-slideUp min-h-[260px] flex flex-col" data-id="${escapeAttr(item.id)}" style="animation-delay: ${Math.min(index * 0.04, 0.24)}s">
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-md group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-2xl" data-icon="${icon}">${icon}</span>
+              </div>
+              <h3 class="font-thai text-[17px] leading-6 font-semibold text-slate-900 mb-2 line-clamp-2">${escapeHtml(item.link_name || "ไม่ระบุชื่อ")}</h3>
+              <p class="text-body-sm text-slate-500 mb-4 line-clamp-3">${escapeHtml(desc)}</p>
             </div>
-            <div class="flex items-center gap-1 ml-2">
-              <button 
-                class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center btn-transition hover:scale-110 btn-edit"
-                style="background-color: ${secondaryColor}20; color: ${secondaryColor}"
-                data-id="${item.id}"
-                title="แก้ไข"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
+            <div class="flex items-center gap-1 shrink-0">
+              <button class="edit-btn w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center hover:bg-blue-100 transition-colors" data-id="${escapeAttr(item.id)}" title="แก้ไข" type="button">
+                <span class="material-symbols-outlined text-base">edit</span>
               </button>
-              <button 
-                    class="delete-btn w-8 h-8 rounded-lg bg-red-50 text-red-400 flex items-center justify-center btn-transition hover:bg-red-100 hover:scale-110"
-                    data-id="${item.id}"
-                    title="ลบ"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                </svg>
+              <button class="delete-btn w-8 h-8 rounded-lg bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-100 transition-colors" data-id="${escapeAttr(item.id)}" title="ลบ" type="button">
+                <span class="material-symbols-outlined text-base">delete</span>
               </button>
             </div>
           </div>
-          
-          <a 
-            href="${item.url || '#'}" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="link-item flex items-center gap-3 p-3 rounded-lg -mx-2 btn-transition group"
-          >
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center btn-primary" style="background: linear-gradient(to right, ${primaryColor}, ${adjustColor(primaryColor, -10)})">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="font-medium text-gray-700 truncate group-hover:text-sky-600 btn-transition">${item.link_name || 'ไม่ระบุชื่อ'}</p>
-              <p class="text-xs text-gray-400 truncate">${item.url || ''}</p>
-            </div>
-            <svg class="w-5 h-5 text-gray-300 group-hover:text-sky-400 btn-transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-          
-          ${item.description ? `
-            <p class="mt-3 text-sm text-gray-400 line-clamp-2">${item.description}</p>
-          ` : ''}
+          <div class="flex items-center justify-between mt-auto pt-4">
+            <span class="text-[10px] font-label-uppercase text-slate-400 bg-slate-50 px-2 py-1 rounded">${escapeHtml(item.department || "GENERAL")}</span>
+            <span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+          </div>
         </div>
       `;
     }
 
     function attachCardEvents() {
-      // Edit buttons
-      document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.id;
-          const item = allData.find(d => d.id === id);
+      document.querySelectorAll("[data-id].card-elevation").forEach((card) => {
+        card.addEventListener("click", () => {
+          const item = allData.find((entry) => String(entry.id) === String(card.dataset.id));
+          if (!item?.url) return;
+
+          window.open(item.url, "_blank", "noopener,noreferrer");
+
+          logStory("WebPortal-Link-Open", {
+            webportal_id: item.id,
+            link_name: item.link_name,
+            url: item.url,
+            department: item.department
+          }).catch((error) => {
+            console.error("StoryLine log failed:", error);
+          });
+        });
+      });
+
+      document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const item = allData.find((entry) => String(entry.id) === String(btn.dataset.id));
           if (item) openEditModal(item);
         });
       });
 
-      // Delete buttons
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.id;
-          showDeleteConfirm(btn, id);
+      document.querySelectorAll(".delete-btn").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          showDeleteConfirm(btn, btn.dataset.id);
         });
       });
     }
 
     function showDeleteConfirm(btn, id) {
-      // Change button to confirm state
       const originalContent = btn.innerHTML;
-      btn.innerHTML = `<span class="text-xs font-medium">ลบ?</span>`;
-      btn.classList.add('bg-red-500', 'text-white', 'px-3');
-      btn.classList.remove('bg-red-50', 'text-red-400');
+      btn.innerHTML = `<span class="text-xs font-semibold">ลบ?</span>`;
+      btn.classList.add("bg-red-500", "text-white", "px-3");
+      btn.classList.remove("bg-red-50", "text-red-400");
 
-      const confirmHandler = async () => {
+      const confirmHandler = async (event) => {
+        event.stopPropagation();
         await deleteItem(id);
-        btn.removeEventListener('click', confirmHandler);
       };
 
-      const cancelHandler = (e) => {
-        if (!btn.contains(e.target)) {
+      const cancelHandler = (event) => {
+        if (!btn.contains(event.target)) {
           btn.innerHTML = originalContent;
-          btn.classList.remove('bg-red-500', 'text-white', 'px-3');
-          btn.classList.add('bg-red-50', 'text-red-400');
-          btn.removeEventListener('click', confirmHandler);
-          document.removeEventListener('click', cancelHandler);
+          btn.classList.remove("bg-red-500", "text-white", "px-3");
+          btn.classList.add("bg-red-50", "text-red-400");
+          btn.removeEventListener("click", confirmHandler);
+          document.removeEventListener("click", cancelHandler);
         }
       };
 
       setTimeout(() => {
-        btn.addEventListener('click', confirmHandler, { once: true });
-        document.addEventListener('click', cancelHandler);
+        btn.addEventListener("click", confirmHandler, { once: true });
+        document.addEventListener("click", cancelHandler);
       }, 10);
-
-      // Auto reset after 3 seconds
-      setTimeout(() => {
-        if (btn.innerHTML.includes('ลบ?')) {
-          btn.innerHTML = originalContent;
-          btn.classList.remove('bg-red-500', 'text-white', 'px-3');
-          btn.classList.add('bg-red-50', 'text-red-400');
-          document.removeEventListener('click', cancelHandler);
-        }
-      }, 3000);
     }
 
-async function deleteItem(id) {
-  const { error } = await supabaseClient
-    .from('webportal')
-    .update({
-      status: 'inactive',
-      updated_by: getUserId(),
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', id); // ✅ ใช้ id ตรง ๆ
+    async function deleteItem(id) {
+      const { error } = await supabaseClient
+        .from("webportal")
+        .update({
+          status: "inactive",
+          updated_by: getUserId(),
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", id);
 
-  if (error) {
-    console.error('DELETE ERROR FULL:', JSON.stringify(error, null, 2));
-    showToast('ลบข้อมูลไม่สำเร็จ', 'error');
-    return;
-  }
+      if (error) {
+        console.error("DELETE ERROR:", error);
+        showToast("ลบข้อมูลไม่สำเร็จ", "error");
+        return;
+      }
 
-  await logStory('WebPortal-Delete', { id });
+      await logStory("WebPortal-Delete", { id });
+      showToast("ลบข้อมูลเรียบร้อยแล้ว", "success");
+      loadWebPortal();
+    }
 
-  showToast('ลบข้อมูลเรียบร้อยแล้ว', 'success');
-  loadWebPortal();
-}
-    // Modal functions
-    function openModal(mode = 'add') {
-      const modal = document.getElementById('modal');
-      const title = document.getElementById('modal-title');
-      const submitText = document.getElementById('submit-text');
-      
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      
-      if (mode === 'add') {
-        title.textContent = 'เพิ่มข้อมูลใหม่';
-        submitText.textContent = 'บันทึก';
-        document.getElementById('data-form').reset();
-        document.getElementById('edit-id').value = '';
+    function openModal(mode = "add") {
+      const modal = document.getElementById("modal");
+      const title = document.getElementById("modal-title");
+      const submitText = document.getElementById("submit-text");
+
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+
+      if (mode === "add") {
+        title.textContent = "เพิ่มข้อมูลใหม่";
+        submitText.textContent = "บันทึก";
+        document.getElementById("data-form").reset();
+        document.getElementById("edit-id").value = "";
+        document.getElementById("icon-name").value = "link";
+        updateIconPreview();
       } else {
-        title.textContent = 'แก้ไขข้อมูล';
-        submitText.textContent = 'อัปเดต';
+        title.textContent = "แก้ไขข้อมูล";
+        submitText.textContent = "อัปเดต";
       }
     }
 
     function openEditModal(item) {
-      openModal('edit');
-      document.getElementById('edit-id').value = item.id;
-      document.getElementById('department').value = item.department || '';
-      document.getElementById('link-name').value = item.link_name || '';
-      document.getElementById('link-url').value = item.url || '';
-      document.getElementById('description').value = item.description || '';
+      openModal("edit");
+      document.getElementById("edit-id").value = item.id;
+      document.getElementById("department").value = item.department || "";
+      document.getElementById("link-name").value = item.link_name || "";
+      document.getElementById("link-url").value = item.url || "";
+      document.getElementById("icon-name").value = item.icon_name || "link";
+      document.getElementById("description").value = item.description || "";
+      updateIconPreview();
     }
 
     function closeModal() {
-      const modal = document.getElementById('modal');
-      modal.classList.add('hidden');
-      document.body.style.overflow = '';
+      document.getElementById("modal").classList.add("hidden");
+      document.body.style.overflow = "";
     }
-    // Form submission
-   async function handleSubmit(e) {
-  e.preventDefault();
-  if (isSubmitting) return;
 
-  const submitBtn = document.getElementById('submit-btn');
-  const submitText = document.getElementById('submit-text');
-  const editId = document.getElementById('edit-id').value;
+    async function handleSubmit(event) {
+      event.preventDefault();
+      if (isSubmitting) return;
 
-  isSubmitting = true;
-  submitBtn.disabled = true;
-  submitText.textContent = 'กำลังบันทึก...';
+      const submitBtn = document.getElementById("submit-btn");
+      const submitText = document.getElementById("submit-text");
+      const editId = document.getElementById("edit-id").value;
 
-  const formData = {
-    department: document.getElementById('department').value.trim(),
-    link_name: document.getElementById('link-name').value.trim(),
-    url: document.getElementById('link-url').value.trim(),
-    description: document.getElementById('description').value.trim()
-  };
+      const formData = {
+        department: document.getElementById("department").value.trim(),
+        link_name: document.getElementById("link-name").value.trim(),
+        url: document.getElementById("link-url").value.trim(),
+        icon_name: document.getElementById("icon-name").value,
+        description: document.getElementById("description").value.trim()
+      };
 
-  /* =========================
-     UPDATE
-  ========================= */
-  if (editId) {
-    const { error } = await supabaseClient
-      .from('webportal')
-      .update({
-        department: formData.department,
-        link_name: formData.link_name,
-        url: formData.url,
-        description: formData.description,
-        updated_by: getUserId(),
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', editId);
+      if (!formData.department || !formData.link_name || !formData.url) {
+        showToast("กรุณากรอกข้อมูลที่จำเป็นให้ครบ", "error");
+        return;
+      }
 
-    if (error) {
-      console.error(error);
-      showToast('อัปเดตไม่สำเร็จ', 'error');
+      isSubmitting = true;
+      submitBtn.disabled = true;
+      submitText.textContent = "กำลังบันทึก...";
+
+      if (editId) {
+        const { error } = await supabaseClient
+          .from("webportal")
+          .update({
+            department: formData.department,
+            link_name: formData.link_name,
+            url: formData.url,
+            icon_name: formData.icon_name,
+            description: formData.description,
+            updated_by: getUserId(),
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", editId);
+
+        if (error) {
+          console.error("UPDATE ERROR:", error);
+          showToast(`อัปเดตไม่สำเร็จ: ${getErrorMessage(error)}`, "error");
+          resetSubmit();
+          return;
+        }
+
+        await logStory("WebPortal-Update", {
+          id: editId,
+          department: formData.department,
+          link_name: formData.link_name,
+          url: formData.url,
+          icon_name: formData.icon_name
+        });
+        showToast("อัปเดตข้อมูลเรียบร้อยแล้ว", "success");
+      } else {
+        const { data, error } = await supabaseClient
+          .from("webportal")
+          .insert([{
+            department: formData.department,
+            link_name: formData.link_name,
+            url: formData.url,
+            icon_name: formData.icon_name,
+            description: formData.description,
+            created_by: getUserId(),
+            status: "active"
+          }])
+          .select("id, url, link_name, department, icon_name")
+          .single();
+
+        if (error) {
+          console.error("CREATE ERROR:", error);
+          showToast(`เพิ่มข้อมูลไม่สำเร็จ: ${getErrorMessage(error)}`, "error");
+          resetSubmit();
+          return;
+        }
+
+        await logStory("WebPortal-Create", {
+          id: data.id,
+          url: data.url,
+          link_name: data.link_name,
+          department: data.department,
+          icon_name: data.icon_name
+        });
+        showToast("เพิ่มข้อมูลเรียบร้อยแล้ว", "success");
+      }
+
+      closeModal();
+      await loadWebPortal();
       resetSubmit();
-      return;
+
+      function resetSubmit() {
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitText.textContent = editId ? "อัปเดต" : "บันทึก";
+      }
     }
 
-    await logStory('WebPortal-Update', {
-      id: editId,
-      department: formData.department,
-      link_name: formData.link_name,
-      url: formData.url
-    });
-
-    showToast('อัปเดตข้อมูลเรียบร้อยแล้ว', 'success');
-  }
-
-  /* =========================
-     CREATE
-  ========================= */
-  else {
-    const { data, error } = await supabaseClient
-  .from('webportal')
-  .insert([{
-    department: formData.department,
-    link_name: formData.link_name,
-    url: formData.url,
-    description: formData.description,
-    created_by: getUserId(),
-    status: 'active'
-  }])
-  .select('id, url, link_name, department')
-  .single();
-
-    if (error) {
-      console.error(error);
-      showToast('เพิ่มข้อมูลไม่สำเร็จ', 'error');
-      resetSubmit();
-      return;
+    function getErrorMessage(error) {
+      return [error?.code, error?.message, error?.details, error?.hint]
+        .filter(Boolean)
+        .join(" | ") || "ไม่ทราบสาเหตุ";
     }
 
-    await logStory('WebPortal-Create', {
-        id: data.id,
-        url: data.url,
-        link_name: data.link_name,
-        department: data.department
-    });
+    function isInvalidSessionError(error) {
+      return error?.code === "28000" || String(error?.message || "").includes("INVALID_SESSION");
+    }
 
-    showToast('เพิ่มข้อมูลเรียบร้อยแล้ว', 'success');
-  }
+    function handleInvalidSession() {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = "Index.html";
+    }
 
-  closeModal();
-  loadWebPortal();
-  resetSubmit();
-
-  function resetSubmit() {
-    isSubmitting = false;
-    submitBtn.disabled = false;
-    submitText.textContent = editId ? 'อัปเดต' : 'บันทึก';
-  }
-}
-    // Toast notification
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
       const colors = {
-        success: 'bg-emerald-500',
-        error: 'bg-red-500',
-        info: 'bg-sky-500'
+        success: "bg-emerald-500",
+        error: "bg-red-500",
+        info: "bg-sky-500"
       };
 
-      const icons = {
-        success: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>',
-        error: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>',
-        info: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
-      };
-
-      toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl text-white text-sm card-shadow animate-slideUp ${colors[type]}`;
-      toast.innerHTML = `${icons[type]}<span>${message}</span>`;
-      
+      toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl text-white text-sm card-elevation animate-slideUp ${colors[type]}`;
+      toast.innerHTML = `<span class="material-symbols-outlined text-lg">${type === "success" ? "check_circle" : type === "error" ? "error" : "info"}</span><span>${escapeHtml(message)}</span>`;
       container.appendChild(toast);
 
       setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(100px)';
+        toast.style.opacity = "0";
+        toast.style.transform = "translateX(100px)";
         setTimeout(() => toast.remove(), 300);
       }, 3000);
     }
 
-    // Search functionality
-    function handleSearch(e) {
-      searchQuery = e.target.value;
-      renderCards();
+    function updateIconPreview() {
+      const iconName = document.getElementById("icon-name").value || "link";
+      document.getElementById("icon-preview").textContent = iconName;
     }
 
-    // Event listeners
-    document.getElementById('add-btn').addEventListener('click', () => openModal('add'));
-    document.getElementById('add-btn').addEventListener('click', () => openModal('add'));
+    function iconForDept(dept = "") {
+      const value = dept.toLowerCase();
+      if (value.includes("it") || value.includes("เทค")) return "terminal";
+      if (value.includes("hr") || value.includes("บุคคล")) return "groups";
+      if (value.includes("sale") || value.includes("ขาย")) return "trending_up";
+      if (value.includes("market")) return "campaign";
+      if (value.includes("admin")) return "admin_panel_settings";
+      return "link";
+    }
 
-const emptyBtn = document.getElementById('empty-add-btn');
-if (emptyBtn) {
-  emptyBtn.addEventListener('click', () => openModal('add'));
-}
+    function escapeHtml(value = "") {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-document.getElementById('cancel-btn').addEventListener('click', closeModal);
-    document.getElementById('cancel-btn').addEventListener('click', closeModal);
-    document.getElementById('modal-backdrop').addEventListener('click', closeModal);
-    document.getElementById('data-form').addEventListener('submit', handleSubmit);
-    document.getElementById('search-input').addEventListener('input', handleSearch);
-    document.getElementById('dept-filter').addEventListener('click', (e) => {
-      const target = e.target.closest('[data-dept]');
+    function escapeAttr(value = "") {
+      return escapeHtml(value);
+    }
+
+    function bindAddButtons() {
+      ["stats-add-btn", "empty-add-btn"].forEach((id) => {
+        const btn = document.getElementById(id);
+        if (btn) btn.addEventListener("click", () => openModal("add"));
+      });
+    }
+
+    document.getElementById("cancel-btn").addEventListener("click", closeModal);
+    document.getElementById("modal-backdrop").addEventListener("click", closeModal);
+    document.getElementById("data-form").addEventListener("submit", handleSubmit);
+    document.getElementById("icon-name").addEventListener("change", updateIconPreview);
+    document.getElementById("search-input").addEventListener("input", (event) => {
+      searchQuery = event.target.value;
+      renderCards();
+    });
+    document.getElementById("dept-filter").addEventListener("click", (event) => {
+      const target = event.target.closest("[data-dept]");
       if (!target) return;
       selectDept(target.dataset.dept);
     });
-
-    // Escape key to close modal
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModal();
     });
 
-    // Initialize
-    loadWebPortal();
+    renderUserHeader("userIdText", "userInfo");
+    bindAddButtons();
     applyConfig();
-
-  </script></body>
+    loadWebPortal();
+  </script>
+</body>
 </html>
