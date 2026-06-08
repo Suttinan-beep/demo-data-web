@@ -142,6 +142,31 @@
       flex-shrink: 0;
     }
 
+    @media (max-width: 767px) {
+      .attendance-sidebar {
+        display: none;
+      }
+
+      .attendance-main {
+        margin-left: 0;
+      }
+
+      #user-summary {
+        border-right: 0;
+        margin-right: 0;
+        padding-right: 0;
+        text-align: right;
+      }
+
+      #user-summary img {
+        display: none;
+      }
+
+      #user-summary > div {
+        align-items: flex-end;
+      }
+    }
+
     .timeline-item::before {
       content: "";
       position: absolute;
@@ -176,15 +201,34 @@
 </head>
 <body class="bg-background font-body-base text-on-surface min-h-screen">
   <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-4 sm:px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
-    <div class="flex items-center gap-8">
-      <span class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50">DataNest</span>
+    <div class="relative flex items-center gap-2 md:gap-8">
+      <button id="mobile-attendance-menu-button" class="md:hidden inline-flex h-9 w-8 items-center justify-center text-primary transition active:scale-95" type="button" aria-label="Open attendance menu" aria-expanded="false">
+        <span class="material-symbols-outlined text-[22px]">menu</span>
+      </button>
+      <a class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50" href="Menu.html">DataNest</a>
+      <div id="mobile-attendance-menu" class="hidden absolute left-0 top-12 z-[60] w-[280px] rounded-xl border border-slate-100 bg-white p-3 shadow-xl shadow-slate-900/10 md:hidden">
+        <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="Attendance.html">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">how_to_reg</span>
+          <span class="flex-1">Check-in</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
+        </a>
+        <a id="mobile-hr-monitor-nav-link" data-menu-code="HR_MONITOR" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRMonitor.html">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">monitoring</span>
+          <span class="flex-1">HR Monitor</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
+        </a>
+        <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-primary px-3 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20" href="AttendanceHistory.html" aria-current="page">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-[24px]">history</span>
+          <span class="flex-1">My History</span>
+        </a>
+      </div>
       <nav class="hidden md:flex items-center gap-6">
         <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors duration-200 cursor-pointer" href="Menu.html">Menu</a>
         <a class="text-primary border-b-2 border-primary py-1 transition-colors duration-200 cursor-pointer" href="Attendance.html">Attendance System</a>
       </nav>
     </div>
     <div class="flex items-center gap-4">
-      <div class="flex items-center border-r border-slate-100 pr-3 sm:pr-6 mr-0 sm:mr-2">
+      <div id="user-summary" class="flex items-center border-r border-slate-100 pr-3 sm:pr-6 mr-0 sm:mr-2">
         <img alt="User avatar" class="mr-3 h-8 w-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"/>
         <div class="flex flex-col">
           <span id="userIdText" class="font-headline-md text-sm font-bold text-slate-900">-</span>
@@ -204,7 +248,7 @@
           <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
           <span class="attendance-nav-label transition-all duration-200">Check-in</span>
         </a>
-        <a id="hr-monitor-nav-link" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
+        <a id="hr-monitor-nav-link" data-menu-code="HR_MONITOR" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
           <span class="material-symbols-outlined text-[18px]">monitoring</span>
           <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
         </a>
@@ -310,7 +354,7 @@
   </main>
 
   <script type="module">
-    import { getAppSessionToken, hasMenuAccess, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
+    import { getAppSessionToken, getDepartment, getNickname, getUserId, hasMenuAccess, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
     import { supabase } from "./supabase-client.js";
 
     const $ = (id) => document.getElementById(id);
@@ -321,10 +365,23 @@
     }
 
     if (await hasMenuAccess("HR_MONITOR")) {
-      $("hr-monitor-nav-link")?.classList.remove("hidden");
+      document.querySelectorAll('[data-menu-code="HR_MONITOR"]').forEach((link) => link.classList.remove("hidden"));
     }
 
-    renderUserHeader("userIdText", "userInfo");
+    function renderAttendanceUserHeader() {
+      renderUserHeader("userIdText", "userInfo");
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        $("userIdText").textContent = getNickname() || getUserId() || "-";
+        $("userInfo").textContent = getDepartment() || "-";
+      }
+    }
+
+    function setMobileAttendanceMenuOpen(open) {
+      $("mobile-attendance-menu")?.classList.toggle("hidden", !open);
+      $("mobile-attendance-menu-button")?.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    renderAttendanceUserHeader();
 
     const state = {
       records: []
@@ -568,6 +625,17 @@
     $("attendance-nav-toggle")?.addEventListener("click", () => {
       setAttendanceNavCollapsed(!document.body.classList.contains("attendance-nav-collapsed"));
     });
+
+    $("mobile-attendance-menu-button")?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setMobileAttendanceMenuOpen($("mobile-attendance-menu")?.classList.contains("hidden"));
+    });
+    document.addEventListener("click", (event) => {
+      if (!$("mobile-attendance-menu")?.contains(event.target) && !$("mobile-attendance-menu-button")?.contains(event.target)) {
+        setMobileAttendanceMenuOpen(false);
+      }
+    });
+    window.addEventListener("resize", renderAttendanceUserHeader);
 
     await loadHistory();
   </script>

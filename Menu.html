@@ -143,12 +143,51 @@
     .shake {
       animation: shake 0.5s ease-in-out;
     }
+
+    @media (max-width: 767px) {
+      #menu-grid {
+        display: none;
+      }
+
+      #mobile-menu-actions {
+        display: grid;
+      }
+
+      #empty-menu-message {
+        display: none !important;
+      }
+
+      #user-summary {
+        border-right: 0;
+        margin-right: 0;
+        padding-right: 0;
+        text-align: right;
+      }
+
+      #user-summary img {
+        display: none;
+      }
+
+      #user-summary > div {
+        align-items: flex-end;
+      }
+    }
   </style>
 </head>
 <body class="bg-background font-body-base text-on-surface min-h-screen flex flex-col">
-  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
-    <div class="flex items-center gap-8">
-      <span class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50">DataNest</span>
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-4 sm:px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
+    <div class="relative flex items-center gap-2 md:gap-8">
+      <button id="mobile-main-menu-button" class="md:hidden inline-flex h-9 w-8 items-center justify-center text-blue-600 transition active:scale-95" type="button" aria-label="Open menu" aria-expanded="false">
+        <span class="material-symbols-outlined text-[22px]">menu</span>
+      </button>
+      <a class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50" href="Menu.html">DataNest</a>
+      <div id="mobile-main-menu" class="hidden absolute left-0 top-12 z-[60] w-[280px] rounded-xl border border-slate-100 bg-white p-3 shadow-xl shadow-slate-900/10 md:hidden">
+        <a data-menu-code="ATTENDANCE" class="hidden flex items-center gap-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-blue-600/10 hover:border-blue-200 hover:bg-blue-50/50 hover:text-blue-600" href="Attendance.html">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-blue-600 text-[24px]">how_to_reg</span>
+          <span class="flex-1">Attendance System</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
+        </a>
+      </div>
       <nav class="hidden md:flex items-center gap-6">
         <a class="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 py-1 transition-colors duration-200 cursor-pointer" href="#">Menu</a>
         <a data-menu-code="ATTENDANCE" class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer" href="Attendance.html">Attendance System</a>
@@ -156,7 +195,7 @@
     </div>
 
     <div class="flex items-center gap-4">
-      <div class="flex items-center border-r border-slate-100 pr-6 mr-2">
+      <div id="user-summary" class="flex items-center border-r border-slate-100 pr-3 sm:pr-6 mr-0 sm:mr-2">
         <img
           alt="User avatar"
           class="mr-3 h-8 w-8 rounded-full object-cover"
@@ -177,8 +216,47 @@
         <p id="welcome-text" class="text-body-base text-secondary max-w-lg mx-auto thai-text">เข้าถึงเครื่องมือฐานข้อมูลและระบบจัดการ</p>
       </div>
 
-      <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-3 gap-lg">
-        <button id="menu-search" data-menu-code="CUSTOMER_SEARCH" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+      <div id="mobile-menu-actions" class="hidden grid-cols-1 gap-3 md:hidden">
+        <button data-menu-code="CUSTOMER_SEARCH" data-mobile-direct="home.html" class="hidden group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-4 text-left shadow-lg shadow-blue-600/10 transition-all duration-300 active:scale-[0.98]" type="button">
+          <div class="relative z-10 flex items-center justify-between gap-4">
+            <div class="flex min-w-0 items-center gap-3">
+              <span class="material-symbols-outlined text-blue-600 text-[32px]">person_search</span>
+              <div class="min-w-0">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-blue-600/60 mb-1">Database</p>
+                <p class="text-body-base font-bold text-slate-900">Customer Search</p>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-blue-600 text-[24px]">chevron_right</span>
+          </div>
+        </button>
+        <button data-menu-code="WEBPORTAL" data-mobile-menu-action="WEBPORTAL" class="hidden group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-4 text-left shadow-lg shadow-blue-600/10 transition-all duration-300 active:scale-[0.98]" type="button">
+          <div class="relative z-10 flex items-center justify-between gap-4">
+            <div class="flex min-w-0 items-center gap-3">
+              <span class="material-symbols-outlined text-blue-600 text-[32px]">public</span>
+              <div class="min-w-0">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-blue-600/60 mb-1">Portal</p>
+                <p class="text-body-base font-bold text-slate-900">Web Portal</p>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-blue-600 text-[22px]">lock</span>
+          </div>
+        </button>
+        <button data-menu-code="CLEARPORT" data-mobile-menu-action="CLEARPORT" class="hidden group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-4 text-left shadow-lg shadow-blue-600/10 transition-all duration-300 active:scale-[0.98]" type="button">
+          <div class="relative z-10 flex items-center justify-between gap-4">
+            <div class="flex min-w-0 items-center gap-3">
+              <span class="material-symbols-outlined text-blue-600 text-[32px]">update</span>
+              <div class="min-w-0">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-blue-600/60 mb-1">Operations</p>
+                <p class="text-body-base font-bold text-slate-900">Update Clearport</p>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-blue-600 text-[22px]">lock</span>
+          </div>
+        </button>
+      </div>
+
+      <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+        <button id="menu-search" data-menu-card="true" data-menu-code="CUSTOMER_SEARCH" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
           <div class="w-16 h-16 rounded-2xl bg-secondary-container flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
             <span class="material-symbols-outlined text-primary text-3xl" data-icon="person_search">person_search</span>
           </div>
@@ -193,7 +271,22 @@
           </div>
         </button>
 
-        <button id="menu-webportal" data-menu-code="WEBPORTAL" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+        <button id="menu-attendance" data-menu-card="true" data-menu-code="ATTENDANCE" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+          <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
+            <span class="material-symbols-outlined text-blue-600 text-3xl" data-icon="how_to_reg">how_to_reg</span>
+          </div>
+          <h2 class="font-headline-md text-headline-md text-on-surface mb-md">Attendance System</h2>
+          <p class="thai-text text-body-sm text-on-surface-variant leading-relaxed">
+            ลงทะเบียนเข้างาน ตรวจสอบประวัติการเช็คอิน และติดตามสถานะการทำงานประจำวัน
+          </p>
+          <div class="mt-lg pt-lg border-t border-slate-50 w-full">
+            <span class="text-primary font-semibold text-sm flex items-center justify-center gap-1 group-hover:gap-2 transition-all">
+              Open Attendance <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </span>
+          </div>
+        </button>
+
+        <button id="menu-webportal" data-menu-card="true" data-menu-code="WEBPORTAL" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
           <div class="w-16 h-16 rounded-2xl bg-tertiary-container flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
             <span class="material-symbols-outlined text-on-tertiary-container text-3xl" data-icon="public">public</span>
           </div>
@@ -208,7 +301,7 @@
           </div>
         </button>
 
-        <button id="menu-update" data-menu-code="CLEARPORT" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+        <button id="menu-update" data-menu-card="true" data-menu-code="CLEARPORT" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
           <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
             <span class="material-symbols-outlined text-blue-600 text-3xl" data-icon="update">update</span>
           </div>
@@ -374,7 +467,7 @@
         const isAllowed = allowed.has(menuCode);
         item.classList.toggle("hidden", !isAllowed);
 
-        if (isAllowed && item.tagName === "BUTTON") {
+        if (isAllowed && item.dataset.menuCard === "true") {
           visibleCards += 1;
         }
       });
@@ -444,10 +537,21 @@
       document.getElementById("userIdText").textContent = userId || "-";
       document.getElementById("page-title").textContent = `Welcome back, ${nickname}`;
       document.getElementById("userInfo").textContent = department ? `${nickname} (${department})` : nickname;
+
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        document.getElementById("userIdText").textContent = nickname || userId || "-";
+        document.getElementById("userInfo").textContent = department || "-";
+      }
+    }
+
+    function setMobileMainMenuOpen(open) {
+      document.getElementById("mobile-main-menu")?.classList.toggle("hidden", !open);
+      document.getElementById("mobile-main-menu-button")?.setAttribute("aria-expanded", open ? "true" : "false");
     }
 
     function bindMenuEvents() {
       const searchBtn = document.getElementById("menu-search");
+      const attendanceBtn = document.getElementById("menu-attendance");
       const updateBtn = document.getElementById("menu-update");
       const webportalBtn = document.getElementById("menu-webportal");
 
@@ -458,6 +562,16 @@
           setTimeout(() => {
             window.location.href = "home.html";
           }, 500);
+        });
+      }
+
+      if (attendanceBtn && !attendanceBtn.dataset.bound) {
+        attendanceBtn.dataset.bound = "true";
+        attendanceBtn.addEventListener("click", () => {
+          showToast("กำลังเข้าสู่หน้า Attendance System...");
+          setTimeout(() => {
+            window.location.href = "Attendance.html";
+          }, 300);
         });
       }
 
@@ -477,6 +591,23 @@
         });
       }
 
+      document.querySelectorAll("[data-mobile-menu-action]").forEach((button) => {
+        if (button.dataset.bound) return;
+        button.dataset.bound = "true";
+        button.addEventListener("click", () => {
+          window.currentMenu = button.dataset.mobileMenuAction;
+          setMobileMainMenuOpen(false);
+          showPasswordModal();
+        });
+      });
+
+      document.querySelectorAll("[data-mobile-direct]").forEach((button) => {
+        if (button.dataset.bound) return;
+        button.dataset.bound = "true";
+        button.addEventListener("click", () => {
+          window.location.href = button.dataset.mobileDirect;
+        });
+      });
     }
 
     document.getElementById("cancel-btn").addEventListener("click", () => {
@@ -531,6 +662,17 @@
         hidePasswordModal();
       }
     });
+
+    document.getElementById("mobile-main-menu-button")?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setMobileMainMenuOpen(document.getElementById("mobile-main-menu")?.classList.contains("hidden"));
+    });
+    document.addEventListener("click", (event) => {
+      if (!document.getElementById("mobile-main-menu")?.contains(event.target) && !document.getElementById("mobile-main-menu-button")?.contains(event.target)) {
+        setMobileMainMenuOpen(false);
+      }
+    });
+    window.addEventListener("resize", renderCurrentUser);
 
     applyConfig(defaultConfig);
     renderCurrentUser();
