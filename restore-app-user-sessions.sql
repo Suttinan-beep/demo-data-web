@@ -9,6 +9,7 @@ create table if not exists public.app_user_sessions (
   created_at timestamp without time zone not null default timezone('Asia/Bangkok', now()),
   last_used_at timestamp without time zone default timezone('Asia/Bangkok', now()),
   expires_at timestamp without time zone not null,
+  max_expires_at timestamp without time zone,
   revoked_at timestamp without time zone
 );
 
@@ -33,8 +34,13 @@ end;
 $$;
 
 alter table public.app_user_sessions
+  add column if not exists max_expires_at timestamp without time zone,
   alter column created_at set default timezone('Asia/Bangkok', now()),
   alter column last_used_at set default timezone('Asia/Bangkok', now());
+
+update public.app_user_sessions
+set max_expires_at = coalesce(max_expires_at, created_at + interval '12 hours')
+where max_expires_at is null;
 
 -- Create index for faster lookups
 create index if not exists idx_app_user_sessions_user_id on public.app_user_sessions(user_id);
@@ -160,7 +166,8 @@ returns table (
   nickname text,
   department text,
   session_token text,
-  expires_at timestamp without time zone
+  expires_at timestamp without time zone,
+  max_expires_at timestamp without time zone
 )
 language plpgsql
 security definer
@@ -174,6 +181,7 @@ declare
   v_token text;
   v_token_hash text;
   v_expires_at timestamp without time zone;
+  v_max_expires_at timestamp without time zone;
 begin
   -- Verify user credentials
   select u.user_id, u."NicKname", u."Department", u.password_hash
@@ -195,12 +203,13 @@ begin
   v_token := encode(extensions.gen_random_bytes(32), 'hex');
   v_token_hash := v_token;
   
-  -- Set expiration to 15 minutes from now
+  -- Idle timeout is 15 minutes. Active sessions can be refreshed up to 12 hours.
   v_expires_at := timezone('Asia/Bangkok', now()) + interval '15 minutes';
+  v_max_expires_at := timezone('Asia/Bangkok', now()) + interval '12 hours';
 
   -- Store session in database
-  insert into public.app_user_sessions (user_id, token_hash, expires_at)
-  values (v_user_id, v_token_hash, v_expires_at)
+  insert into public.app_user_sessions (user_id, token_hash, expires_at, max_expires_at)
+  values (v_user_id, v_token_hash, v_expires_at, v_max_expires_at)
   on conflict (token_hash) do nothing;
 
   -- Return user data with session token
@@ -210,7 +219,44 @@ begin
     v_nickname,
     v_department,
     v_token,
-    v_expires_at;
+    v_expires_at,
+    v_max_expires_at;
+end;
+$$;
+
+create or replace function public.touch_app_user_session(
+  p_session_token text
+)
+returns table (
+  user_id text,
+  expires_at timestamp without time zone,
+  max_expires_at timestamp without time zone
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_now timestamp without time zone;
+begin
+  v_now := timezone('Asia/Bangkok', now());
+
+  update public.app_user_sessions as s
+  set
+    last_used_at = v_now,
+    expires_at = least(v_now + interval '15 minutes', coalesce(s.max_expires_at, s.created_at + interval '12 hours'))
+  where s.token_hash = p_session_token
+    and s.revoked_at is null
+    and s.expires_at > v_now
+    and coalesce(s.max_expires_at, s.created_at + interval '12 hours') > v_now
+  returning s.user_id, s.expires_at, coalesce(s.max_expires_at, s.created_at + interval '12 hours')
+  into user_id, expires_at, max_expires_at;
+
+  if user_id is null then
+    return;
+  end if;
+
+  return next;
 end;
 $$;
 
@@ -389,6 +435,7 @@ comment on function public.check_menu_access_for_session(text, text) is
 'Checks whether a valid app session has access to a specific menu code.';
 
 grant execute on function public.verify_user_login(text, text) to anon, authenticated;
+grant execute on function public.touch_app_user_session(text) to anon, authenticated;
 grant execute on function public.verify_menu_pin_for_session(text, text, text) to anon, authenticated;
 grant execute on function public.get_allowed_menus_for_session(text) to anon, authenticated;
 grant execute on function public.check_menu_access_for_session(text, text) to anon, authenticated;

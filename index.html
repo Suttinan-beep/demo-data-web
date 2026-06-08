@@ -240,6 +240,8 @@
       sessionStorage.setItem("alive", "true");
       sessionStorage.setItem("appSessionToken", user.session_token);
       sessionStorage.setItem("appSessionExpiresAt", user.expires_at || "");
+      sessionStorage.setItem("appSessionMaxExpiresAt", user.max_expires_at || "");
+      sessionStorage.setItem("appLastActivityAt", String(Date.now()));
       localStorage.setItem("alive", "true");
       window.location.href = "Menu.html";
     };

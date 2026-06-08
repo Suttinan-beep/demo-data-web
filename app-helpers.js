@@ -2,6 +2,101 @@ import { getAppSessionToken, getUserId, supabase } from "./supabase-client.js";
 
 export { getAppSessionToken, getUserId };
 
+const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
+const SESSION_REFRESH_INTERVAL_MS = 60 * 1000;
+let keepAliveStarted = false;
+let refreshInFlight = false;
+let lastRefreshAttemptMs = 0;
+
+function parseStoredTime(key) {
+  const value = sessionStorage.getItem(key);
+  const ms = Date.parse(value || "");
+  return Number.isFinite(ms) ? ms : 0;
+}
+
+function redirectToLogin() {
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.href = "Index.html";
+}
+
+function getLastActivityMs() {
+  const stored = Number(sessionStorage.getItem("appLastActivityAt") || "");
+  return Number.isFinite(stored) && stored > 0 ? stored : Date.now();
+}
+
+function markAppActivity() {
+  sessionStorage.setItem("appLastActivityAt", String(Date.now()));
+  void refreshAppSession();
+}
+
+async function refreshAppSession(force = false) {
+  const token = getAppSessionToken();
+  const now = Date.now();
+  const lastActivityMs = getLastActivityMs();
+  const maxExpiresMs = parseStoredTime("appSessionMaxExpiresAt");
+
+  if (!token || refreshInFlight) return false;
+  if (maxExpiresMs && maxExpiresMs <= now) {
+    redirectToLogin();
+    return false;
+  }
+  if (now - lastActivityMs > IDLE_TIMEOUT_MS) {
+    redirectToLogin();
+    return false;
+  }
+  if (!force && now - lastRefreshAttemptMs < SESSION_REFRESH_INTERVAL_MS) return true;
+
+  refreshInFlight = true;
+  lastRefreshAttemptMs = now;
+
+  const { data, error } = await supabase.rpc("touch_app_user_session", {
+    p_session_token: token,
+  });
+
+  refreshInFlight = false;
+
+  if (error) {
+    console.error("Session refresh error:", error);
+    return false;
+  }
+
+  const session = Array.isArray(data) ? data[0] : data;
+  if (!session?.expires_at) {
+    redirectToLogin();
+    return false;
+  }
+
+  sessionStorage.setItem("appSessionExpiresAt", session.expires_at || "");
+  sessionStorage.setItem("appSessionMaxExpiresAt", session.max_expires_at || "");
+  return true;
+}
+
+function initAppSessionKeepAlive() {
+  if (keepAliveStarted) return;
+  keepAliveStarted = true;
+
+  if (!sessionStorage.getItem("appLastActivityAt")) {
+    sessionStorage.setItem("appLastActivityAt", String(Date.now()));
+  }
+
+  ["click", "keydown", "pointerdown", "touchstart", "scroll"].forEach((eventName) => {
+    window.addEventListener(eventName, markAppActivity, { passive: true });
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      markAppActivity();
+    }
+  });
+
+  window.setInterval(() => {
+    void refreshAppSession();
+  }, SESSION_REFRESH_INTERVAL_MS);
+
+  void refreshAppSession(true);
+}
+
 export function getNickname() {
   return ["currentNickname", "nickname", "NickName", "nick", "Nick"]
     .map((key) => localStorage.getItem(key))
@@ -18,17 +113,20 @@ export function requireLogin() {
   const uid = localStorage.getItem("userId");
   const alive = sessionStorage.getItem("alive");
   const appSessionToken = getAppSessionToken();
-  const appSessionExpiresAt = sessionStorage.getItem("appSessionExpiresAt");
-  const appSessionExpiresMs = Date.parse(appSessionExpiresAt || "");
-  const appSessionExpired = !Number.isFinite(appSessionExpiresMs) || appSessionExpiresMs <= Date.now();
+  const now = Date.now();
+  const appSessionExpiresMs = parseStoredTime("appSessionExpiresAt");
+  const appSessionMaxExpiresMs = parseStoredTime("appSessionMaxExpiresAt");
+  const lastActivityMs = getLastActivityMs();
+  const appSessionExpired = !appSessionExpiresMs || appSessionExpiresMs <= now;
+  const appSessionMaxExpired = Boolean(appSessionMaxExpiresMs) && appSessionMaxExpiresMs <= now;
+  const appSessionIdleExpired = now - lastActivityMs > IDLE_TIMEOUT_MS;
 
-  if (!uid || !alive || !appSessionToken || appSessionExpired) {
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.href = "Index.html";
+  if (!uid || !alive || !appSessionToken || appSessionExpired || appSessionMaxExpired || appSessionIdleExpired) {
+    redirectToLogin();
     return false;
   }
 
+  initAppSessionKeepAlive();
   return true;
 }
 

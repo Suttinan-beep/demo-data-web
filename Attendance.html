@@ -182,16 +182,16 @@
 
     @media (max-width: 767px) {
       .attendance-sidebar {
-        width: 40px;
+        display: none;
       }
 
       .attendance-main {
-        margin-left: 40px;
+        margin-left: 0;
+        padding-bottom: 96px;
       }
 
-      .attendance-nav-label,
-      .attendance-nav-title {
-        display: none;
+      .mobile-attendance-nav {
+        display: flex;
       }
     }
 
@@ -237,7 +237,7 @@
           <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
           <span class="attendance-nav-label transition-all duration-200">Check-in</span>
         </a>
-        <a id="hr-monitor-nav-link" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
+        <a id="hr-monitor-nav-link" data-menu-code="HR_MONITOR" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
           <span class="material-symbols-outlined text-[18px]">monitoring</span>
           <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
         </a>
@@ -254,6 +254,21 @@
       </div>
     </div>
   </aside>
+
+  <nav class="mobile-attendance-nav hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-100 bg-white/95 px-3 py-2 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur md:hidden">
+    <a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-xl bg-primary px-2 py-2 text-white" href="Attendance.html" aria-current="page">
+      <span class="material-symbols-outlined text-[21px]">how_to_reg</span>
+      <span class="text-[11px] font-semibold leading-4">Check-in</span>
+    </a>
+    <a data-menu-code="HR_MONITOR" class="hidden flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-slate-500" href="HRMonitor.html">
+      <span class="material-symbols-outlined text-[21px]">monitoring</span>
+      <span class="text-[11px] font-semibold leading-4">HR Monitor</span>
+    </a>
+    <a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-slate-500" href="AttendanceHistory.html">
+      <span class="material-symbols-outlined text-[21px]">history</span>
+      <span class="text-[11px] font-semibold leading-4">My History</span>
+    </a>
+  </nav>
 
   <main id="attendance-main" class="attendance-main flex-grow px-4 sm:px-6 py-6 sm:py-10">
     <div class="w-full max-w-[1440px] mx-auto">
@@ -503,7 +518,7 @@
     }
 
     if (await hasMenuAccess("HR_MONITOR")) {
-      $("hr-monitor-nav-link")?.classList.remove("hidden");
+      document.querySelectorAll('[data-menu-code="HR_MONITOR"]').forEach((link) => link.classList.remove("hidden"));
     }
 
     const initialStorageDateKey = new Intl.DateTimeFormat("en-CA", {
