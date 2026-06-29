@@ -948,6 +948,13 @@
       `;
     }
 
+    function formatDuration(ms) {
+      const totalMinutes = Math.max(0, Math.floor((Number(ms) || 0) / 60000));
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      return `${hours} ชม. ${minutes} นาที`;
+    }
+
     function showCheckinSummary(payload) {
       const checkinDate = new Date(payload.time);
       const status = getCheckinStatus(checkinDate);
@@ -974,6 +981,53 @@
         createSummaryRow("วันที่", dateText),
         createSummaryRow("เวลา", timeText),
         createSummaryRow("หมายเหตุ", payload.note || "-")
+      ].join("");
+      $("checkin-summary-modal").classList.remove("hidden");
+      $("checkin-summary-modal").classList.add("flex");
+    }
+
+    function showCheckoutSummary(payload) {
+      const checkinDate = new Date(payload.time);
+      const checkoutDate = new Date(payload.checkoutAt);
+      const checkoutPlace = payload.type === "Office" ? "Office" : payload.checkoutAddress || payload.address || state.address || "-";
+      const dateText = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }).format(Number.isNaN(checkoutDate.getTime()) ? getServerNow() : checkoutDate);
+      const checkinTimeText = Number.isNaN(checkinDate.getTime())
+        ? "-"
+        : new Intl.DateTimeFormat("th-TH", {
+            timeZone: "Asia/Bangkok",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+          }).format(checkinDate);
+      const checkoutTimeText = Number.isNaN(checkoutDate.getTime())
+        ? "-"
+        : new Intl.DateTimeFormat("th-TH", {
+            timeZone: "Asia/Bangkok",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+          }).format(checkoutDate);
+      const workingMs = Number.isNaN(checkinDate.getTime()) || Number.isNaN(checkoutDate.getTime())
+        ? 0
+        : getNetWorkingMs(checkinDate, checkoutDate);
+
+      $("summary-modal-title").textContent = "บันทึกเวลาออกงานสำเร็จ";
+      $("summary-modal-content").innerHTML = [
+        createSummaryRow("ชื่อ User", getDisplayUserName()),
+        createSummaryRow("ประเภท", payload.type),
+        createSummaryRow("วันที่", dateText),
+        createSummaryRow("เวลาเข้างาน", checkinTimeText),
+        createSummaryRow("เวลาออกงาน", checkoutTimeText),
+        createSummaryRow("ชั่วโมงทำงาน", formatDuration(workingMs)),
+        createSummaryRow("สถานที่ออกงาน", checkoutPlace),
+        createSummaryRow("หมายเหตุ", payload.checkoutNote || "-")
       ].join("");
       $("checkin-summary-modal").classList.remove("hidden");
       $("checkin-summary-modal").classList.add("flex");
@@ -1173,16 +1227,13 @@
       const savedRecord = Array.isArray(data) ? data[0] : data;
       state.lastCheckin.checkoutAt = savedRecord?.checkout_at || formatBangkokSqlDateTime();
       state.lastCheckin.checkoutNote = note.trim() || null;
+      state.lastCheckin.checkoutAddress = isOffice ? "Office" : state.address || null;
       state.lastCheckin.checkoutPhotoDataUrl = photoUrl;
       localStorage.setItem("attendanceLastCheckin", JSON.stringify(state.lastCheckin));
       renderLastCheckin();
       renderDailyTimeline();
       setAttendanceMode("completed");
-      showAttendanceAlert({
-        eyebrow: "Check-out",
-        title: "บันทึกเวลาออกงานสำเร็จ",
-        message: `ระบบบันทึกเวลาออกงานประจำวันที่ ${formatThaiShortDate(getServerNow())} เรียบร้อยแล้ว`
-      });
+      showCheckoutSummary(state.lastCheckin);
       return true;
     }
 

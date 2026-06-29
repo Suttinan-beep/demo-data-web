@@ -234,6 +234,7 @@
 
       localStorage.clear();
       sessionStorage.clear();
+      localStorage.setItem("name", user.name || user.full_name || user.employee_name || "");
       localStorage.setItem("nickname", user.nickname || "");
       localStorage.setItem("department", user.department || "");
       localStorage.setItem("userId", user.user_id);

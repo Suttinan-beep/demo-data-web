@@ -181,20 +181,143 @@
       display: none;
     }
 
+    #print-report {
+      display: none;
+    }
+
     @media print {
+      @page {
+        size: A4 portrait;
+        margin: 12mm;
+      }
+
       header,
       .attendance-sidebar,
+      .attendance-main,
       .no-print {
         display: none !important;
       }
 
-      .attendance-main {
-        margin-left: 0 !important;
-        padding: 0 !important;
-      }
-
       body {
         background: white !important;
+        color: #111827 !important;
+      }
+
+      #print-report {
+        display: block !important;
+        font-family: 'IBM Plex Sans Thai', sans-serif;
+        font-size: 11px;
+        line-height: 1.45;
+      }
+
+      .print-page {
+        min-height: 270mm;
+        page-break-after: always;
+      }
+
+      .print-page:last-child {
+        page-break-after: auto;
+      }
+
+      .print-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #004ac6;
+      }
+
+      .print-section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 8px;
+      }
+
+      .print-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      .print-card {
+        border: 1px solid #dbe3ef;
+        border-radius: 8px;
+        padding: 10px;
+        background: #fff;
+      }
+
+      .print-card-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+      }
+
+      .print-card-value {
+        display: block;
+        margin-top: 4px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .print-card-desc {
+        display: block;
+        margin-top: 4px;
+        font-size: 9px;
+        color: #64748b;
+        line-height: 1.35;
+      }
+
+      .print-field-list {
+        margin: 0;
+        padding-left: 16px;
+      }
+
+      .print-field-list li {
+        margin-bottom: 4px;
+      }
+
+      .print-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .print-table th,
+      .print-table td {
+        border: 1px solid #dbe3ef;
+        padding: 6px 7px;
+        vertical-align: top;
+      }
+
+      .print-table th {
+        background: #f1f5f9;
+        font-size: 9px;
+        text-transform: uppercase;
+        color: #475569;
+      }
+
+      .print-timeline-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        border: 1px solid #dbe3ef;
+        border-left: 4px solid #004ac6;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 8px;
+      }
+
+      .print-signature {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 28px;
+      }
+
+      .print-signature-line {
+        border-top: 1px solid #111827;
+        padding-top: 8px;
+        text-align: center;
+        min-height: 44px;
       }
     }
   </style>
@@ -288,6 +411,10 @@
             <span class="material-symbols-outlined text-[20px]">print</span>
             Print
           </button>
+          <button id="pdf-btn" class="bg-white text-primary border border-primary/20 px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 soft-shadow hover:bg-primary-fixed/60 active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+            Save PDF
+          </button>
         </div>
       </section>
 
@@ -352,6 +479,8 @@
       </section>
     </div>
   </main>
+
+  <section id="print-report" aria-hidden="true"></section>
 
   <script type="module">
     import { getAppSessionToken, getDepartment, getNickname, getUserId, hasMenuAccess, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
@@ -438,6 +567,10 @@
       return `${hours}h ${minutes}m`;
     }
 
+    function formatKm(value) {
+      return `${(Number(value) || 0).toFixed(1)} km`;
+    }
+
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, (char) => ({
         "&": "&amp;",
@@ -446,6 +579,69 @@
         '"': "&quot;",
         "'": "&#039;"
       }[char]));
+    }
+
+    function getRemarkLabel(type) {
+      return {
+        absent: "ขาดงาน",
+        leave: "ลากิจ",
+        personal_leave: "ลากิจ",
+        sick_leave: "ลาป่วย",
+        annual_leave: "ลาพักร้อน",
+        normal_before_launch: "ทำงานปกติ - ระบบยังไม่ประกาศใช้",
+        holiday: "วันหยุด",
+        forgot_checkin: "ลืมเช็คอิน",
+        other: "อื่นๆ"
+      }[type] || "ยังไม่ได้ระบุ";
+    }
+
+    function isRemarkEditable(workDate) {
+      const today = new Date(`${formatDateInput(new Date())}T00:00:00+07:00`);
+      const date = new Date(`${workDate}T00:00:00+07:00`);
+      if (Number.isNaN(date.getTime())) return false;
+      const diffDays = Math.floor((today - date) / 86400000);
+      return diffDays <= 31;
+    }
+
+    function isLateCheckin(checkinAt) {
+      if (!checkinAt) return false;
+      const date = new Date(checkinAt);
+      if (Number.isNaN(date.getTime())) return false;
+      const bangkokTime = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+      const [hour, minute] = bangkokTime.split(":").map(Number);
+      return (hour * 60) + minute > 540;
+    }
+
+    function getBangkokMinutes(checkinAt) {
+      if (!checkinAt) return null;
+      const date = new Date(checkinAt);
+      if (Number.isNaN(date.getTime())) return null;
+      const bangkokTime = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+      const [hour, minute] = bangkokTime.split(":").map(Number);
+      return (hour * 60) + minute;
+    }
+
+    function getPersonalLeaveHoursFromLate(checkinAt) {
+      const minutes = getBangkokMinutes(checkinAt);
+      if (minutes === null || minutes <= 555) return 0;
+      return Math.max(1, Math.ceil((minutes - 540) / 60));
+    }
+
+    function formatLeaveSummary(days, hours) {
+      const parts = [];
+      if (days) parts.push(`${days} วัน`);
+      if (hours) parts.push(`${hours} ชั่วโมง`);
+      return parts.length ? parts.join(" ") : "0";
     }
 
     function normalizeHistoryRecord(record) {
@@ -458,6 +654,9 @@
         checkoutAt: toBangkokIso(record.checkout_at),
         address: record.address,
         note: record.note,
+        remarkType: record.remark_type || "",
+        remarkNote: record.remark_note || "",
+        remarkUpdatedAt: toBangkokIso(record.remark_updated_at),
         fieldPoints: fieldPoints.map((point) => ({
           locationName: point.location_name || `จุดที่ ${point.sequence_no || "-"}`,
           time: toBangkokIso(point.checked_at || point.captured_at),
@@ -468,13 +667,47 @@
       };
     }
 
-    function renderSummary(records) {
-      const selectedDays = records.length;
+    function getHistoryStats(records) {
       const checkins = records.filter((record) => record.checkinAt).length;
       const missed = records.filter((record) => !record.checkinAt).length;
       const office = records.filter((record) => record.type === "Office").length;
       const remote = records.filter((record) => String(record.type || "").toLowerCase().includes("wfh") || String(record.type || "").toLowerCase().includes("on-site")).length;
       const distance = records.reduce((sum, record) => sum + (record.fieldPoints || []).reduce((pointSum, point) => pointSum + (Number(point.distanceKm) || 0), 0), 0);
+      const remarks = records.filter((record) => !record.checkinAt && record.remarkType).length;
+      const personalLeave = records.filter((record) => !record.checkinAt && ["leave", "personal_leave"].includes(record.remarkType)).length;
+      const sickLeave = records.filter((record) => !record.checkinAt && record.remarkType === "sick_leave").length;
+      const annualLeave = records.filter((record) => !record.checkinAt && record.remarkType === "annual_leave").length;
+      const normalBeforeLaunch = records.filter((record) => !record.checkinAt && record.remarkType === "normal_before_launch").length;
+      const late = records.filter((record) => isLateCheckin(record.checkinAt)).length;
+      const personalLeaveHoursFromLate = records.reduce((sum, record) => sum + getPersonalLeaveHoursFromLate(record.checkinAt), 0);
+      const remarkTypes = records.reduce((counts, record) => {
+        if (!record.checkinAt && record.remarkType) {
+          counts[record.remarkType] = (counts[record.remarkType] || 0) + 1;
+        }
+        return counts;
+      }, {});
+
+      return {
+        selectedDays: records.length,
+        checkins,
+        missed,
+        office,
+        remote,
+        distance,
+        remarks,
+        personalLeave,
+        personalLeaveHoursFromLate,
+        personalLeaveSummary: formatLeaveSummary(personalLeave, personalLeaveHoursFromLate),
+        sickLeave,
+        annualLeave,
+        normalBeforeLaunch,
+        late,
+        remarkTypes
+      };
+    }
+
+    function renderSummary(records) {
+      const { selectedDays, checkins, missed, office, remote, distance } = getHistoryStats(records);
 
       $("summary-days").textContent = `${selectedDays} Days`;
       $("summary-range").textContent = `${$("start-date").value} - ${$("end-date").value}`;
@@ -482,7 +715,7 @@
       $("summary-missed").textContent = `${missed} Days`;
       $("summary-office").textContent = `${office}d`;
       $("summary-remote").textContent = `${remote}d`;
-      $("summary-distance").textContent = `${distance.toFixed(1)} km`;
+      $("summary-distance").textContent = formatKm(distance);
       $("office-bar").style.width = `${checkins ? (office / checkins) * 100 : 0}%`;
       $("remote-bar").style.width = `${checkins ? (remote / checkins) * 100 : 0}%`;
     }
@@ -508,6 +741,7 @@
             : "border-primary text-primary";
         const badge = absent ? "ABSENT" : remote ? "WFH / ON-SITE" : "OFFICE";
         const distance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
+        const remarkEditable = isRemarkEditable(record.date);
 
         return `
           <article class="timeline-item relative pl-12">
@@ -527,9 +761,32 @@
                   </div>
                 </div>
                 ${absent ? `
-                  <div class="bg-error-container/25 border border-error/10 rounded-xl p-3 flex items-center gap-3">
-                    <span class="material-symbols-outlined text-error">notification_important</span>
-                    <span class="text-sm text-error font-medium">No check-in recorded for this date.</span>
+                  <div class="bg-error-container/20 border border-error/10 rounded-xl p-4">
+                    <div class="flex items-start gap-3">
+                      <span class="material-symbols-outlined text-error">notification_important</span>
+                      <div class="min-w-0 flex-1">
+                        <p class="text-sm text-error font-semibold">No check-in recorded for this date.</p>
+                        <p class="mt-1 text-xs text-slate-500">Remark: ${escapeHtml(getRemarkLabel(record.remarkType))}${record.remarkNote ? ` - ${escapeHtml(record.remarkNote)}` : ""}</p>
+                      </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-[160px_minmax(0,1fr)_auto] gap-2">
+                      <select class="history-remark-type rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-primary/20 disabled:bg-slate-100 disabled:text-slate-400" data-date="${escapeHtml(record.date)}" ${remarkEditable ? "" : "disabled"}>
+                        <option value="">เลือกเหตุผล</option>
+                        <option value="absent" ${record.remarkType === "absent" ? "selected" : ""}>ขาดงาน</option>
+                        <option value="leave" ${record.remarkType === "leave" ? "selected" : ""}>ลากิจ</option>
+                        <option value="sick_leave" ${record.remarkType === "sick_leave" ? "selected" : ""}>ลาป่วย</option>
+                        <option value="annual_leave" ${record.remarkType === "annual_leave" ? "selected" : ""}>ลาพักร้อน</option>
+                        <option value="normal_before_launch" ${record.remarkType === "normal_before_launch" ? "selected" : ""}>ทำงานปกติ - ระบบยังไม่ประกาศใช้</option>
+                        <option value="holiday" ${record.remarkType === "holiday" ? "selected" : ""}>วันหยุด</option>
+                        <option value="forgot_checkin" ${record.remarkType === "forgot_checkin" ? "selected" : ""}>ลืมเช็คอิน</option>
+                        <option value="other" ${record.remarkType === "other" ? "selected" : ""}>อื่นๆ</option>
+                      </select>
+                      <input class="history-remark-note rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-primary/20 disabled:bg-slate-100 disabled:text-slate-400" data-date="${escapeHtml(record.date)}" value="${escapeHtml(record.remarkNote)}" placeholder="หมายเหตุเพิ่มเติม" ${remarkEditable ? "" : "disabled"}/>
+                      <button class="history-remark-save rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none" data-date="${escapeHtml(record.date)}" type="button" ${remarkEditable ? "" : "disabled"}>
+                        Save
+                      </button>
+                    </div>
+                    ${remarkEditable ? "" : `<p class="mt-3 text-xs font-medium text-slate-500">เลยกำหนดแก้ไข Remark แล้ว (แก้ไขย้อนหลังได้ภายใน 31 วัน)</p>`}
                   </div>
                 ` : `
                   <div class="flex flex-wrap items-center gap-4">
@@ -569,9 +826,322 @@
       }).join("");
     }
 
+    function getPrintEmployeeName() {
+      return ["currentName", "name", "Name", "fullName", "FullName", "employeeName", "EmployeeName"]
+        .map((key) => localStorage.getItem(key))
+        .find(Boolean) || getNickname() || getUserId() || "-";
+    }
+
+    function getPrintDepartment() {
+      return getDepartment() || "-";
+    }
+
+    function getPrintWorkMode(record) {
+      if (!record.checkinAt) return "No Check-in";
+      const remote = String(record.type || "").toLowerCase().includes("wfh") || String(record.type || "").toLowerCase().includes("on-site");
+      return remote ? "WFH / On-site" : "Office";
+    }
+
+    function getPrintStatus(record) {
+      if (!record.checkinAt) {
+        return record.remarkType ? getRemarkLabel(record.remarkType) : "No Check-in";
+      }
+      return record.checkoutAt ? "Completed" : "Checked-in";
+    }
+
+    function renderPrintReportLegacy(records) {
+      const stats = getHistoryStats(records);
+      const printedAt = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(new Date());
+      const rangeText = `${$("start-date").value || "-"} - ${$("end-date").value || "-"}`;
+      const remarkSummary = Object.entries(stats.remarkTypes)
+        .map(([type, count]) => `${getRemarkLabel(type)} ${count} วัน`)
+        .join(", ") || "-";
+
+      $("print-report").innerHTML = `
+        <section class="print-page">
+          <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; border-bottom:2px solid #004ac6; padding-bottom:12px; margin-bottom:16px;">
+            <div>
+              <div class="print-title">Attendance Monthly Report</div>
+              <div style="margin-top:4px; color:#475569;">DataNest Attendance System</div>
+            </div>
+            <div style="text-align:right; color:#475569;">
+              <div><strong>Period:</strong> ${escapeHtml(rangeText)}</div>
+              <div><strong>Printed:</strong> ${escapeHtml(printedAt)}</div>
+            </div>
+          </div>
+
+          <div class="print-section-title">Employee Information</div>
+          <table class="print-table" style="margin-bottom:14px;">
+            <tbody>
+              <tr>
+                <th style="width:18%;">Employee</th>
+                <td>${escapeHtml(getPrintEmployeeName())}</td>
+                <th style="width:18%;">User ID</th>
+                <td>${escapeHtml(getUserId() || "-")}</td>
+              </tr>
+              <tr>
+                <th>Department</th>
+                <td>${escapeHtml(getPrintDepartment())}</td>
+                <th>Selected Period</th>
+                <td>${escapeHtml(rangeText)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="print-section-title">Period Summary - Overall</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Selected Days</span><span class="print-card-value">${stats.selectedDays}</span><span class="print-card-desc">จำนวนวันทั้งหมดในช่วงวันที่ที่เลือก</span></div>
+            <div class="print-card"><span class="print-card-label">Check-in Days</span><span class="print-card-value">${stats.checkins}</span><span class="print-card-desc">จำนวนวันที่มีการเช็คอินในระบบ</span></div>
+            <div class="print-card"><span class="print-card-label">Missed Days</span><span class="print-card-value">${stats.missed}</span><span class="print-card-desc">จำนวนวันที่ไม่มีข้อมูลเช็คอิน</span></div>
+            <div class="print-card"><span class="print-card-label">Total Distance</span><span class="print-card-value">${escapeHtml(formatKm(stats.distance))}</span><span class="print-card-desc">ระยะทางรวมจากจุดเช็คอินนอกสถานที่</span></div>
+          </div>
+
+          <div class="print-section-title">Period Summary - Work Mode & Remark</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Office</span><span class="print-card-value">${stats.office}</span><span class="print-card-desc">จำนวนวันที่เช็คอินเป็น Office</span></div>
+            <div class="print-card"><span class="print-card-label">WFH / On-site</span><span class="print-card-value">${stats.remote}</span><span class="print-card-desc">วันที่เช็คอินเป็น WFH หรือ Onsite</span></div>
+            <div class="print-card"><span class="print-card-label">Remark Days</span><span class="print-card-value">${stats.remarks}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและมี Remark</span></div>
+            <div class="print-card"><span class="print-card-label">Unmarked Missed</span><span class="print-card-value">${Math.max(0, stats.missed - stats.remarks)}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและยังไม่มี Remark</span></div>
+            <div class="print-card"><span class="print-card-label">Normal Before Launch</span><span class="print-card-value">${stats.normalBeforeLaunch}</span><span class="print-card-desc">วันที่ทำงานปกติ แต่ระบบยังไม่ประกาศใช้</span></div>
+          </div>
+
+          <div class="print-section-title">Period Summary - Leave & Late</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Personal Leave</span><span class="print-card-value">${stats.personalLeaveSummary}</span><span class="print-card-desc">ลากิจจาก Remark และการเช็คอินสาย</span></div>
+            <div class="print-card"><span class="print-card-label">Sick Leave</span><span class="print-card-value">${stats.sickLeave}</span><span class="print-card-desc">วันที่ระบุ Remark เป็นลาป่วย</span></div>
+            <div class="print-card"><span class="print-card-label">Annual Leave</span><span class="print-card-value">${stats.annualLeave}</span><span class="print-card-desc">วันที่ระบุ Remark เป็นลาพักร้อน</span></div>
+            <div class="print-card"><span class="print-card-label">Late</span><span class="print-card-value">${stats.late}</span><span class="print-card-desc">วันที่เช็คอินหลัง 09:00</span></div>
+          </div>
+
+          <div class="print-section-title">Remark Summary</div>
+          <div class="print-card" style="margin-bottom:18px;">${escapeHtml(remarkSummary)}</div>
+
+          <div class="print-section-title">Employee Confirmation</div>
+          <p style="color:#475569; margin-bottom:34px;">ข้าพเจ้าตรวจสอบข้อมูลการเข้างานในช่วงวันที่ที่เลือกแล้ว และรับรองว่าข้อมูลถูกต้องตามที่บันทึกไว้ในระบบ</p>
+          <div class="print-signature">
+            <div class="print-signature-line">Employee Signature / Date</div>
+            <div class="print-signature-line">HR Received / Date</div>
+          </div>
+        </section>
+
+        <section class="print-page">
+          <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-end; border-bottom:2px solid #004ac6; padding-bottom:10px; margin-bottom:14px;">
+            <div>
+              <div class="print-title">Attendance Timeline</div>
+              <div style="color:#475569;">${escapeHtml(getPrintEmployeeName())} | ${escapeHtml(rangeText)}</div>
+            </div>
+            <div style="text-align:right; color:#475569;">${stats.selectedDays} days</div>
+          </div>
+          ${records.map((record) => {
+            const fieldDistance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
+            const fieldDetails = (record.fieldPoints || []).map((point) => `${point.locationName || "Point"} ${formatTime(point.time)} (${formatKm(point.distanceKm)})`).join("; ");
+            return `
+              <article class="print-timeline-item">
+                <table class="print-table">
+                  <tbody>
+                    <tr>
+                      <th style="width:18%;">Date</th>
+                      <td style="width:32%;"><strong>${escapeHtml(formatThaiDate(record.date))}</strong></td>
+                      <th style="width:18%;">Status</th>
+                      <td>${escapeHtml(getPrintStatus(record))}</td>
+                    </tr>
+                    <tr>
+                      <th>Work Mode</th>
+                      <td>${escapeHtml(getPrintWorkMode(record))}</td>
+                      <th>Time</th>
+                      <td>${escapeHtml(formatTime(record.checkinAt))} - ${escapeHtml(formatTime(record.checkoutAt))}</td>
+                    </tr>
+                    <tr>
+                      <th>Working Hours</th>
+                      <td>${escapeHtml(formatHours(getNetWorkingMs(record.checkinAt, record.checkoutAt)))}</td>
+                      <th>Distance</th>
+                      <td>${escapeHtml(formatKm(fieldDistance))}</td>
+                    </tr>
+                    <tr>
+                      <th>Location / Remark</th>
+                      <td colspan="3">${escapeHtml(record.checkinAt ? (record.address || "-") : `${getRemarkLabel(record.remarkType)}${record.remarkNote ? ` - ${record.remarkNote}` : ""}`)}</td>
+                    </tr>
+                    ${fieldDetails ? `<tr><th>Field Points</th><td colspan="3">${escapeHtml(fieldDetails)}</td></tr>` : ""}
+                  </tbody>
+                </table>
+              </article>
+            `;
+          }).join("")}
+        </section>
+      `;
+    }
+
+    function renderPrintReport(records) {
+      const stats = getHistoryStats(records);
+      const missedRecords = records.filter((record) => !record.checkinAt);
+      const printedAt = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(new Date());
+      const rangeText = `${$("start-date").value || "-"} - ${$("end-date").value || "-"}`;
+      const remarkSummary = Object.entries(stats.remarkTypes)
+        .map(([type, count]) => `${getRemarkLabel(type)} ${count} วัน`)
+        .join(", ") || "-";
+      const missedRows = missedRecords.length
+        ? missedRecords.map((record) => `
+          <tr>
+            <td>${escapeHtml(formatThaiDate(record.date))}</td>
+            <td>${escapeHtml(getRemarkLabel(record.remarkType))}</td>
+            <td>${escapeHtml(record.remarkNote || "-")}</td>
+          </tr>
+        `).join("")
+        : `<tr><td colspan="3" style="text-align:center; color:#64748b;">ไม่มีวันที่ไม่ได้เช็คอินในช่วงที่เลือก</td></tr>`;
+
+      $("print-report").innerHTML = `
+        <section class="print-page">
+          <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; border-bottom:2px solid #004ac6; padding-bottom:12px; margin-bottom:16px;">
+            <div>
+              <div class="print-title">Attendance History Report</div>
+              <div style="margin-top:4px; color:#475569;">DataNest Attendance System</div>
+            </div>
+            <div style="text-align:right; color:#475569;">
+              <div><strong>Period:</strong> ${escapeHtml(rangeText)}</div>
+              <div><strong>Printed:</strong> ${escapeHtml(printedAt)}</div>
+            </div>
+          </div>
+
+          <div class="print-section-title">Employee Information</div>
+          <table class="print-table" style="margin-bottom:14px;">
+            <tbody>
+              <tr>
+                <th style="width:18%;">Employee</th>
+                <td>${escapeHtml(getPrintEmployeeName())}</td>
+                <th style="width:18%;">User ID</th>
+                <td>${escapeHtml(getUserId() || "-")}</td>
+              </tr>
+              <tr>
+                <th>Department</th>
+                <td>${escapeHtml(getPrintDepartment())}</td>
+                <th>Selected Period</th>
+                <td>${escapeHtml(rangeText)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="print-section-title">Period Summary - Overall</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Selected Days</span><span class="print-card-value">${stats.selectedDays}</span><span class="print-card-desc">จำนวนวันทั้งหมดในช่วงวันที่ที่เลือก</span></div>
+            <div class="print-card"><span class="print-card-label">Check-in Days</span><span class="print-card-value">${stats.checkins}</span><span class="print-card-desc">จำนวนวันที่มีการเช็คอินในระบบ</span></div>
+            <div class="print-card"><span class="print-card-label">Missed Days</span><span class="print-card-value">${stats.missed}</span><span class="print-card-desc">จำนวนวันที่ไม่มีข้อมูลเช็คอิน</span></div>
+            <div class="print-card"><span class="print-card-label">Total Distance</span><span class="print-card-value">${escapeHtml(formatKm(stats.distance))}</span><span class="print-card-desc">ระยะทางรวมจากจุดเช็คอินนอกสถานที่</span></div>
+          </div>
+
+          <div class="print-section-title">Period Summary - Work Mode & Remark</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Office</span><span class="print-card-value">${stats.office}</span><span class="print-card-desc">จำนวนวันที่เช็คอินเป็น Office</span></div>
+            <div class="print-card"><span class="print-card-label">WFH / On-site</span><span class="print-card-value">${stats.remote}</span><span class="print-card-desc">วันที่เช็คอินเป็น WFH หรือ Onsite</span></div>
+            <div class="print-card"><span class="print-card-label">Remark Days</span><span class="print-card-value">${stats.remarks}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและมี Remark</span></div>
+            <div class="print-card"><span class="print-card-label">Unmarked Missed</span><span class="print-card-value">${Math.max(0, stats.missed - stats.remarks)}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและยังไม่มี Remark</span></div>
+            <div class="print-card"><span class="print-card-label">Normal Before Launch</span><span class="print-card-value">${stats.normalBeforeLaunch}</span><span class="print-card-desc">วันที่ทำงานปกติ แต่ระบบยังไม่ประกาศใช้</span></div>
+          </div>
+
+          <div class="print-section-title">Period Summary - Leave & Late</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Personal Leave</span><span class="print-card-value">${stats.personalLeaveSummary}</span><span class="print-card-desc">ลากิจจาก Remark และการเช็คอินสาย</span></div>
+            <div class="print-card"><span class="print-card-label">Sick Leave</span><span class="print-card-value">${stats.sickLeave}</span><span class="print-card-desc">วันที่ระบุ Remark เป็นลาป่วย</span></div>
+            <div class="print-card"><span class="print-card-label">Annual Leave</span><span class="print-card-value">${stats.annualLeave}</span><span class="print-card-desc">วันที่ระบุ Remark เป็นลาพักร้อน</span></div>
+            <div class="print-card"><span class="print-card-label">Late</span><span class="print-card-value">${stats.late}</span><span class="print-card-desc">วันที่เช็คอินหลัง 09:00</span></div>
+          </div>
+
+          <div class="print-section-title">Remark Summary</div>
+          <div class="print-card" style="margin-bottom:18px;">${escapeHtml(remarkSummary)}</div>
+
+          <div class="print-section-title">Missed Check-in Details</div>
+          <table class="print-table" style="margin-bottom:18px;">
+            <thead>
+              <tr>
+                <th style="width:32%;">Date</th>
+                <th style="width:24%;">Remark Type</th>
+                <th>Remark</th>
+              </tr>
+            </thead>
+            <tbody>${missedRows}</tbody>
+          </table>
+
+          <div class="print-section-title">Employee Confirmation</div>
+          <p style="color:#475569; margin-bottom:34px;">ข้าพเจ้าได้ตรวจสอบข้อมูลการเช็คอินในช่วงวันที่ที่เลือกแล้ว และรับรองว่าข้อมูลถูกต้องตามที่บันทึกไว้ในระบบ</p>
+          <div class="print-signature">
+            <div class="print-signature-line">Employee Signature / Date</div>
+            <div class="print-signature-line">HR Received / Date</div>
+          </div>
+        </section>
+
+        <section class="print-page">
+          <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-end; border-bottom:2px solid #004ac6; padding-bottom:10px; margin-bottom:14px;">
+            <div>
+              <div class="print-title">Attendance Timeline</div>
+              <div style="color:#475569;">${escapeHtml(getPrintEmployeeName())} | ${escapeHtml(rangeText)}</div>
+            </div>
+            <div style="text-align:right; color:#475569;">${stats.selectedDays} days</div>
+          </div>
+          ${records.map((record) => {
+            const fieldDistance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
+            const fieldDetails = (record.fieldPoints || []).map((point) => `
+              <li>
+                <strong>${escapeHtml(point.locationName || "Point")}</strong>
+                <span>${escapeHtml(formatTime(point.time))}</span>
+                <span>(${escapeHtml(formatKm(point.distanceKm))})</span>
+                ${point.address ? `<div style="color:#475569;">${escapeHtml(point.address)}</div>` : ""}
+              </li>
+            `).join("");
+            return `
+              <article class="print-timeline-item">
+                <table class="print-table">
+                  <tbody>
+                    <tr>
+                      <th style="width:18%;">Date</th>
+                      <td style="width:32%;"><strong>${escapeHtml(formatThaiDate(record.date))}</strong></td>
+                      <th style="width:18%;">Status</th>
+                      <td>${escapeHtml(getPrintStatus(record))}</td>
+                    </tr>
+                    <tr>
+                      <th>Work Mode</th>
+                      <td>${escapeHtml(getPrintWorkMode(record))}</td>
+                      <th>Time</th>
+                      <td>${escapeHtml(formatTime(record.checkinAt))} - ${escapeHtml(formatTime(record.checkoutAt))}</td>
+                    </tr>
+                    <tr>
+                      <th>Working Hours</th>
+                      <td>${escapeHtml(formatHours(getNetWorkingMs(record.checkinAt, record.checkoutAt)))}</td>
+                      <th>Distance</th>
+                      <td>${escapeHtml(formatKm(fieldDistance))}</td>
+                    </tr>
+                    <tr>
+                      <th>Location / Remark</th>
+                      <td colspan="3">${escapeHtml(record.checkinAt ? (record.address || "-") : `${getRemarkLabel(record.remarkType)}${record.remarkNote ? ` - ${record.remarkNote}` : ""}`)}</td>
+                    </tr>
+                    ${fieldDetails ? `<tr><th>Field Points</th><td colspan="3"><ul class="print-field-list">${fieldDetails}</ul></td></tr>` : ""}
+                  </tbody>
+                </table>
+              </article>
+            `;
+          }).join("")}
+        </section>
+      `;
+    }
+
     function render() {
       renderSummary(state.records);
       renderTimeline(state.records);
+      renderPrintReport(state.records);
     }
 
     async function loadHistory() {
@@ -605,6 +1175,58 @@
       }
     }
 
+    async function saveHistoryRemark(workDate) {
+      const sessionToken = getAppSessionToken();
+      const typeEl = document.querySelector(`.history-remark-type[data-date="${workDate}"]`);
+      const noteEl = document.querySelector(`.history-remark-note[data-date="${workDate}"]`);
+      const saveButton = document.querySelector(`.history-remark-save[data-date="${workDate}"]`);
+      const remarkType = typeEl?.value || "";
+      const remarkNote = noteEl?.value || "";
+
+      if (!sessionToken) {
+        window.location.href = "Login.html";
+        return;
+      }
+
+      if (!remarkType) {
+        alert("กรุณาเลือกเหตุผลก่อนบันทึก Remark");
+        return;
+      }
+
+      if (!isRemarkEditable(workDate)) {
+        alert("เลยกำหนดแก้ไข Remark แล้ว สามารถแก้ไขย้อนหลังได้ภายใน 31 วันเท่านั้น");
+        return;
+      }
+
+      saveButton.disabled = true;
+      saveButton.classList.add("opacity-70", "cursor-wait");
+
+      try {
+        const { error } = await supabase.rpc("save_my_attendance_day_remark", {
+          p_session_token: sessionToken,
+          p_work_date: workDate,
+          p_remark_type: remarkType,
+          p_remark_note: remarkNote
+        });
+
+        if (error) throw error;
+
+        const record = state.records.find((item) => item.date === workDate);
+        if (record) {
+          record.remarkType = remarkType;
+          record.remarkNote = remarkNote;
+          record.remarkUpdatedAt = new Date().toISOString();
+        }
+        render();
+      } catch (error) {
+        console.error("Save attendance remark failed", error);
+        alert(`บันทึก Remark ไม่สำเร็จ: ${error.message || error}`);
+      } finally {
+        saveButton.disabled = false;
+        saveButton.classList.remove("opacity-70", "cursor-wait");
+      }
+    }
+
     function setAttendanceNavCollapsed(collapsed) {
       document.body.classList.toggle("attendance-nav-collapsed", collapsed);
       localStorage.setItem("attendanceNavCollapsed", collapsed ? "true" : "false");
@@ -620,7 +1242,25 @@
     $("start-date").value = formatDateInput(start);
     $("end-date").value = formatDateInput(today);
     $("search-btn").addEventListener("click", loadHistory);
-    $("print-btn").addEventListener("click", () => window.print());
+    $("print-btn").addEventListener("click", () => {
+      renderPrintReport(state.records);
+      window.print();
+    });
+    $("pdf-btn").addEventListener("click", () => {
+      renderPrintReport(state.records);
+      const originalTitle = document.title;
+      document.title = `Attendance History ${$("start-date").value || ""} to ${$("end-date").value || ""}`.trim();
+      window.print();
+      setTimeout(() => {
+        document.title = originalTitle;
+      }, 1000);
+    });
+    $("history-timeline").addEventListener("click", (event) => {
+      const saveButton = event.target.closest(".history-remark-save");
+      if (saveButton?.dataset.date) {
+        saveHistoryRemark(saveButton.dataset.date);
+      }
+    });
     setAttendanceNavCollapsed(localStorage.getItem("attendanceNavCollapsed") === "true");
     $("attendance-nav-toggle")?.addEventListener("click", () => {
       setAttendanceNavCollapsed(!document.body.classList.contains("attendance-nav-collapsed"));

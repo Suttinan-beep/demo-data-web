@@ -95,11 +95,34 @@ create unique index if not exists uq_attendance_field_checkins_sequence
 create index if not exists idx_attendance_field_checkins_user_checked
   on public.attendance_field_checkins(user_id, checked_at);
 
+create table if not exists public.attendance_day_remarks (
+  id uuid primary key default extensions.gen_random_uuid(),
+  user_id text not null,
+  work_date date not null,
+  remark_type text not null check (remark_type in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other')),
+  remark_note text,
+  created_at timestamp without time zone not null default timezone('Asia/Bangkok', now()),
+  updated_at timestamp without time zone not null default timezone('Asia/Bangkok', now()),
+  unique (user_id, work_date)
+);
+
+alter table public.attendance_day_remarks
+  drop constraint if exists attendance_day_remarks_remark_type_check;
+
+alter table public.attendance_day_remarks
+  add constraint attendance_day_remarks_remark_type_check
+  check (remark_type in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other'));
+
+create index if not exists idx_attendance_day_remarks_user_date
+  on public.attendance_day_remarks(user_id, work_date);
+
 alter table public.attendance_records enable row level security;
 alter table public.attendance_field_checkins enable row level security;
+alter table public.attendance_day_remarks enable row level security;
 
 drop policy if exists "allow_attendance_select" on public.attendance_records;
 drop policy if exists "allow_attendance_field_checkins_select" on public.attendance_field_checkins;
+drop policy if exists "allow_attendance_day_remarks_select" on public.attendance_day_remarks;
 
 create policy "allow_attendance_select"
   on public.attendance_records for select
@@ -111,10 +134,17 @@ create policy "allow_attendance_field_checkins_select"
   to anon, authenticated
   using (true);
 
+create policy "allow_attendance_day_remarks_select"
+  on public.attendance_day_remarks for select
+  to anon, authenticated
+  using (true);
+
 revoke all on table public.attendance_records from anon, authenticated;
 grant select on table public.attendance_records to anon, authenticated;
 revoke all on table public.attendance_field_checkins from anon, authenticated;
 grant select on table public.attendance_field_checkins to anon, authenticated;
+revoke all on table public.attendance_day_remarks from anon, authenticated;
+grant select on table public.attendance_day_remarks to anon, authenticated;
 
 create or replace function public.get_attendance_server_time()
 returns table (
@@ -560,6 +590,90 @@ begin
 end;
 $$;
 
+drop function if exists public.save_my_attendance_day_remark(text, date, text, text);
+
+create or replace function public.save_my_attendance_day_remark(
+  p_session_token text,
+  p_work_date date,
+  p_remark_type text,
+  p_remark_note text default null
+)
+returns table (
+  id uuid,
+  employee_id text,
+  work_date date,
+  remark_type text,
+  remark_note text,
+  updated_at timestamp without time zone
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user_id text;
+  v_remark_type text;
+begin
+  select s.user_id
+  into v_user_id
+  from public.app_user_sessions as s
+  where s.token_hash = p_session_token
+    and s.revoked_at is null
+    and s.expires_at > timezone('Asia/Bangkok', now())
+  limit 1;
+
+  if v_user_id is null then
+    raise exception 'Invalid or expired session';
+  end if;
+
+  if p_work_date is null then
+    raise exception 'Work date is required';
+  end if;
+
+  if p_work_date < ((timezone('Asia/Bangkok', now()))::date - interval '31 days')::date then
+    raise exception 'Remark can only be saved within 31 days';
+  end if;
+
+  v_remark_type := lower(trim(coalesce(p_remark_type, '')));
+  if v_remark_type not in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other') then
+    raise exception 'Invalid remark type';
+  end if;
+
+  insert into public.attendance_day_remarks (
+    user_id,
+    work_date,
+    remark_type,
+    remark_note,
+    updated_at
+  )
+  values (
+    v_user_id,
+    p_work_date,
+    v_remark_type,
+    nullif(trim(p_remark_note), ''),
+    timezone('Asia/Bangkok', now())
+  )
+  on conflict on constraint attendance_day_remarks_user_id_work_date_key do update
+  set
+    remark_type = excluded.remark_type,
+    remark_note = excluded.remark_note,
+    updated_at = timezone('Asia/Bangkok', now());
+
+  return query
+  select
+    adr.id,
+    adr.user_id as employee_id,
+    adr.work_date,
+    adr.remark_type,
+    adr.remark_note,
+    adr.updated_at
+  from public.attendance_day_remarks as adr
+  where lower(adr.user_id) = lower(v_user_id)
+    and adr.work_date = p_work_date
+  limit 1;
+end;
+$$;
+
 insert into public.app_menus (menu_code, menu_name, menu_path, display_order, requires_pin)
 values
   ('HR_MONITOR', 'HR Monitor', 'HRMonitor.html', 41, false)
@@ -713,6 +827,8 @@ begin
 end;
 $$;
 
+drop function if exists public.get_my_attendance_history(text, date, date);
+
 create or replace function public.get_my_attendance_history(
   p_session_token text,
   p_start_date date,
@@ -726,6 +842,9 @@ returns table (
   checkout_at timestamp without time zone,
   address text,
   note text,
+  remark_type text,
+  remark_note text,
+  remark_updated_at timestamp without time zone,
   field_points jsonb
 )
 language plpgsql
@@ -769,6 +888,9 @@ begin
     ar.checkout_at,
     ar.address,
     ar.note,
+    adr.remark_type,
+    adr.remark_note,
+    adr.updated_at as remark_updated_at,
     coalesce(
       (
         select jsonb_agg(
@@ -798,6 +920,9 @@ begin
   left join public.attendance_records as ar
     on ar.work_date = days.work_date::date
     and lower(ar.user_id) = lower(v_user_id)
+  left join public.attendance_day_remarks as adr
+    on adr.work_date = days.work_date::date
+    and lower(adr.user_id) = lower(v_user_id)
   order by days.work_date desc;
 end;
 $$;
@@ -844,5 +969,6 @@ grant execute on function public.record_attendance_field_checkin(
   text
 ) to anon, authenticated;
 grant execute on function public.get_today_attendance_field_checkins(text) to anon, authenticated;
+grant execute on function public.save_my_attendance_day_remark(text, date, text, text) to anon, authenticated;
 grant execute on function public.get_hr_attendance_monitor(text, date) to anon, authenticated;
 grant execute on function public.get_my_attendance_history(text, date, date) to anon, authenticated;

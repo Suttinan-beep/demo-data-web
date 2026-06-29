@@ -255,7 +255,7 @@
         </button>
       </div>
 
-      <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+      <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-3 gap-lg">
         <button id="menu-search" data-menu-card="true" data-menu-code="CUSTOMER_SEARCH" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
           <div class="w-16 h-16 rounded-2xl bg-secondary-container flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
             <span class="material-symbols-outlined text-primary text-3xl" data-icon="person_search">person_search</span>
@@ -271,7 +271,7 @@
           </div>
         </button>
 
-        <button id="menu-attendance" data-menu-card="true" data-menu-code="ATTENDANCE" class="ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button">
+        <button id="menu-attendance" data-main-menu-hidden="true" data-menu-code="ATTENDANCE" class="hidden ambient-card rounded-xl p-lg flex flex-col items-center text-center group cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20" type="button" style="display: none;">
           <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-lg group-hover:scale-110 transition-transform duration-300">
             <span class="material-symbols-outlined text-blue-600 text-3xl" data-icon="how_to_reg">how_to_reg</span>
           </div>
@@ -465,7 +465,11 @@
       menuItems.forEach((item) => {
         const menuCode = normalizeMenuCode(item.dataset.menuCode);
         const isAllowed = allowed.has(menuCode);
-        item.classList.toggle("hidden", !isAllowed);
+        const forceHidden = item.dataset.mainMenuHidden === "true";
+        item.classList.toggle("hidden", !isAllowed || forceHidden);
+        if (forceHidden) {
+          item.style.display = "none";
+        }
 
         if (isAllowed && item.dataset.menuCard === "true") {
           visibleCards += 1;

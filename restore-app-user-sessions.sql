@@ -163,6 +163,7 @@ create or replace function public.verify_user_login(
 )
 returns table (
   user_id text,
+  name text,
   nickname text,
   department text,
   session_token text,
@@ -175,6 +176,7 @@ set search_path = public
 as $$
 declare
   v_user_id text;
+  v_name text;
   v_nickname text;
   v_department text;
   v_password_hash text;
@@ -184,8 +186,8 @@ declare
   v_max_expires_at timestamp without time zone;
 begin
   -- Verify user credentials
-  select u.user_id, u."NicKname", u."Department", u.password_hash
-  into v_user_id, v_nickname, v_department, v_password_hash
+  select u.user_id, u."Name", u."NicKname", u."Department", u.password_hash
+  into v_user_id, v_name, v_nickname, v_department, v_password_hash
   from public."UserIDdemoDATA" as u
   where lower(u.user_id) = lower(trim(p_user_id))
   limit 1;
@@ -216,6 +218,7 @@ begin
   return query
   select
     v_user_id,
+    v_name,
     v_nickname,
     v_department,
     v_token,
