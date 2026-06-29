@@ -639,6 +639,15 @@ begin
     raise exception 'Invalid remark type';
   end if;
 
+  if exists (
+    select 1
+    from public.attendance_day_remarks as adr
+    where lower(adr.user_id) = lower(v_user_id)
+      and adr.work_date = p_work_date
+  ) then
+    raise exception 'Remark for this date has already been saved';
+  end if;
+
   insert into public.attendance_day_remarks (
     user_id,
     work_date,
@@ -652,12 +661,7 @@ begin
     v_remark_type,
     nullif(trim(p_remark_note), ''),
     timezone('Asia/Bangkok', now())
-  )
-  on conflict on constraint attendance_day_remarks_user_id_work_date_key do update
-  set
-    remark_type = excluded.remark_type,
-    remark_note = excluded.remark_note,
-    updated_at = timezone('Asia/Bangkok', now());
+  );
 
   return query
   select

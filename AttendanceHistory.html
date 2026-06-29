@@ -480,6 +480,38 @@
     </div>
   </main>
 
+  <div id="remark-confirm-modal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm no-print" role="dialog" aria-modal="true" aria-labelledby="remark-confirm-title">
+    <div class="w-full max-w-md rounded-xl border border-slate-100 bg-white p-6 shadow-2xl shadow-slate-900/20">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-fixed text-primary">
+          <span class="material-symbols-outlined text-[22px]">edit_note</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h3 id="remark-confirm-title" class="font-headline-md text-lg font-bold text-slate-900">ยืนยันการบันทึก Remark</h3>
+          <p class="mt-1 text-sm text-slate-500">โปรดตรวจสอบรายละเอียดก่อนบันทึกข้อมูล</p>
+        </div>
+      </div>
+      <div class="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-700">
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">วันที่</span>
+          <span id="remark-confirm-date" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">เหตุผล</span>
+          <span id="remark-confirm-type" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="mt-3 border-t border-slate-200 pt-3">
+          <p class="font-semibold text-slate-500">หมายเหตุ</p>
+          <p id="remark-confirm-note" class="mt-1 whitespace-pre-line text-slate-900">-</p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="remark-confirm-cancel" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 active:scale-[0.98]" type="button">ยกเลิก</button>
+        <button id="remark-confirm-save" class="gradient-primary rounded-xl px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 active:scale-[0.98]" type="button">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
   <section id="print-report" aria-hidden="true"></section>
 
   <script type="module">
@@ -742,7 +774,8 @@
             : "border-primary text-primary";
         const badge = absent ? "ABSENT" : remote ? "WFH / ON-SITE" : "OFFICE";
         const distance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
-        const remarkEditable = isRemarkEditable(record.date);
+        const remarkLocked = Boolean(record.remarkType);
+        const remarkEditable = isRemarkEditable(record.date) && !remarkLocked;
 
         return `
           <article class="timeline-item relative pl-12">
@@ -788,7 +821,8 @@
                         Save
                       </button>
                     </div>
-                    ${remarkEditable ? "" : `<p class="mt-3 text-xs font-medium text-slate-500">เลยกำหนดแก้ไข Remark แล้ว (แก้ไขย้อนหลังได้ภายใน 45 วัน)</p>`}
+                    ${remarkLocked ? `<p class="mt-3 text-xs font-medium text-slate-500">Remark นี้ถูกบันทึกแล้ว ไม่สามารถแก้ไขได้</p>` : ""}
+                    ${!remarkLocked && !remarkEditable ? `<p class="mt-3 text-xs font-medium text-slate-500">เลยกำหนดแก้ไข Remark แล้ว (แก้ไขย้อนหลังได้ภายใน 45 วัน)</p>` : ""}
                   </div>
                 ` : `
                   <div class="flex flex-wrap items-center gap-4">
@@ -1146,6 +1180,41 @@
       renderPrintReport(state.records);
     }
 
+    function openRemarkConfirmMsbox({ workDate, remarkType, remarkNote }) {
+      const modal = $("remark-confirm-modal");
+      $("remark-confirm-date").textContent = formatThaiDate(workDate);
+      $("remark-confirm-type").textContent = getRemarkLabel(remarkType);
+      $("remark-confirm-note").textContent = remarkNote || "-";
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+
+      return new Promise((resolve) => {
+        const cleanup = (result) => {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          $("remark-confirm-save").removeEventListener("click", onSave);
+          $("remark-confirm-cancel").removeEventListener("click", onCancel);
+          modal.removeEventListener("click", onBackdrop);
+          document.removeEventListener("keydown", onKeydown);
+          resolve(result);
+        };
+        const onSave = () => cleanup(true);
+        const onCancel = () => cleanup(false);
+        const onBackdrop = (event) => {
+          if (event.target === modal) cleanup(false);
+        };
+        const onKeydown = (event) => {
+          if (event.key === "Escape") cleanup(false);
+        };
+
+        $("remark-confirm-save").addEventListener("click", onSave);
+        $("remark-confirm-cancel").addEventListener("click", onCancel);
+        modal.addEventListener("click", onBackdrop);
+        document.addEventListener("keydown", onKeydown);
+        $("remark-confirm-save").focus();
+      });
+    }
+
     async function loadHistory() {
       const sessionToken = getAppSessionToken();
       if (!sessionToken) {
@@ -1195,8 +1264,19 @@
         return;
       }
 
+      const existingRecord = state.records.find((item) => item.date === workDate);
+      if (existingRecord?.remarkType) {
+        alert("Remark นี้ถูกบันทึกแล้ว ไม่สามารถแก้ไขได้");
+        return;
+      }
+
       if (!isRemarkEditable(workDate)) {
         alert("เลยกำหนดแก้ไข Remark แล้ว สามารถแก้ไขย้อนหลังได้ภายใน 45 วันเท่านั้น");
+        return;
+      }
+
+      const confirmed = await openRemarkConfirmMsbox({ workDate, remarkType, remarkNote });
+      if (!confirmed) {
         return;
       }
 
