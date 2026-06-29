@@ -99,7 +99,7 @@ create table if not exists public.attendance_day_remarks (
   id uuid primary key default extensions.gen_random_uuid(),
   user_id text not null,
   work_date date not null,
-  remark_type text not null check (remark_type in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other')),
+  remark_type text not null check (remark_type in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'ot_holiday', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other')),
   remark_note text,
   created_at timestamp without time zone not null default timezone('Asia/Bangkok', now()),
   updated_at timestamp without time zone not null default timezone('Asia/Bangkok', now()),
@@ -111,7 +111,7 @@ alter table public.attendance_day_remarks
 
 alter table public.attendance_day_remarks
   add constraint attendance_day_remarks_remark_type_check
-  check (remark_type in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other'));
+  check (remark_type in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'ot_holiday', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other'));
 
 create index if not exists idx_attendance_day_remarks_user_date
   on public.attendance_day_remarks(user_id, work_date);
@@ -630,12 +630,12 @@ begin
     raise exception 'Work date is required';
   end if;
 
-  if p_work_date < ((timezone('Asia/Bangkok', now()))::date - interval '31 days')::date then
-    raise exception 'Remark can only be saved within 31 days';
+  if p_work_date < ((timezone('Asia/Bangkok', now()))::date - interval '45 days')::date then
+    raise exception 'Remark can only be saved within 45 days';
   end if;
 
   v_remark_type := lower(trim(coalesce(p_remark_type, '')));
-  if v_remark_type not in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other') then
+  if v_remark_type not in ('absent', 'leave', 'personal_leave', 'sick_leave', 'annual_leave', 'ot_holiday', 'normal_before_launch', 'holiday', 'forgot_checkin', 'other') then
     raise exception 'Invalid remark type';
   end if;
 
