@@ -139,12 +139,11 @@
     }
 
     .attendance-field-title {
-      flex-direction: column;
       gap: 2px;
     }
 
     .attendance-title-subline {
-      display: block;
+      display: inline;
       white-space: nowrap;
     }
 
@@ -372,6 +371,9 @@
       }
 
       .attendance-field-title {
+        flex-direction: column;
+        gap: 0;
+        align-items: flex-start;
         display: block !important;
         text-align: left;
       }
@@ -601,8 +603,8 @@
           </section>
           <section class="grid grid-cols-1 md:grid-cols-2 gap-lg items-stretch">
         <div class="attendance-card bg-surface-container-lowest p-6 sm:p-8 rounded-xl border border-slate-100 soft-shadow card-interaction text-center">
-          <div class="w-20 h-20 rounded-2xl bg-tertiary-container flex items-center justify-center">
-            <span class="material-symbols-outlined text-on-tertiary-container text-[40px]">corporate_fare</span>
+          <div class="w-20 h-20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-[48px]">corporate_fare</span>
           </div>
           <h2 class="font-headline-md text-headline-md text-on-surface flex items-center justify-center">เช็คอินที่สำนักงาน (Office)</h2>
           <p class="text-body-sm text-secondary max-w-xs flex items-start justify-center">ระบบจะตรวจสอบสถานะเครือข่ายสำนักงานและบันทึกเวลาเข้างานโดยไม่ต้องถ่ายภาพ</p>
@@ -619,8 +621,8 @@
         </div>
 
         <div class="attendance-card bg-surface-container-lowest p-6 sm:p-8 rounded-xl border border-slate-100 soft-shadow card-interaction text-center">
-          <div class="w-20 h-20 rounded-2xl bg-tertiary-container flex items-center justify-center">
-            <span class="material-symbols-outlined text-on-tertiary-container text-[40px]">distance</span>
+          <div class="w-20 h-20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-[48px]">distance</span>
           </div>
           <h2 class="attendance-field-title font-headline-md text-headline-md text-on-surface flex items-center justify-center">เช็คอินนอกสถานที่ <span class="attendance-title-subline">(WFH / On-site)</span></h2>
           <p class="text-body-sm text-secondary max-w-xs flex items-start justify-center">ยืนยันตัวตนด้วยกล้องและระบุตำแหน่ง GPS แบบเรียลไทม์ก่อนบันทึกเวลา</p>
