@@ -68,7 +68,7 @@
           },
           fontSize: {
             "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
-            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0em", fontWeight: "600" }],
+            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
             "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }],
             "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
             "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }]
@@ -93,7 +93,8 @@
       direction: ltr;
     }
     .thai-text { font-family: 'IBM Plex Sans Thai', sans-serif; }
-    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .ambient-shadow,
+    .soft-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
     .primary-gradient { background: linear-gradient(135deg, #004ac6 0%, #0074a6 100%); }
     .stat-card { min-height: 118px; }
     .thai-label { letter-spacing: 0; text-transform: none; }
@@ -103,7 +104,7 @@
       transition: width 0.25s ease;
     }
 
-    .main-shell {
+    .attendance-main {
       margin-left: 190px;
       transition: margin-left 0.25s ease;
     }
@@ -112,7 +113,7 @@
       width: 40px;
     }
 
-    body.attendance-nav-collapsed .main-shell {
+    body.attendance-nav-collapsed .attendance-main {
       margin-left: 40px;
     }
 
@@ -159,12 +160,12 @@
         display: none;
       }
 
-      .main-shell {
+      .attendance-main {
         margin-left: 0;
         padding: 16px 16px 28px;
       }
 
-      .main-shell > header {
+      .attendance-main > header {
         border-radius: 16px;
         border: 1px solid #e8eef6;
         background: #ffffff;
@@ -172,12 +173,12 @@
         box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
       }
 
-      .main-shell > header h1 {
+      .attendance-main > header h1 {
         font-size: 24px;
         line-height: 32px;
       }
 
-      .main-shell > header > div:last-child {
+      .attendance-main > header > div:last-child {
         width: 100%;
       }
 
@@ -203,11 +204,11 @@
         align-items: flex-end;
       }
 
-      .main-shell > section {
+      .attendance-main > section {
         margin-bottom: 16px;
       }
 
-      .main-shell > section:nth-of-type(1) {
+      .attendance-main > section:nth-of-type(1) {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 12px;
@@ -217,18 +218,18 @@
         box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
       }
 
-      .main-shell > section:nth-of-type(1) > div,
-      .main-shell > section:nth-of-type(1) > label {
+      .attendance-main > section:nth-of-type(1) > div,
+      .attendance-main > section:nth-of-type(1) > label {
         min-width: 0;
         width: 100%;
         padding-top: 0;
       }
 
-      .main-shell > section:nth-of-type(1) > div:last-child {
+      .attendance-main > section:nth-of-type(1) > div:last-child {
         grid-column: 1 / -1;
       }
 
-      .main-shell > section:nth-of-type(1) > label {
+      .attendance-main > section:nth-of-type(1) > label {
         grid-column: 1 / -1;
         min-height: 44px;
         border-radius: 14px;
@@ -236,23 +237,23 @@
         padding: 0 12px;
       }
 
-      .main-shell > section:nth-of-type(1) input,
-      .main-shell > section:nth-of-type(1) select {
+      .attendance-main > section:nth-of-type(1) input,
+      .attendance-main > section:nth-of-type(1) select {
         min-height: 44px;
         border-radius: 14px;
       }
 
-      .main-shell > section:nth-of-type(2) {
+      .attendance-main > section:nth-of-type(2) {
         gap: 12px;
         margin-bottom: 16px;
       }
 
-      .main-shell > section:nth-of-type(2) > div:first-child {
+      .attendance-main > section:nth-of-type(2) > div:first-child {
         display: grid;
         grid-template-columns: 1fr 1fr;
       }
 
-      .main-shell > section:nth-of-type(2) button {
+      .attendance-main > section:nth-of-type(2) button {
         border-radius: 16px;
         padding: 16px;
         box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
@@ -281,25 +282,25 @@
         margin-top: 2px !important;
       }
 
-      .main-shell > section:nth-of-type(3) {
+      .attendance-main > section:nth-of-type(3) {
         gap: 16px;
       }
 
-      .main-shell > section:nth-of-type(3) > div > div {
+      .attendance-main > section:nth-of-type(3) > div > div {
         border-radius: 16px;
         box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
       }
 
-      .main-shell > section:nth-of-type(3) h3 {
+      .attendance-main > section:nth-of-type(3) h3 {
         font-size: 20px;
         line-height: 28px;
       }
 
-      .main-shell table {
+      .attendance-main table {
         display: none;
       }
 
-      .main-shell > section:nth-of-type(3) .overflow-auto {
+      .attendance-main > section:nth-of-type(3) .overflow-auto {
         max-height: min(62vh, 520px);
         overflow-y: auto;
         overscroll-behavior: contain;
@@ -361,7 +362,7 @@
         color: #0f172a;
       }
 
-      .main-shell > section:nth-of-type(4) {
+      .attendance-main > section:nth-of-type(4) {
         margin-top: 16px;
         border-radius: 16px;
         padding: 16px;
@@ -375,7 +376,7 @@
     }
   </style>
 </head>
-<body class="bg-surface-bright text-on-surface min-h-screen">
+<body class="bg-background font-body-base text-on-surface min-h-screen flex flex-col">
   <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-4 sm:px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
     <div class="relative flex items-center gap-2 md:gap-8">
       <button id="mobile-attendance-menu-button" class="md:hidden inline-flex h-9 w-8 items-center justify-center text-primary transition active:scale-95" type="button" aria-label="Open attendance menu" aria-expanded="false">
@@ -383,7 +384,7 @@
       </button>
       <a class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50" href="Menu.html">DataNest</a>
       <div id="mobile-attendance-menu" class="hidden absolute left-0 top-12 z-[60] w-[280px] rounded-xl border border-slate-100 bg-white p-3 shadow-xl shadow-slate-900/10 md:hidden">
-        <a id="mobile-attendance-checkin-nav-link" data-menu-code="ATTENDANCE" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="Attendance.html">
+        <a id="mobile-attendance-checkin-nav-link" data-menu-code="ATTENDANCE" class="flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="Attendance.html">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">how_to_reg</span>
           <span class="flex-1">Check-in</span>
           <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
@@ -397,7 +398,7 @@
           <span class="flex-1">HR Summary</span>
           <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
         </a>
-        <a id="mobile-attendance-history-nav-link" data-menu-code="ATTENDANCE" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="AttendanceHistory.html">
+        <a id="mobile-attendance-history-nav-link" data-menu-code="ATTENDANCE" class="flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="AttendanceHistory.html">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">history</span>
           <span class="flex-1">My History</span>
           <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
@@ -417,20 +418,20 @@
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"
         />
         <div class="flex flex-col">
-          <span id="userIdText" class="font-headline-md text-sm font-bold text-slate-900">-</span>
-          <span id="userInfo" class="font-body-sm text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
+          <span id="userIdText" class="font-manrope text-sm font-bold text-slate-900">-</span>
+          <span id="userInfo" class="font-inter text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
         </div>
       </div>
     </div>
   </header>
 
-  <aside id="attendance-sidebar" class="attendance-sidebar fixed left-0 top-[61px] bottom-0 z-40 bg-white border-r border-slate-100 ambient-shadow overflow-hidden">
+  <aside id="attendance-sidebar" class="attendance-sidebar fixed left-0 top-[61px] bottom-0 z-40 bg-white border-r border-slate-100 soft-shadow overflow-hidden">
     <div class="h-full flex flex-col py-4">
       <div class="attendance-nav-title px-4 mb-4 transition-all duration-200">
         <p class="font-headline-md text-sm font-bold text-primary">Workforce tools</p>
       </div>
       <nav class="flex-1 space-y-1 px-1.5">
-        <a id="attendance-checkin-nav-link" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html">
+        <a id="attendance-checkin-nav-link" class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html">
           <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
           <span class="attendance-nav-label transition-all duration-200">Check-in</span>
         </a>
@@ -442,7 +443,7 @@
           <span class="material-symbols-outlined text-[18px]">summarize</span>
           <span class="attendance-nav-label transition-all duration-200">HR Summary</span>
         </a>
-        <a id="attendance-history-nav-link" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
+        <a id="attendance-history-nav-link" class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
           <span class="material-symbols-outlined text-[18px]">history</span>
           <span class="attendance-nav-label transition-all duration-200">My History</span>
         </a>
@@ -456,7 +457,7 @@
     </div>
   </aside>
 
-  <main class="main-shell px-4 sm:px-6 lg:px-8 py-6 sm:py-10 min-h-screen">
+  <main id="attendance-main" class="attendance-main px-4 sm:px-6 lg:px-8 py-6 sm:py-10 min-h-screen">
     <header class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
       <div>
         <h1 class="text-display-lg font-display-lg text-on-surface">HR Monitor</h1>

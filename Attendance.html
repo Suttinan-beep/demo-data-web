@@ -1670,13 +1670,7 @@
           return false;
         }
 
-        let photoUrl = null;
-        try {
-          photoUrl = isOffice ? null : await uploadAttendancePhoto(photoDataUrl, "checkout", capturedAt);
-        } catch (error) {
-          showToast(error.message, "error");
-          return false;
-        }
+        const photoUrl = null;
 
         const { data, error } = await supabase.rpc("record_attendance_checkout", {
           p_session_token: sessionToken,
@@ -1685,8 +1679,8 @@
           p_checkout_captured_at: formatBangkokSqlDateTime(capturedAt),
           p_checkout_capture_date: formatCaptureDate(capturedAt),
           p_checkout_capture_time: formatCaptureTime(capturedAt),
-          p_checkout_latitude: isOffice ? null : state.position?.coords?.latitude ?? null,
-          p_checkout_longitude: isOffice ? null : state.position?.coords?.longitude ?? null,
+          p_checkout_latitude: state.position?.coords?.latitude ?? null,
+          p_checkout_longitude: state.position?.coords?.longitude ?? null,
           p_checkout_address: checkoutAddress,
           p_checkout_photo_data_url: photoUrl
         });
@@ -2190,6 +2184,28 @@
         showToast(error.message || "ไม่สามารถเปิดกล้องหรือ GPS ได้", "error");
       }
     }
+
+    async function checkoutWithoutPhoto(checkoutType = "Office", buttonId = null) {
+      if (state.isCheckingOut) return false;
+
+      try {
+        if (buttonId && $(buttonId)) $(buttonId).disabled = true;
+        showToast("กำลังตรวจสอบตำแหน่งก่อนเช็คเอาท์", "info");
+        await loadCurrentLocation(true);
+        return await recordCheckout(null, "", checkoutType);
+      } catch (error) {
+        console.error("Checkout location error:", error);
+        showAttendanceAlert({
+          eyebrow: "Check-out",
+          title: "ไม่สามารถยืนยันตำแหน่งได้",
+          message: "กรุณาอนุญาตตำแหน่ง GPS ก่อนบันทึกเวลาออกงาน"
+        });
+        return false;
+      } finally {
+        if (buttonId && $(buttonId)) $(buttonId).disabled = false;
+      }
+    }
+
     function closeCamera() {
       if (state.stream) {
         state.stream.getTracks().forEach((track) => track.stop());
@@ -2321,7 +2337,7 @@
       }
 
       if (state.attendanceMode === "checkout") {
-        await recordCheckout(null, "", "Office");
+        await checkoutWithoutPhoto("Office", "office-checkin-btn");
         return;
       }
 
@@ -2342,13 +2358,13 @@
 
       openCameraAndGps("checkin");
     });
-    $("field-checkout-btn").addEventListener("click", () => openCameraAndGps("checkout"));
+    $("field-checkout-btn").addEventListener("click", () => checkoutWithoutPhoto("WFH / On-site", "field-checkout-btn"));
     $("close-camera-btn").addEventListener("click", closeCamera);
     $("capture-photo-btn").addEventListener("click", captureStampedPhoto);
     $("capture-photo-mobile-btn").addEventListener("click", captureStampedPhoto);
     $("retake-photo-btn").addEventListener("click", retakePhoto);
     $("retake-photo-mobile-btn").addEventListener("click", retakePhoto);
-    $("checkout-btn").addEventListener("click", () => recordCheckout(null, "", "Office"));
+    $("checkout-btn").addEventListener("click", () => checkoutWithoutPhoto("Office", "checkout-btn"));
     $("close-summary-modal-btn").addEventListener("click", closeCheckinSummary);
     $("summary-modal-ok-btn").addEventListener("click", closeCheckinSummary);
     $("checkin-summary-modal").addEventListener("click", (event) => {
@@ -2378,9 +2394,7 @@
       $("confirm-field-btn").disabled = true;
 
       try {
-        const saved = state.verificationMode === "checkout"
-          ? await recordCheckout(state.capturedPhoto, state.fieldNote, "WFH / On-site")
-          : state.verificationMode === "field-visit"
+        const saved = state.verificationMode === "field-visit"
             ? await recordFieldVisit(state.capturedPhoto, state.fieldNote)
             : await recordCheckin("WFH / On-site", state.capturedPhoto, state.fieldNote);
         if (saved) {

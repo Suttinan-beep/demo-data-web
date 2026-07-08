@@ -15,6 +15,7 @@
         extend: {
           colors: {
             "surface-bright": "#f7f9fb",
+            "background": "#f7f9fb",
             "primary-container": "#2563eb",
             "secondary": "#505f76",
             "primary-fixed": "#dbe1ff",
@@ -40,13 +41,15 @@
             "headline-md": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
             "display-lg": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
             "label-uppercase": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "body-sm": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
             thai: ["IBM Plex Sans Thai"]
           },
           fontSize: {
-            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em" }],
+            "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
             "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }],
             "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }],
-            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0em", fontWeight: "600" }]
+            "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }]
           }
         }
       }
@@ -62,13 +65,14 @@
       white-space: nowrap;
       direction: ltr;
     }
-    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .ambient-shadow,
+    .soft-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
     .primary-gradient { background: linear-gradient(135deg, #004ac6 0%, #0074a6 100%); }
     .thai-label { letter-spacing: 0; text-transform: none; }
     .attendance-sidebar { width: 190px; transition: width 0.25s ease; }
-    .main-shell { margin-left: 190px; transition: margin-left 0.25s ease; }
+    .attendance-main { margin-left: 190px; transition: margin-left 0.25s ease; }
     body.attendance-nav-collapsed .attendance-sidebar { width: 40px; }
-    body.attendance-nav-collapsed .main-shell { margin-left: 40px; }
+    body.attendance-nav-collapsed .attendance-main { margin-left: 40px; }
     body.attendance-nav-collapsed .attendance-nav-label,
     body.attendance-nav-collapsed .attendance-nav-title {
       opacity: 0;
@@ -86,6 +90,14 @@
       padding-right: 0;
       gap: 0;
     }
+    body.attendance-nav-collapsed .attendance-nav-link.active {
+      border-radius: 9999px;
+      padding: 0;
+    }
+    body.attendance-nav-collapsed .attendance-nav-link .material-symbols-outlined {
+      margin: 0;
+      flex-shrink: 0;
+    }
     .department-pill input:checked + span {
       background: #004ac6;
       border-color: #004ac6;
@@ -94,15 +106,23 @@
     #print-report { display: none; }
     @media (max-width: 767px) {
       .attendance-sidebar { display: none; }
-      .main-shell { margin-left: 0; padding: 16px 16px 28px; }
-      .main-shell > header {
+      .attendance-main { margin-left: 0; padding: 16px 16px 28px; }
+      #user-summary {
+        border-right: 0;
+        margin-right: 0;
+        padding-right: 0;
+        text-align: right;
+      }
+      #user-summary img { display: none; }
+      #user-summary > div { align-items: flex-end; }
+      .attendance-main > header {
         border-radius: 16px;
         border: 1px solid #e8eef6;
         background: #ffffff;
         padding: 16px;
         box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
       }
-      .main-shell > header h1 { font-size: 24px; line-height: 32px; }
+      .attendance-main > header h1 { font-size: 24px; line-height: 32px; }
       .mobile-stack { display: grid; grid-template-columns: 1fr; }
       .summary-table { display: none; }
       .summary-card-list { display: grid; }
@@ -198,69 +218,79 @@
     }
   </style>
 </head>
-<body class="min-h-screen bg-surface-bright text-on-surface">
-  <header class="no-print sticky top-0 z-50 flex w-full items-center justify-between border-b border-slate-100 bg-white px-4 py-3 text-sm font-medium shadow-sm sm:px-8 lg:px-12">
+<body class="bg-background font-body-base text-on-surface min-h-screen flex flex-col">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-4 sm:px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
     <div class="relative flex items-center gap-2 md:gap-8">
       <button id="mobile-attendance-menu-button" class="md:hidden inline-flex h-9 w-8 items-center justify-center text-primary transition active:scale-95" type="button" aria-label="Open attendance menu" aria-expanded="false">
         <span class="material-symbols-outlined text-[22px]">menu</span>
       </button>
-      <a class="text-lg font-black tracking-widest text-slate-900" href="Menu.html">DataNest</a>
+      <a class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50" href="Menu.html">DataNest</a>
       <div id="mobile-attendance-menu" class="hidden absolute left-0 top-12 z-[60] w-[280px] rounded-xl border border-slate-100 bg-white p-3 shadow-xl shadow-slate-900/10 md:hidden">
-        <a id="mobile-attendance-checkin-nav-link" data-menu-code="ATTENDANCE" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="Attendance.html">
+        <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="Attendance.html">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">how_to_reg</span>
           <span class="flex-1">Check-in</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
         </a>
-        <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRMonitor.html">
+        <a data-menu-code="HR_MONITOR" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRMonitor.html">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">monitoring</span>
           <span class="flex-1">HR Monitor</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
         </a>
-        <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-primary px-3 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20" href="HRSummary.html" aria-current="page">
+        <a data-menu-code="HR_SUMMARY" class="flex items-center gap-3 rounded-xl border border-primary/15 bg-primary px-3 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20" href="HRSummary.html" aria-current="page">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-[24px]">summarize</span>
           <span class="flex-1">HR Summary</span>
         </a>
-        <a id="mobile-attendance-history-nav-link" data-menu-code="ATTENDANCE" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="AttendanceHistory.html">
+        <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="AttendanceHistory.html">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">history</span>
           <span class="flex-1">My History</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
         </a>
       </div>
-      <nav class="hidden items-center gap-6 md:flex">
-        <a class="text-slate-500 transition-colors hover:text-primary" href="Menu.html">Menu</a>
-        <a class="border-b-2 border-primary py-1 text-primary" href="Attendance.html">Attendance System</a>
+      <nav class="hidden md:flex items-center gap-6">
+        <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors duration-200 cursor-pointer" href="Menu.html">Menu</a>
+        <a class="text-primary border-b-2 border-primary py-1 transition-colors duration-200 cursor-pointer" href="Attendance.html">Attendance System</a>
       </nav>
     </div>
-    <div id="user-summary" class="flex items-center border-r border-slate-100 pr-3 sm:pr-6">
-      <div class="flex flex-col">
-        <span id="userIdText" class="text-sm font-bold text-slate-900">-</span>
-        <span id="userInfo" class="text-[10px] font-semibold tracking-wider text-slate-400">-</span>
-      </div>
+    <div class="flex items-center gap-4">
+      <div id="user-summary" class="flex items-center border-r border-slate-100 pr-3 sm:pr-6 mr-0 sm:mr-2">
+          <img
+            alt="User avatar"
+            class="mr-3 h-8 w-8 rounded-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"
+          />
+          <div class="flex flex-col">
+            <span id="userIdText" class="font-manrope text-sm font-bold text-slate-900">-</span>
+            <span id="userInfo" class="font-inter text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
+          </div>
+        </div>
     </div>
   </header>
 
-  <aside id="attendance-sidebar" class="attendance-sidebar no-print fixed bottom-0 left-0 top-[61px] z-40 overflow-hidden border-r border-slate-100 bg-white ambient-shadow">
-    <div class="flex h-full flex-col py-4">
-      <div class="attendance-nav-title mb-4 px-4 transition-all duration-200">
-        <p class="text-sm font-bold text-primary">Workforce tools</p>
+  <aside id="attendance-sidebar" class="attendance-sidebar fixed left-0 top-[61px] bottom-0 z-40 bg-white border-r border-slate-100 soft-shadow overflow-hidden">
+    <div class="h-full flex flex-col py-4">
+      <div class="attendance-nav-title px-4 mb-4 transition-all duration-200">
+        <p class="font-headline-md text-sm font-bold text-primary">Workforce tools</p>
       </div>
       <nav class="flex-1 space-y-1 px-1.5">
-        <a id="attendance-checkin-nav-link" class="attendance-nav-link hidden items-center gap-3 rounded-full px-3 py-2 text-sm font-semibold text-slate-500 transition-all duration-200 hover:bg-slate-50 hover:text-primary" href="Attendance.html">
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html">
           <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
           <span class="attendance-nav-label transition-all duration-200">Check-in</span>
         </a>
-        <a id="hr-monitor-nav-link" class="attendance-nav-link flex items-center gap-3 rounded-full px-3 py-2 text-sm font-semibold text-slate-500 transition-all duration-200 hover:bg-slate-50 hover:text-primary" href="HRMonitor.html">
+        <a id="hr-monitor-nav-link" data-menu-code="HR_MONITOR" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
           <span class="material-symbols-outlined text-[18px]">monitoring</span>
           <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
         </a>
-        <a id="hr-summary-nav-link" class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary px-3 py-2 text-sm font-semibold text-white transition-all duration-200" href="HRSummary.html" aria-current="page">
+        <a id="hr-summary-nav-link" class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRSummary.html" aria-current="page">
           <span class="material-symbols-outlined text-[18px]">summarize</span>
           <span class="attendance-nav-label transition-all duration-200">HR Summary</span>
         </a>
-        <a id="attendance-history-nav-link" class="attendance-nav-link hidden items-center gap-3 rounded-full px-3 py-2 text-sm font-semibold text-slate-500 transition-all duration-200 hover:bg-slate-50 hover:text-primary" href="AttendanceHistory.html">
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
           <span class="material-symbols-outlined text-[18px]">history</span>
           <span class="attendance-nav-label transition-all duration-200">My History</span>
         </a>
       </nav>
       <div class="px-1.5">
-        <button id="attendance-nav-toggle" class="attendance-nav-link flex w-full items-center gap-3 rounded-full bg-surface-container-low px-3 py-2 text-sm font-semibold text-slate-500 transition-all duration-200 hover:text-primary" type="button" aria-label="Toggle attendance navigation" aria-expanded="true">
+        <button id="attendance-nav-toggle" class="attendance-nav-link w-full flex items-center gap-3 rounded-full bg-surface-container-low text-slate-500 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" type="button" aria-label="Toggle attendance navigation" aria-expanded="true">
           <span id="attendance-nav-toggle-icon" class="material-symbols-outlined text-[18px]">chevron_left</span>
           <span class="attendance-nav-label transition-all duration-200">Collapse</span>
         </button>
@@ -268,7 +298,7 @@
     </div>
   </aside>
 
-  <main class="main-shell no-print min-h-screen px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+  <main id="attendance-main" class="attendance-main no-print px-4 sm:px-6 lg:px-8 py-6 sm:py-10 min-h-screen">
     <header class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 class="font-display-lg text-display-lg text-on-surface">HR Attendance Summary</h1>
@@ -376,9 +406,11 @@
     }
 
     if (await hasMenuAccess("ATTENDANCE")) {
-      $("attendance-checkin-nav-link")?.classList.remove("hidden");
-      $("attendance-history-nav-link")?.classList.remove("hidden");
       document.querySelectorAll('[data-menu-code="ATTENDANCE"]').forEach((link) => link.classList.remove("hidden"));
+    }
+
+    if (await hasMenuAccess("HR_MONITOR")) {
+      document.querySelectorAll('[data-menu-code="HR_MONITOR"]').forEach((link) => link.classList.remove("hidden"));
     }
 
     function renderAttendanceUserHeader() {
