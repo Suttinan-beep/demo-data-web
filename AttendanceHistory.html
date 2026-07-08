@@ -143,12 +143,26 @@
     }
 
     @media (max-width: 767px) {
+      body {
+        background: #f7f9fb;
+      }
+
+      header {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+
       .attendance-sidebar {
         display: none;
       }
 
       .attendance-main {
         margin-left: 0;
+        padding: 16px 16px 28px;
+      }
+
+      .attendance-main > div {
+        max-width: 480px;
       }
 
       #user-summary {
@@ -164,6 +178,134 @@
 
       #user-summary > div {
         align-items: flex-end;
+      }
+
+      .attendance-main section:first-child {
+        border-radius: 16px;
+        border: 1px solid #e8eef6;
+        background: #ffffff;
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      .attendance-main section:first-child h1 {
+        font-size: 24px;
+        line-height: 32px;
+      }
+
+      .attendance-main section:first-child p {
+        font-size: 13px;
+        line-height: 20px;
+      }
+
+      .attendance-main section:first-child .no-print {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .attendance-main section:first-child .no-print > div,
+      .attendance-main section:first-child .no-print button {
+        width: 100%;
+        min-height: 46px;
+        justify-content: center;
+        border-radius: 14px;
+      }
+
+      .attendance-main section:first-child .no-print > div {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+        padding: 10px 12px;
+      }
+
+      .attendance-main section:first-child input[type="date"] {
+        min-width: 0;
+        width: 100%;
+        font-size: 13px;
+      }
+
+      .attendance-main section:nth-of-type(2) {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .attendance-main section:nth-of-type(2) > div {
+        min-height: 112px;
+        border-radius: 16px;
+        padding: 14px !important;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      .attendance-main section:nth-of-type(2) > div:first-child,
+      .attendance-main section:nth-of-type(2) > div:nth-child(4) {
+        grid-column: 1 / -1;
+      }
+
+      .attendance-main section:nth-of-type(2) h3 {
+        font-size: 22px;
+        line-height: 30px;
+      }
+
+      .attendance-main section:nth-of-type(3) h2 {
+        margin-bottom: 14px;
+        font-size: 20px;
+        line-height: 28px;
+      }
+
+      #history-timeline {
+        display: grid;
+        gap: 12px;
+      }
+
+      .timeline-item {
+        padding-left: 0 !important;
+      }
+
+      .timeline-item::before {
+        display: none;
+      }
+
+      .timeline-item > div:first-child {
+        display: none;
+      }
+
+      .timeline-item > div:nth-child(2) {
+        border-radius: 16px;
+        padding: 14px !important;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      .timeline-item > div:nth-child(2):hover {
+        transform: none;
+      }
+
+      .timeline-item .text-center.bg-slate-50 {
+        min-width: 52px;
+        padding: 8px 10px;
+      }
+
+      .timeline-item h4 {
+        font-size: 16px;
+        line-height: 24px;
+      }
+
+      .timeline-item .history-remark-type,
+      .timeline-item .history-remark-note,
+      .timeline-item .history-remark-save {
+        min-height: 44px;
+        border-radius: 14px;
+      }
+
+      .timeline-item .bg-error-container\/20 {
+        padding: 12px;
+        border-radius: 14px;
+      }
+
+      .timeline-item .bg-slate-50.rounded-xl {
+        padding: 12px;
       }
     }
 
@@ -306,6 +448,26 @@
         margin-bottom: 8px;
       }
 
+      .print-timeline-item.under-hours {
+        border-color: #dc2626;
+        border-left-color: #dc2626;
+      }
+
+      .print-timeline-item.under-hours .print-table th,
+      .print-timeline-item.under-hours .print-table td {
+        border-color: #fecaca;
+      }
+
+      .print-timeline-item.under-hours .print-table th {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .print-timeline-item.under-hours .print-table td,
+      .print-timeline-item.under-hours .print-table strong {
+        color: #b91c1c;
+      }
+
       .print-signature {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -338,6 +500,11 @@
         <a id="mobile-hr-monitor-nav-link" data-menu-code="HR_MONITOR" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRMonitor.html">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">monitoring</span>
           <span class="flex-1">HR Monitor</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
+        </a>
+        <a data-menu-code="HR_SUMMARY" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRSummary.html">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">summarize</span>
+          <span class="flex-1">HR Summary</span>
           <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
         </a>
         <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-primary px-3 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20" href="AttendanceHistory.html" aria-current="page">
@@ -375,6 +542,10 @@
           <span class="material-symbols-outlined text-[18px]">monitoring</span>
           <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
         </a>
+        <a id="hr-summary-nav-link" data-menu-code="HR_SUMMARY" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRSummary.html">
+          <span class="material-symbols-outlined text-[18px]">summarize</span>
+          <span class="attendance-nav-label transition-all duration-200">HR Summary</span>
+        </a>
         <a class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html" aria-current="page">
           <span class="material-symbols-outlined text-[18px]">history</span>
           <span class="attendance-nav-label transition-all duration-200">My History</span>
@@ -410,10 +581,6 @@
           <button id="print-btn" class="bg-secondary-container text-on-secondary-container px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 hover:bg-blue-200 active:scale-95 transition-all" type="button">
             <span class="material-symbols-outlined text-[20px]">print</span>
             Print
-          </button>
-          <button id="pdf-btn" class="bg-white text-primary border border-primary/20 px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 soft-shadow hover:bg-primary-fixed/60 active:scale-95 transition-all" type="button">
-            <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
-            Save PDF
           </button>
         </div>
       </section>
@@ -528,6 +695,9 @@
     if (await hasMenuAccess("HR_MONITOR")) {
       document.querySelectorAll('[data-menu-code="HR_MONITOR"]').forEach((link) => link.classList.remove("hidden"));
     }
+    if (await hasMenuAccess("HR_SUMMARY")) {
+      document.querySelectorAll('[data-menu-code="HR_SUMMARY"]').forEach((link) => link.classList.remove("hidden"));
+    }
 
     function renderAttendanceUserHeader() {
       renderUserHeader("userIdText", "userInfo");
@@ -545,7 +715,8 @@
     renderAttendanceUserHeader();
 
     const state = {
-      records: []
+      records: [],
+      printEmployeeName: ""
     };
 
     function formatDateInput(date) {
@@ -621,7 +792,6 @@
         sick_leave: "ลาป่วย",
         annual_leave: "ลาพักร้อน",
         ot_holiday: "วันหยุดทำ OT",
-        normal_before_launch: "ทำงานปกติ - ระบบยังไม่ประกาศใช้",
         holiday: "วันหยุด",
         forgot_checkin: "ลืมเช็คอิน",
         other: "อื่นๆ"
@@ -633,7 +803,7 @@
       const date = new Date(`${workDate}T00:00:00+07:00`);
       if (Number.isNaN(date.getTime())) return false;
       const diffDays = Math.floor((today - date) / 86400000);
-      return diffDays <= 45;
+      return diffDays <= 7;
     }
 
     function isLateCheckin(checkinAt) {
@@ -682,6 +852,7 @@
 
       return {
         date: record.work_date,
+        employeeName: record.employee_name || "",
         type: record.checkin_type,
         checkinAt: toBangkokIso(record.checkin_at),
         checkoutAt: toBangkokIso(record.checkout_at),
@@ -710,7 +881,6 @@
       const personalLeave = records.filter((record) => !record.checkinAt && ["leave", "personal_leave"].includes(record.remarkType)).length;
       const sickLeave = records.filter((record) => !record.checkinAt && record.remarkType === "sick_leave").length;
       const annualLeave = records.filter((record) => !record.checkinAt && record.remarkType === "annual_leave").length;
-      const normalBeforeLaunch = records.filter((record) => !record.checkinAt && record.remarkType === "normal_before_launch").length;
       const late = records.filter((record) => isLateCheckin(record.checkinAt)).length;
       const personalLeaveHoursFromLate = records.reduce((sum, record) => sum + getPersonalLeaveHoursFromLate(record.checkinAt), 0);
       const remarkTypes = records.reduce((counts, record) => {
@@ -733,7 +903,6 @@
         personalLeaveSummary: formatLeaveSummary(personalLeave, personalLeaveHoursFromLate),
         sickLeave,
         annualLeave,
-        normalBeforeLaunch,
         late,
         remarkTypes
       };
@@ -811,7 +980,6 @@
                         <option value="sick_leave" ${record.remarkType === "sick_leave" ? "selected" : ""}>ลาป่วย</option>
                         <option value="annual_leave" ${record.remarkType === "annual_leave" ? "selected" : ""}>ลาพักร้อน</option>
                         <option value="ot_holiday" ${record.remarkType === "ot_holiday" ? "selected" : ""}>วันหยุดทำ OT</option>
-                        <option value="normal_before_launch" ${record.remarkType === "normal_before_launch" ? "selected" : ""}>ทำงานปกติ - ระบบยังไม่ประกาศใช้</option>
                         <option value="holiday" ${record.remarkType === "holiday" ? "selected" : ""}>วันหยุด</option>
                         <option value="forgot_checkin" ${record.remarkType === "forgot_checkin" ? "selected" : ""}>ลืมเช็คอิน</option>
                         <option value="other" ${record.remarkType === "other" ? "selected" : ""}>อื่นๆ</option>
@@ -822,7 +990,7 @@
                       </button>
                     </div>
                     ${remarkLocked ? `<p class="mt-3 text-xs font-medium text-slate-500">Remark นี้ถูกบันทึกแล้ว ไม่สามารถแก้ไขได้</p>` : ""}
-                    ${!remarkLocked && !remarkEditable ? `<p class="mt-3 text-xs font-medium text-slate-500">เลยกำหนดแก้ไข Remark แล้ว (แก้ไขย้อนหลังได้ภายใน 45 วัน)</p>` : ""}
+                    ${!remarkLocked && !remarkEditable ? `<p class="mt-3 text-xs font-medium text-slate-500">เลยกำหนดแก้ไข Remark แล้ว (แก้ไขย้อนหลังได้ภายใน 7 วัน)</p>` : ""}
                   </div>
                 ` : `
                   <div class="flex flex-wrap items-center gap-4">
@@ -863,9 +1031,31 @@
     }
 
     function getPrintEmployeeName() {
-      return ["currentName", "name", "Name", "fullName", "FullName", "employeeName", "EmployeeName"]
+      return state.printEmployeeName || ["currentName", "name", "Name", "fullName", "FullName", "employeeName", "EmployeeName"]
         .map((key) => localStorage.getItem(key))
-        .find(Boolean) || getNickname() || getUserId() || "-";
+        .find(Boolean) || "-";
+    }
+
+    async function loadPrintEmployeeName() {
+      const userId = getUserId();
+      if (!userId || state.printEmployeeName) return;
+
+      const { data, error } = await supabase
+        .from("UserIDdemoDATA")
+        .select("Name,NicKname,user_id")
+        .ilike("user_id", userId)
+        .maybeSingle();
+
+      if (error) {
+        console.warn("Load employee name failed", error);
+        return;
+      }
+
+      const employeeName = data?.Name || data?.name || data?.employee_name || data?.full_name || "";
+      state.printEmployeeName = String(employeeName || "").trim();
+      if (state.printEmployeeName) {
+        localStorage.setItem("name", state.printEmployeeName);
+      }
     }
 
     function getPrintDepartment() {
@@ -883,6 +1073,10 @@
         return record.remarkType ? getRemarkLabel(record.remarkType) : "No Check-in";
       }
       return record.checkoutAt ? "Completed" : "Checked-in";
+    }
+
+    function isUnderEightWorkingHours(record) {
+      return Boolean(record.checkinAt) && getNetWorkingMs(record.checkinAt, record.checkoutAt) < 28800000;
     }
 
     function renderPrintReportLegacy(records) {
@@ -946,7 +1140,6 @@
             <div class="print-card"><span class="print-card-label">WFH / On-site</span><span class="print-card-value">${stats.remote}</span><span class="print-card-desc">วันที่เช็คอินเป็น WFH หรือ Onsite</span></div>
             <div class="print-card"><span class="print-card-label">Remark Days</span><span class="print-card-value">${stats.remarks}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและมี Remark</span></div>
             <div class="print-card"><span class="print-card-label">Unmarked Missed</span><span class="print-card-value">${Math.max(0, stats.missed - stats.remarks)}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและยังไม่มี Remark</span></div>
-            <div class="print-card"><span class="print-card-label">Normal Before Launch</span><span class="print-card-value">${stats.normalBeforeLaunch}</span><span class="print-card-desc">วันที่ทำงานปกติ แต่ระบบยังไม่ประกาศใช้</span></div>
           </div>
 
           <div class="print-section-title">Period Summary - Leave & Late</div>
@@ -979,8 +1172,9 @@
           ${records.map((record) => {
             const fieldDistance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
             const fieldDetails = (record.fieldPoints || []).map((point) => `${point.locationName || "Point"} ${formatTime(point.time)} (${formatKm(point.distanceKm)})`).join("; ");
+            const underHoursClass = isUnderEightWorkingHours(record) ? " under-hours" : "";
             return `
-              <article class="print-timeline-item">
+              <article class="print-timeline-item${underHoursClass}">
                 <table class="print-table">
                   <tbody>
                     <tr>
@@ -1086,7 +1280,6 @@
             <div class="print-card"><span class="print-card-label">WFH / On-site</span><span class="print-card-value">${stats.remote}</span><span class="print-card-desc">วันที่เช็คอินเป็น WFH หรือ Onsite</span></div>
             <div class="print-card"><span class="print-card-label">Remark Days</span><span class="print-card-value">${stats.remarks}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและมี Remark</span></div>
             <div class="print-card"><span class="print-card-label">Unmarked Missed</span><span class="print-card-value">${Math.max(0, stats.missed - stats.remarks)}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและยังไม่มี Remark</span></div>
-            <div class="print-card"><span class="print-card-label">Normal Before Launch</span><span class="print-card-value">${stats.normalBeforeLaunch}</span><span class="print-card-desc">วันที่ทำงานปกติ แต่ระบบยังไม่ประกาศใช้</span></div>
           </div>
 
           <div class="print-section-title">Period Summary - Leave & Late</div>
@@ -1138,8 +1331,9 @@
                 ${point.address ? `<div style="color:#475569;">${escapeHtml(point.address)}</div>` : ""}
               </li>
             `).join("");
+            const underHoursClass = isUnderEightWorkingHours(record) ? " under-hours" : "";
             return `
-              <article class="print-timeline-item">
+              <article class="print-timeline-item${underHoursClass}">
                 <table class="print-table">
                   <tbody>
                     <tr>
@@ -1236,6 +1430,8 @@
         if (error) throw error;
 
         state.records = (data || []).map(normalizeHistoryRecord);
+        state.printEmployeeName = state.records.map((record) => String(record.employeeName || "").trim()).find(Boolean) || state.printEmployeeName;
+        await loadPrintEmployeeName();
         render();
       } catch (error) {
         console.error("Load attendance history failed", error);
@@ -1271,7 +1467,7 @@
       }
 
       if (!isRemarkEditable(workDate)) {
-        alert("เลยกำหนดแก้ไข Remark แล้ว สามารถแก้ไขย้อนหลังได้ภายใน 45 วันเท่านั้น");
+        alert("เลยกำหนดแก้ไข Remark แล้ว สามารถแก้ไขย้อนหลังได้ภายใน 7 วันเท่านั้น");
         return;
       }
 
@@ -1324,18 +1520,10 @@
     $("start-date").value = formatDateInput(start);
     $("end-date").value = formatDateInput(today);
     $("search-btn").addEventListener("click", loadHistory);
-    $("print-btn").addEventListener("click", () => {
+    $("print-btn").addEventListener("click", async () => {
+      await loadPrintEmployeeName();
       renderPrintReport(state.records);
       window.print();
-    });
-    $("pdf-btn").addEventListener("click", () => {
-      renderPrintReport(state.records);
-      const originalTitle = document.title;
-      document.title = `Attendance History ${$("start-date").value || ""} to ${$("end-date").value || ""}`.trim();
-      window.print();
-      setTimeout(() => {
-        document.title = originalTitle;
-      }, 1000);
     });
     $("history-timeline").addEventListener("click", (event) => {
       const saveButton = event.target.closest(".history-remark-save");

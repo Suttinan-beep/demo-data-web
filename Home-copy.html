@@ -1,65 +1,41 @@
-﻿<!DOCTYPE html>
-<html lang="th">
+<!DOCTYPE html>
+<html class="light" lang="th">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>DataNest - Web Portal</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <title>DataNest - Attendance History</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
       theme: {
         extend: {
           colors: {
-            "surface-container-lowest": "#ffffff",
-            "outline-variant": "#c3c6d7",
-            "on-surface-variant": "#434655",
-            "inverse-on-surface": "#eff1f3",
-            "surface-container-highest": "#e0e3e5",
-            "surface-container-high": "#e6e8ea",
-            "secondary-fixed-dim": "#b7c8e1",
-            "on-tertiary-fixed": "#001e2f",
-            error: "#ba1a1a",
-            "surface-container-low": "#f2f4f6",
-            "on-tertiary-container": "#e4f2ff",
-            "tertiary-fixed": "#c9e6ff",
-            "on-surface": "#191c1e",
-            surface: "#f7f9fb",
-            "primary-container": "#2563eb",
-            "on-background": "#191c1e",
-            "surface-variant": "#e0e3e5",
-            "surface-dim": "#d8dadc",
-            "on-secondary": "#ffffff",
-            "tertiary-fixed-dim": "#89ceff",
-            "on-primary": "#ffffff",
-            "tertiary-container": "#0074a6",
-            "surface-bright": "#f7f9fb",
             primary: "#004ac6",
-            "on-error": "#ffffff",
+            "primary-fixed": "#dbe1ff",
             "primary-fixed-dim": "#b4c5ff",
             tertiary: "#005a82",
-            "on-primary-fixed-variant": "#003ea8",
-            "error-container": "#ffdad6",
-            "surface-container": "#eceef0",
-            "on-tertiary": "#ffffff",
-            "on-secondary-container": "#54647a",
-            "secondary-container": "#d0e1fb",
-            "on-error-container": "#93000a",
-            "inverse-primary": "#b4c5ff",
-            "primary-fixed": "#dbe1ff",
-            outline: "#737686",
-            secondary: "#505f76",
-            "on-primary-fixed": "#00174b",
+            "tertiary-fixed": "#c9e6ff",
+            "tertiary-container": "#0074a6",
             background: "#f7f9fb",
-            "on-tertiary-fixed-variant": "#004c6e",
-            "on-secondary-fixed-variant": "#38485d",
-            "on-secondary-fixed": "#0b1c30",
-            "inverse-surface": "#2d3133",
-            "surface-tint": "#0053db",
-            "on-primary-container": "#eeefff",
-            "secondary-fixed": "#d3e4fe"
+            surface: "#f7f9fb",
+            "surface-container-low": "#f2f4f6",
+            "surface-container": "#eceef0",
+            "surface-container-lowest": "#ffffff",
+            secondary: "#505f76",
+            "secondary-container": "#d0e1fb",
+            "on-surface": "#191c1e",
+            "on-surface-variant": "#434655",
+            "on-secondary-container": "#54647a",
+            "on-primary": "#ffffff",
+            outline: "#737686",
+            "outline-variant": "#c3c6d7",
+            error: "#ba1a1a",
+            "error-container": "#ffdad6"
           },
           borderRadius: {
             DEFAULT: "0.25rem",
@@ -68,29 +44,27 @@
             full: "9999px"
           },
           spacing: {
-            lg: "24px",
             gutter: "20px",
-            xs: "4px",
+            md: "16px",
+            lg: "24px",
             xl: "48px",
             sm: "8px",
-            md: "16px",
-            "container-margin": "32px",
-            "base-unit": "4px"
+            xs: "4px"
           },
           fontFamily: {
-            "display-lg": ["Manrope"],
-            "body-sm": ["Inter"],
-            "body-base": ["Inter"],
-            "label-uppercase": ["Inter"],
-            "headline-md": ["Manrope"],
-            thai: ["IBM Plex Sans Thai", "sans-serif"]
+            "body-base": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "headline-md": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
+            "label-uppercase": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            "display-lg": ["Manrope", "IBM Plex Sans Thai", "sans-serif"],
+            "body-sm": ["Inter", "IBM Plex Sans Thai", "sans-serif"],
+            thai: ["IBM Plex Sans Thai"]
           },
           fontSize: {
-            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }],
-            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
             "body-base": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }],
             "label-uppercase": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
-            "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }]
+            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "0em", fontWeight: "700" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }]
           }
         }
       }
@@ -98,698 +72,1294 @@
   </script>
   <style>
     body {
+      box-sizing: border-box;
       font-family: 'IBM Plex Sans Thai', sans-serif;
-      background-color: #f7f9fb;
     }
 
     .material-symbols-outlined {
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
     }
 
-    .card-elevation {
+    .soft-shadow {
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-      border: 1px solid #f1f5f9;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .card-elevation:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
+    .gradient-primary {
+      background: linear-gradient(135deg, #004ac6 0%, #0074a6 100%);
     }
 
-    .primary-gradient {
-      background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+    .attendance-sidebar {
+      width: 190px;
+      transition: width 0.25s ease;
     }
 
-    .modal-overlay {
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
+    .attendance-main {
+      margin-left: 190px;
+      transition: margin-left 0.25s ease;
     }
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+    body.attendance-nav-collapsed .attendance-sidebar {
+      width: 40px;
     }
 
-    .animate-slideUp {
-      animation: slideUp 0.3s ease forwards;
+    body.attendance-nav-collapsed .attendance-main {
+      margin-left: 40px;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-label,
+    body.attendance-nav-collapsed .attendance-nav-title {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link {
+      width: 28px;
+      height: 28px;
+      margin-left: auto;
+      margin-right: auto;
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+      gap: 0;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link.active {
+      border-radius: 9999px;
+      padding: 0;
+    }
+
+    body.attendance-nav-collapsed .attendance-nav-link .material-symbols-outlined {
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 767px) {
+      .attendance-sidebar {
+        display: none;
+      }
+
+      .attendance-main {
+        margin-left: 0;
+      }
+
+      #user-summary {
+        border-right: 0;
+        margin-right: 0;
+        padding-right: 0;
+        text-align: right;
+      }
+
+      #user-summary img {
+        display: none;
+      }
+
+      #user-summary > div {
+        align-items: flex-end;
+      }
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 19px;
+      top: 44px;
+      bottom: -28px;
+      width: 2px;
+      background: #e2e8f0;
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    #print-report {
+      display: none;
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 12mm;
+      }
+
+      header,
+      .attendance-sidebar,
+      .attendance-main,
+      .no-print {
+        display: none !important;
+      }
+
+      body {
+        background: white !important;
+        color: #111827 !important;
+      }
+
+      #print-report {
+        display: block !important;
+        font-family: 'IBM Plex Sans Thai', sans-serif;
+        font-size: 11px;
+        line-height: 1.45;
+      }
+
+      .print-page {
+        min-height: 270mm;
+        page-break-after: always;
+      }
+
+      .print-page:last-child {
+        page-break-after: auto;
+      }
+
+      .print-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #004ac6;
+      }
+
+      .print-section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 8px;
+      }
+
+      .print-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      .print-card {
+        border: 1px solid #dbe3ef;
+        border-radius: 8px;
+        padding: 10px;
+        background: #fff;
+      }
+
+      .print-card-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+      }
+
+      .print-card-value {
+        display: block;
+        margin-top: 4px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .print-card-desc {
+        display: block;
+        margin-top: 4px;
+        font-size: 9px;
+        color: #64748b;
+        line-height: 1.35;
+      }
+
+      .print-field-list {
+        margin: 0;
+        padding-left: 16px;
+      }
+
+      .print-field-list li {
+        margin-bottom: 4px;
+      }
+
+      .print-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .print-table th,
+      .print-table td {
+        border: 1px solid #dbe3ef;
+        padding: 6px 7px;
+        vertical-align: top;
+      }
+
+      .print-table th {
+        background: #f1f5f9;
+        font-size: 9px;
+        text-transform: uppercase;
+        color: #475569;
+      }
+
+      .print-timeline-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        border: 1px solid #dbe3ef;
+        border-left: 4px solid #004ac6;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 8px;
+      }
+
+      .print-signature {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 28px;
+      }
+
+      .print-signature-line {
+        border-top: 1px solid #111827;
+        padding-top: 8px;
+        text-align: center;
+        min-height: 44px;
+      }
     }
   </style>
 </head>
-<body class="bg-surface text-on-surface antialiased overflow-hidden">
-  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm fixed top-0 z-50 h-16 w-full grid grid-cols-[1fr_auto_1fr] items-center px-6">
-    <div class="flex items-center gap-4 justify-self-start">
-      <span id="portal-title" class="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white font-display-lg">DataNest</span>
+<body class="bg-background font-body-base text-on-surface min-h-screen">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center w-full px-4 sm:px-8 lg:px-12 py-3 font-headline-md text-sm font-medium tracking-tight">
+    <div class="relative flex items-center gap-2 md:gap-8">
+      <button id="mobile-attendance-menu-button" class="md:hidden inline-flex h-9 w-8 items-center justify-center text-primary transition active:scale-95" type="button" aria-label="Open attendance menu" aria-expanded="false">
+        <span class="material-symbols-outlined text-[22px]">menu</span>
+      </button>
+      <a class="text-lg font-black tracking-widest text-slate-900 dark:text-slate-50" href="Menu.html">DataNest</a>
+      <div id="mobile-attendance-menu" class="hidden absolute left-0 top-12 z-[60] w-[280px] rounded-xl border border-slate-100 bg-white p-3 shadow-xl shadow-slate-900/10 md:hidden">
+        <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="Attendance.html">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">how_to_reg</span>
+          <span class="flex-1">Check-in</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
+        </a>
+        <a id="mobile-hr-monitor-nav-link" data-menu-code="HR_MONITOR" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRMonitor.html">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">monitoring</span>
+          <span class="flex-1">HR Monitor</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
+        </a>
+        <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-primary px-3 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20" href="AttendanceHistory.html" aria-current="page">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-[24px]">history</span>
+          <span class="flex-1">My History</span>
+        </a>
+      </div>
+      <nav class="hidden md:flex items-center gap-6">
+        <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors duration-200 cursor-pointer" href="Menu.html">Menu</a>
+        <a class="text-primary border-b-2 border-primary py-1 transition-colors duration-200 cursor-pointer" href="Attendance.html">Attendance System</a>
+      </nav>
     </div>
-    <div class="hidden md:flex relative group justify-self-center">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">search</span>
-        <input id="search-input" class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-body-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all w-80" placeholder="Search resources..." type="text"/>
-    </div>
-    <div class="flex items-center gap-md justify-self-end">
-      <div class="flex items-center border-l border-slate-100 pl-4 ml-1">
-        <img
-          alt="User avatar"
-          class="mr-3 h-8 w-8 rounded-full object-cover"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"
-        />
+    <div class="flex items-center gap-4">
+      <div id="user-summary" class="flex items-center border-r border-slate-100 pr-3 sm:pr-6 mr-0 sm:mr-2">
+        <img alt="User avatar" class="mr-3 h-8 w-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_vTD3s6O3MteWt8Yj1-CUMlJ9HtIOXLELFB4RtbOMR9dAUXmbRStVq23udzvpPD0rGRQ0QTu8ZWGWtcL1FfZ3BWVhY2BAFyYb7kLbJMSAjm4DvmPHEq_o7QukS6_WBbVCP-nltEJUuSposFoPXGEDNtqvz3wfp0M_AYiAURRFVlg8HWQQw17rgmzCq3Z9B-PdN6KziKhyYWdeeMhJs3MmRpbHZcJSGBkVWzCvUSBoKH85ChvtHFV_zmQX_YLQ0h_5qTQiMIWgxc"/>
         <div class="flex flex-col">
-          <span id="userIdText" class="font-display-lg text-sm font-bold text-slate-900">-</span>
+          <span id="userIdText" class="font-headline-md text-sm font-bold text-slate-900">-</span>
           <span id="userInfo" class="font-body-sm text-[10px] text-slate-400 font-semibold tracking-wider">-</span>
         </div>
       </div>
     </div>
   </header>
 
-  <div class="flex h-screen pt-16">
-    <aside class="bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_20px_rgba(0,0,0,0.02)] fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col py-4 overflow-y-auto">
-      <div class="px-6 py-4 mb-4">
-        <div class="flex items-center gap-3 mb-1">
-          <div class="w-10 h-10 rounded-lg primary-gradient flex items-center justify-center text-white shadow-lg">
-            <span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
-          </div>
-          <div>
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Departments</h3>
-            <p class="text-[10px] text-slate-500 uppercase tracking-wider">Enterprise Hub</p>
-          </div>
-        </div>
+  <aside id="attendance-sidebar" class="attendance-sidebar fixed left-0 top-[61px] bottom-0 z-40 bg-white border-r border-slate-100 soft-shadow overflow-hidden">
+    <div class="h-full flex flex-col py-4">
+      <div class="attendance-nav-title px-4 mb-4 transition-all duration-200">
+        <p class="font-headline-md text-sm font-bold text-primary">Workforce tools</p>
       </div>
-      <nav id="dept-filter" class="space-y-1 px-3"></nav>
-    </aside>
-
-    <main class="flex-1 ml-64 overflow-y-auto bg-surface">
-      <div class="px-lg pt-lg pb-md">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-md mb-8">
-          <div>
-            <nav class="flex items-center gap-2 text-slate-400 text-xs font-label-uppercase mb-2">
-              <span>DEPARTMENTS</span>
-              <span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
-              <span id="active-dept-label" class="text-primary font-bold">ทั้งหมด</span>
-            </nav>
-            <h1 class="text-display-lg font-display-lg text-slate-900">Web Portal</h1>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-lg">
-          <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex items-center gap-4">
-            <span class="material-symbols-outlined text-primary text-3xl" data-icon="link">link</span>
-            <div>
-              <p class="text-[10px] font-label-uppercase text-slate-500">Total Resources</p>
-              <p id="total-count" class="text-headline-md font-bold">0</p>
-            </div>
-          </div>
-          <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex items-center gap-4">
-            <span class="material-symbols-outlined text-primary text-3xl" data-icon="groups">groups</span>
-            <div>
-              <p class="text-[10px] font-label-uppercase text-slate-500">Departments</p>
-              <p id="dept-count" class="text-headline-md font-bold">0</p>
-            </div>
-          </div>
-          <div class="md:col-span-2 bg-gradient-to-r from-blue-600 to-blue-400 rounded-xl p-4 flex items-center justify-between text-white shadow-lg">
-            <div class="flex items-center gap-4">
-              <div class="p-2 bg-white/20 rounded-lg">
-                <span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
-              </div>
-              <div>
-                <p class="text-sm font-bold">ต้องการเพิ่มแหล่งข้อมูลใหม่?</p>
-                <p class="text-xs text-white/80">จัดเก็บลิงก์สำคัญแยกตามแผนกเพื่อให้ทีมเข้าถึงได้รวดเร็ว</p>
-              </div>
-            </div>
-            <button id="stats-add-btn" class="bg-white text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-50 transition-colors" type="button">ADD LINK</button>
-          </div>
-        </div>
-
-        <div id="cards-container" class="space-y-10"></div>
-
-        <div id="empty-state" class="hidden text-center py-20">
-          <div class="mx-auto mb-4 w-16 h-16 rounded-2xl bg-surface-container-low flex items-center justify-center">
-            <span class="material-symbols-outlined text-3xl text-slate-300">link_off</span>
-          </div>
-          <p class="text-gray-400 mb-4">ยังไม่มีข้อมูล</p>
-          <button id="empty-add-btn" class="px-5 py-2 primary-gradient text-white rounded-lg hover:opacity-90">เพิ่มข้อมูล</button>
-        </div>
-
-        <div class="h-24"></div>
+      <nav class="flex-1 space-y-1 px-1.5">
+        <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="Attendance.html">
+          <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+          <span class="attendance-nav-label transition-all duration-200">Check-in</span>
+        </a>
+        <a id="hr-monitor-nav-link" data-menu-code="HR_MONITOR" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
+          <span class="material-symbols-outlined text-[18px]">monitoring</span>
+          <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
+        </a>
+        <a class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html" aria-current="page">
+          <span class="material-symbols-outlined text-[18px]">history</span>
+          <span class="attendance-nav-label transition-all duration-200">My History</span>
+        </a>
+      </nav>
+      <div class="px-1.5">
+        <button id="attendance-nav-toggle" class="attendance-nav-link w-full flex items-center gap-3 rounded-full bg-surface-container-low text-slate-500 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" type="button" aria-label="Toggle attendance navigation" aria-expanded="true">
+          <span id="attendance-nav-toggle-icon" class="material-symbols-outlined text-[18px]">chevron_left</span>
+          <span class="attendance-nav-label transition-all duration-200">Collapse</span>
+        </button>
       </div>
-    </main>
-  </div>
+    </div>
+  </aside>
 
-  <div id="modal" class="fixed inset-0 z-50 hidden">
-    <div class="modal-overlay absolute inset-0" id="modal-backdrop"></div>
-    <div class="absolute inset-0 flex items-center justify-center p-4">
-      <div class="bg-white rounded-xl w-full max-w-lg card-elevation animate-slideUp overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-cyan-50">
-          <h2 id="modal-title" class="text-lg font-semibold text-gray-800">เพิ่มข้อมูลใหม่</h2>
+  <main class="attendance-main px-4 sm:px-6 lg:px-8 py-6 sm:py-10 min-h-screen">
+    <div class="w-full max-w-[1280px] mx-auto">
+      <section class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div>
+          <h1 class="font-display-lg text-display-lg text-on-surface mb-2">Attendance History</h1>
+          <p class="text-body-sm text-secondary">ดูประวัติการเช็คอินย้อนหลัง Timeline และระยะทางนอกสถานที่</p>
         </div>
-        <form id="data-form" class="p-6 space-y-5">
-          <input type="hidden" id="edit-id">
-          <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1.5">แผนก</label>
-            <input type="text" id="department" required class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="เช่น IT, Sales, HR">
+        <div class="no-print flex flex-wrap items-center gap-3">
+          <div class="flex items-center bg-white border border-outline-variant rounded-xl px-3 py-2 soft-shadow focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+            <span class="material-symbols-outlined text-slate-400 mr-2 text-sm">calendar_today</span>
+            <input id="start-date" class="border-none bg-transparent p-0 focus:ring-0 text-sm font-medium text-on-surface" type="date"/>
+            <span class="mx-2 text-slate-300">-</span>
+            <input id="end-date" class="border-none bg-transparent p-0 focus:ring-0 text-sm font-medium text-on-surface" type="date"/>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1.5">ชื่อลิงก์</label>
-            <input type="text" id="link-name" required class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="ระบบจัดการพนักงาน">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1.5">URL</label>
-            <input type="url" id="link-url" required class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="https://example.com/system">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1.5">ไอคอน</label>
-            <div class="flex items-center gap-3">
-              <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                <span id="icon-preview" class="material-symbols-outlined text-2xl">link</span>
-              </div>
-              <select id="icon-name" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                <option value="link">Link / ลิงก์ทั่วไป</option>
-                <option value="dashboard">Dashboard</option>
-                <option value="table_chart">Table / ตารางข้อมูล</option>
-                <option value="bar_chart">Report / รายงาน</option>
-                <option value="monitoring">Monitoring</option>
-                <option value="assignment">Task / แบบฟอร์มงาน</option>
-                <option value="description">Document</option>
-                <option value="public">Portal / Website</option>
-                <option value="cloud_done">Cloud</option>
-                <option value="vpn_key">VPN / Security</option>
-                <option value="groups">People / HR</option>
-                <option value="terminal">IT / Dev</option>
-                <option value="settings_suggest">Operations</option>
-                <option value="campaign">Marketing</option>
-                <option value="trending_up">Sales</option>
-                <option value="admin_panel_settings">Admin</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1.5">หมายเหตุ / คำอธิบาย</label>
-            <textarea id="description" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
-          </div>
-        </form>
-        <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
-          <button type="button" id="cancel-btn" class="px-5 py-2.5 text-gray-600 bg-white border border-gray-200 rounded-lg font-medium text-sm hover:bg-gray-50">ยกเลิก</button>
-          <button type="submit" form="data-form" id="submit-btn" class="px-5 py-2.5 primary-gradient text-white rounded-lg font-medium text-sm hover:shadow-lg disabled:opacity-50">
-            <span id="submit-text">บันทึก</span>
+          <button id="search-btn" class="gradient-primary text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[20px]">search</span>
+            Search
+          </button>
+          <button id="print-btn" class="bg-secondary-container text-on-secondary-container px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 hover:bg-blue-200 active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[20px]">print</span>
+            Print
+          </button>
+          <button id="pdf-btn" class="bg-white text-primary border border-primary/20 px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 soft-shadow hover:bg-primary-fixed/60 active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+            Save PDF
           </button>
         </div>
+      </section>
+
+      <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 mb-10">
+        <div class="bg-white p-5 rounded-xl border border-slate-100 soft-shadow">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Selected Period</span>
+          <h3 id="summary-days" class="text-headline-md font-headline-md text-primary">-</h3>
+          <p id="summary-range" class="mt-1 text-body-sm text-secondary">-</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-100 soft-shadow">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Check-in Days</span>
+          <div class="flex items-end justify-between">
+            <h3 id="summary-checkins" class="text-headline-md font-headline-md text-primary">0</h3>
+            <span class="material-symbols-outlined text-primary/40">done_all</span>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-100 soft-shadow">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Missed Days</span>
+          <div class="flex items-end justify-between">
+            <h3 id="summary-missed" class="text-headline-md font-headline-md text-error">0</h3>
+            <span class="material-symbols-outlined text-error/40">event_busy</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-100 soft-shadow px-5 py-5">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Work Mode</span>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs">
+                <span class="text-secondary font-medium">Office</span>
+                <span id="summary-office" class="text-on-surface font-semibold">0d</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5">
+                <div id="office-bar" class="bg-primary h-full rounded-full" style="width: 0%;"></div>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs">
+                <span class="text-secondary font-medium">WFH / On-site</span>
+                <span id="summary-remote" class="text-on-surface font-semibold">0d</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5">
+                <div id="remote-bar" class="bg-tertiary-container h-full rounded-full" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-100 soft-shadow">
+          <span class="text-label-uppercase font-label-uppercase text-secondary block mb-3">Total Distance</span>
+          <div class="flex items-end justify-between">
+            <h3 id="summary-distance" class="text-headline-md font-headline-md">0 km</h3>
+            <span class="material-symbols-outlined text-slate-300">route</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-headline-md font-headline-md mb-6 flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-primary rounded-full"></span>
+          Timeline Activity
+        </h2>
+        <div id="history-timeline" class="relative space-y-6"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="remark-confirm-modal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm no-print" role="dialog" aria-modal="true" aria-labelledby="remark-confirm-title">
+    <div class="w-full max-w-md rounded-xl border border-slate-100 bg-white p-6 shadow-2xl shadow-slate-900/20">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-fixed text-primary">
+          <span class="material-symbols-outlined text-[22px]">edit_note</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h3 id="remark-confirm-title" class="font-headline-md text-lg font-bold text-slate-900">ยืนยันการบันทึก Remark</h3>
+          <p class="mt-1 text-sm text-slate-500">โปรดตรวจสอบรายละเอียดก่อนบันทึกข้อมูล</p>
+        </div>
+      </div>
+      <div class="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-700">
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">วันที่</span>
+          <span id="remark-confirm-date" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">เหตุผล</span>
+          <span id="remark-confirm-type" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="mt-3 border-t border-slate-200 pt-3">
+          <p class="font-semibold text-slate-500">หมายเหตุ</p>
+          <p id="remark-confirm-note" class="mt-1 whitespace-pre-line text-slate-900">-</p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="remark-confirm-cancel" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 active:scale-[0.98]" type="button">ยกเลิก</button>
+        <button id="remark-confirm-save" class="gradient-primary rounded-xl px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 active:scale-[0.98]" type="button">บันทึก</button>
       </div>
     </div>
   </div>
 
-  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
+  <section id="print-report" aria-hidden="true"></section>
 
   <script type="module">
-    import { supabase as supabaseClient } from "./supabase-client.js";
-    import { getUserId, insertStory, renderUserHeader, requireLogin, requirePageFlag } from "./app-helpers.js";
+    import { getAppSessionToken, getDepartment, getNickname, getUserId, hasMenuAccess, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
+    import { supabase } from "./supabase-client.js";
 
-    if (!requireLogin()) {
-      throw new Error("NOT_LOGIN");
+    const $ = (id) => document.getElementById(id);
+
+    await requireLogin();
+    if (!(await requireMenuAccess("ATTENDANCE"))) {
+      throw new Error("ACCESS_DENIED");
     }
 
-    setTimeout(() => {
-      requirePageFlag("WEBPORTAL_OK", "Menu.html");
-    }, 300);
+    if (await hasMenuAccess("HR_MONITOR")) {
+      document.querySelectorAll('[data-menu-code="HR_MONITOR"]').forEach((link) => link.classList.remove("hidden"));
+    }
 
-    const defaultConfig = {
-      portal_title: "DataNest",
-      search_placeholder: "Search resources...",
-      primary_action_color: "#2563eb"
+    function renderAttendanceUserHeader() {
+      renderUserHeader("userIdText", "userInfo");
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        $("userIdText").textContent = getNickname() || getUserId() || "-";
+        $("userInfo").textContent = getDepartment() || "-";
+      }
+    }
+
+    function setMobileAttendanceMenuOpen(open) {
+      $("mobile-attendance-menu")?.classList.toggle("hidden", !open);
+      $("mobile-attendance-menu-button")?.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    renderAttendanceUserHeader();
+
+    const state = {
+      records: []
     };
 
-    let config = { ...defaultConfig };
-    let allData = [];
-    let searchQuery = "";
-    let selectedDept = "";
-    let isSubmitting = false;
-
-    async function logStory(action, detail) {
-      const { error } = await insertStory(supabaseClient, action, detail);
-      if (error) {
-        console.error("StoryLine error:", error);
-      }
+    function formatDateInput(date) {
+      return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(date);
     }
 
-    async function loadWebPortal() {
-      const { data, error } = await supabaseClient
-        .from("webportal")
-        .select("*")
-        .eq("status", "active")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("LOAD ERROR:", error?.message, error);
-        showToast("โหลดข้อมูลไม่สำเร็จ", "error");
-        return;
-      }
-
-      allData = data || [];
-      renderDeptFilter();
-      renderCards();
+    function formatTime(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
     }
 
-    function applyConfig() {
-      document.getElementById("portal-title").textContent = config.portal_title || defaultConfig.portal_title;
-      document.getElementById("search-input").placeholder = config.search_placeholder || defaultConfig.search_placeholder;
+    function formatThaiDate(value) {
+      const date = new Date(`${value}T00:00:00+07:00`);
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        weekday: "long",
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      }).format(date);
     }
 
-    function getFilteredData() {
-      const query = searchQuery.toLowerCase();
-      return allData.filter((item) => {
-        const matchSearch = !query || (
-          item.department?.toLowerCase().includes(query) ||
-          item.link_name?.toLowerCase().includes(query) ||
-          item.description?.toLowerCase().includes(query)
-        );
-        const matchDept = !selectedDept || item.department === selectedDept;
-        return matchSearch && matchDept;
-      });
+    function toBangkokIso(value) {
+      if (!value) return null;
+      return String(value).includes("T") ? `${value}+07:00` : `${value}T00:00:00+07:00`;
     }
 
-    function renderDeptFilter() {
-      const container = document.getElementById("dept-filter");
-      const depts = [...new Set(allData.map((item) => item.department || "ไม่ระบุ"))];
-
-      const allClass = !selectedDept
-        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 rounded-lg"
-        : "text-slate-500 hover:bg-slate-50 rounded-xl";
-
-      let html = `
-        <button class="w-full flex items-center gap-3 px-4 py-3 ${allClass} transition-colors text-left" data-dept="" type="button">
-          <span class="material-symbols-outlined text-xl" data-icon="apps">apps</span>
-          <span class="font-medium text-body-sm">ทั้งหมด</span>
-        </button>
-      `;
-
-      depts.forEach((dept) => {
-        const active = selectedDept === dept;
-        const itemClass = active
-          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 rounded-lg"
-          : "text-slate-500 hover:bg-slate-50 rounded-xl";
-        html += `
-          <button class="w-full flex items-center gap-3 px-4 py-3 ${itemClass} transition-colors text-left" data-dept="${escapeAttr(dept)}" type="button">
-            <span class="material-symbols-outlined text-xl" data-icon="folder">folder</span>
-            <span class="font-medium text-body-sm truncate">${escapeHtml(dept)}</span>
-          </button>
-        `;
-      });
-
-      container.innerHTML = html;
+    function getNetWorkingMs(checkinAt, checkoutAt) {
+      if (!checkinAt || !checkoutAt) return 0;
+      const start = new Date(checkinAt);
+      const end = new Date(checkoutAt);
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 0;
+      return Math.max(0, end - start);
     }
 
-    function selectDept(dept) {
-      selectedDept = dept;
-      renderDeptFilter();
-      renderCards();
+    function formatHours(ms) {
+      const hours = Math.floor(ms / 3600000);
+      const minutes = Math.floor((ms % 3600000) / 60000);
+      return `${hours}h ${minutes}m`;
     }
 
-    function renderCards() {
-      const container = document.getElementById("cards-container");
-      const emptyState = document.getElementById("empty-state");
-      const filteredData = getFilteredData();
-      const uniqueDepts = [...new Set(filteredData.map((item) => item.department || "ไม่ระบุ"))];
+    function formatKm(value) {
+      return `${(Number(value) || 0).toFixed(1)} km`;
+    }
 
-      document.getElementById("total-count").textContent = filteredData.length;
-      document.getElementById("dept-count").textContent = uniqueDepts.length;
-      document.getElementById("active-dept-label").textContent = selectedDept || "ทั้งหมด";
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
 
-      if (!filteredData.length) {
-        container.innerHTML = "";
-        emptyState.classList.remove("hidden");
-        return;
-      }
+    function getRemarkLabel(type) {
+      return {
+        absent: "ขาดงาน",
+        leave: "ลากิจ",
+        personal_leave: "ลากิจ",
+        sick_leave: "ลาป่วย",
+        annual_leave: "ลาพักร้อน",
+        ot_holiday: "วันหยุดทำ OT",
+        normal_before_launch: "ทำงานปกติ - ระบบยังไม่ประกาศใช้",
+        holiday: "วันหยุด",
+        forgot_checkin: "ลืมเช็คอิน",
+        other: "อื่นๆ"
+      }[type] || "ยังไม่ได้ระบุ";
+    }
 
-      emptyState.classList.add("hidden");
+    function isRemarkEditable(workDate) {
+      const today = new Date(`${formatDateInput(new Date())}T00:00:00+07:00`);
+      const date = new Date(`${workDate}T00:00:00+07:00`);
+      if (Number.isNaN(date.getTime())) return false;
+      const diffDays = Math.floor((today - date) / 86400000);
+      return diffDays <= 45;
+    }
 
-      const grouped = filteredData.reduce((acc, item) => {
-        const dept = item.department || "ไม่ระบุ";
-        if (!acc[dept]) acc[dept] = [];
-        acc[dept].push(item);
-        return acc;
+    function isLateCheckin(checkinAt) {
+      if (!checkinAt) return false;
+      const date = new Date(checkinAt);
+      if (Number.isNaN(date.getTime())) return false;
+      const bangkokTime = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+      const [hour, minute] = bangkokTime.split(":").map(Number);
+      return (hour * 60) + minute > 540;
+    }
+
+    function getBangkokMinutes(checkinAt) {
+      if (!checkinAt) return null;
+      const date = new Date(checkinAt);
+      if (Number.isNaN(date.getTime())) return null;
+      const bangkokTime = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+      const [hour, minute] = bangkokTime.split(":").map(Number);
+      return (hour * 60) + minute;
+    }
+
+    function getPersonalLeaveHoursFromLate(checkinAt) {
+      const minutes = getBangkokMinutes(checkinAt);
+      if (minutes === null || minutes <= 555) return 0;
+      return Math.max(1, Math.ceil((minutes - 540) / 60));
+    }
+
+    function formatLeaveSummary(days, hours) {
+      const parts = [];
+      if (days) parts.push(`${days} วัน`);
+      if (hours) parts.push(`${hours} ชั่วโมง`);
+      return parts.length ? parts.join(" ") : "0";
+    }
+
+    function normalizeHistoryRecord(record) {
+      const fieldPoints = Array.isArray(record.field_points) ? record.field_points : [];
+
+      return {
+        date: record.work_date,
+        type: record.checkin_type,
+        checkinAt: toBangkokIso(record.checkin_at),
+        checkoutAt: toBangkokIso(record.checkout_at),
+        address: record.address,
+        note: record.note,
+        remarkType: record.remark_type || "",
+        remarkNote: record.remark_note || "",
+        remarkUpdatedAt: toBangkokIso(record.remark_updated_at),
+        fieldPoints: fieldPoints.map((point) => ({
+          locationName: point.location_name || `จุดที่ ${point.sequence_no || "-"}`,
+          time: toBangkokIso(point.checked_at || point.captured_at),
+          distanceKm: Number(point.distance_km) || 0,
+          address: point.address || "",
+          note: point.note || ""
+        }))
+      };
+    }
+
+    function getHistoryStats(records) {
+      const checkins = records.filter((record) => record.checkinAt).length;
+      const missed = records.filter((record) => !record.checkinAt).length;
+      const office = records.filter((record) => record.type === "Office").length;
+      const remote = records.filter((record) => String(record.type || "").toLowerCase().includes("wfh") || String(record.type || "").toLowerCase().includes("on-site")).length;
+      const distance = records.reduce((sum, record) => sum + (record.fieldPoints || []).reduce((pointSum, point) => pointSum + (Number(point.distanceKm) || 0), 0), 0);
+      const remarks = records.filter((record) => !record.checkinAt && record.remarkType).length;
+      const personalLeave = records.filter((record) => !record.checkinAt && ["leave", "personal_leave"].includes(record.remarkType)).length;
+      const sickLeave = records.filter((record) => !record.checkinAt && record.remarkType === "sick_leave").length;
+      const annualLeave = records.filter((record) => !record.checkinAt && record.remarkType === "annual_leave").length;
+      const normalBeforeLaunch = records.filter((record) => !record.checkinAt && record.remarkType === "normal_before_launch").length;
+      const late = records.filter((record) => isLateCheckin(record.checkinAt)).length;
+      const personalLeaveHoursFromLate = records.reduce((sum, record) => sum + getPersonalLeaveHoursFromLate(record.checkinAt), 0);
+      const remarkTypes = records.reduce((counts, record) => {
+        if (!record.checkinAt && record.remarkType) {
+          counts[record.remarkType] = (counts[record.remarkType] || 0) + 1;
+        }
+        return counts;
       }, {});
 
-      let cardIndex = 0;
-      container.innerHTML = Object.entries(grouped).map(([dept, items]) => {
-        const cards = items.map((item) => createCardHTML(item, cardIndex++)).join("");
-        return `
-          <section>
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                <span class="material-symbols-outlined text-xl">${iconForDept(dept)}</span>
-              </div>
-              <div>
-                <h2 class="text-headline-md font-headline-md text-slate-900">${escapeHtml(dept)}</h2>
-                <p class="text-body-sm text-slate-500">${items.length} รายการ</p>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
-              ${cards}
-            </div>
-          </section>
-        `;
-      }).join("");
-
-      attachCardEvents();
+      return {
+        selectedDays: records.length,
+        checkins,
+        missed,
+        office,
+        remote,
+        distance,
+        remarks,
+        personalLeave,
+        personalLeaveHoursFromLate,
+        personalLeaveSummary: formatLeaveSummary(personalLeave, personalLeaveHoursFromLate),
+        sickLeave,
+        annualLeave,
+        normalBeforeLaunch,
+        late,
+        remarkTypes
+      };
     }
 
-    function createCardHTML(item, index) {
-      const icon = item.icon_name || iconForDept(item.department);
-      const desc = item.description || "เปิดใช้งานลิงก์ทรัพยากรภายในองค์กร";
+    function renderSummary(records) {
+      const { selectedDays, checkins, missed, office, remote, distance } = getHistoryStats(records);
 
-      return `
-        <div class="bg-white card-elevation rounded-xl p-6 group cursor-pointer animate-slideUp min-h-[260px] flex flex-col" data-id="${escapeAttr(item.id)}" style="animation-delay: ${Math.min(index * 0.04, 0.24)}s">
-          <div class="flex items-start justify-between gap-4">
-            <div class="min-w-0">
-              <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-md group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <span class="material-symbols-outlined text-2xl" data-icon="${icon}">${icon}</span>
+      $("summary-days").textContent = `${selectedDays} Days`;
+      $("summary-range").textContent = `${$("start-date").value} - ${$("end-date").value}`;
+      $("summary-checkins").textContent = `${checkins} Days`;
+      $("summary-missed").textContent = `${missed} Days`;
+      $("summary-office").textContent = `${office}d`;
+      $("summary-remote").textContent = `${remote}d`;
+      $("summary-distance").textContent = formatKm(distance);
+      $("office-bar").style.width = `${checkins ? (office / checkins) * 100 : 0}%`;
+      $("remote-bar").style.width = `${checkins ? (remote / checkins) * 100 : 0}%`;
+    }
+
+    function renderTimeline(records) {
+      if (!records.length) {
+        $("history-timeline").innerHTML = `
+          <div class="bg-white rounded-xl border border-slate-100 soft-shadow p-8 text-center text-secondary">
+            ไม่พบข้อมูลในช่วงวันที่ที่เลือก
+          </div>
+        `;
+        return;
+      }
+
+      $("history-timeline").innerHTML = records.map((record) => {
+        const absent = !record.checkinAt;
+        const remote = String(record.type || "").toLowerCase().includes("wfh") || String(record.type || "").toLowerCase().includes("on-site");
+        const icon = absent ? "event_busy" : remote ? "near_me" : "business";
+        const markerClass = absent
+          ? "border-error text-error"
+          : remote
+            ? "border-tertiary-container text-tertiary-container"
+            : "border-primary text-primary";
+        const badge = absent ? "ABSENT" : remote ? "WFH / ON-SITE" : "OFFICE";
+        const distance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
+        const remarkLocked = Boolean(record.remarkType);
+        const remarkEditable = isRemarkEditable(record.date) && !remarkLocked;
+
+        return `
+          <article class="timeline-item relative pl-12">
+            <div class="absolute left-0 top-0 w-10 h-10 bg-white rounded-full border-2 ${markerClass} flex items-center justify-center z-10 shadow-sm">
+              <span class="material-symbols-outlined text-[20px]">${icon}</span>
+            </div>
+            <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-100 soft-shadow hover:-translate-y-0.5 transition-all duration-300">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                  <div class="text-center bg-slate-50 px-3 py-2 rounded-xl min-w-[58px]">
+                    <span class="block text-[10px] font-bold text-secondary uppercase">${new Date(`${record.date}T00:00:00+07:00`).toLocaleString("en-US", { month: "short" })}</span>
+                    <span class="block text-xl font-bold text-on-surface">${new Date(`${record.date}T00:00:00+07:00`).getDate()}</span>
+                  </div>
+                  <div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${absent ? "bg-error-container text-error" : remote ? "bg-tertiary-fixed text-tertiary" : "bg-primary-fixed text-primary"} mb-1">${badge}</span>
+                    <h4 class="font-headline-md text-lg text-on-surface">${formatThaiDate(record.date)}</h4>
+                  </div>
+                </div>
+                ${absent ? `
+                  <div class="bg-error-container/20 border border-error/10 rounded-xl p-4">
+                    <div class="flex items-start gap-3">
+                      <span class="material-symbols-outlined text-error">notification_important</span>
+                      <div class="min-w-0 flex-1">
+                        <p class="text-sm text-error font-semibold">No check-in recorded for this date.</p>
+                        <p class="mt-1 text-xs text-slate-500">Remark: ${escapeHtml(getRemarkLabel(record.remarkType))}${record.remarkNote ? ` - ${escapeHtml(record.remarkNote)}` : ""}</p>
+                      </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-[160px_minmax(0,1fr)_auto] gap-2">
+                      <select class="history-remark-type rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-primary/20 disabled:bg-slate-100 disabled:text-slate-400" data-date="${escapeHtml(record.date)}" ${remarkEditable ? "" : "disabled"}>
+                        <option value="">เลือกเหตุผล</option>
+                        <option value="absent" ${record.remarkType === "absent" ? "selected" : ""}>ขาดงาน</option>
+                        <option value="leave" ${record.remarkType === "leave" ? "selected" : ""}>ลากิจ</option>
+                        <option value="sick_leave" ${record.remarkType === "sick_leave" ? "selected" : ""}>ลาป่วย</option>
+                        <option value="annual_leave" ${record.remarkType === "annual_leave" ? "selected" : ""}>ลาพักร้อน</option>
+                        <option value="ot_holiday" ${record.remarkType === "ot_holiday" ? "selected" : ""}>วันหยุดทำ OT</option>
+                        <option value="normal_before_launch" ${record.remarkType === "normal_before_launch" ? "selected" : ""}>ทำงานปกติ - ระบบยังไม่ประกาศใช้</option>
+                        <option value="holiday" ${record.remarkType === "holiday" ? "selected" : ""}>วันหยุด</option>
+                        <option value="forgot_checkin" ${record.remarkType === "forgot_checkin" ? "selected" : ""}>ลืมเช็คอิน</option>
+                        <option value="other" ${record.remarkType === "other" ? "selected" : ""}>อื่นๆ</option>
+                      </select>
+                      <input class="history-remark-note rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-primary/20 disabled:bg-slate-100 disabled:text-slate-400" data-date="${escapeHtml(record.date)}" value="${escapeHtml(record.remarkNote)}" placeholder="หมายเหตุเพิ่มเติม" ${remarkEditable ? "" : "disabled"}/>
+                      <button class="history-remark-save rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none" data-date="${escapeHtml(record.date)}" type="button" ${remarkEditable ? "" : "disabled"}>
+                        Save
+                      </button>
+                    </div>
+                    ${remarkLocked ? `<p class="mt-3 text-xs font-medium text-slate-500">Remark นี้ถูกบันทึกแล้ว ไม่สามารถแก้ไขได้</p>` : ""}
+                    ${!remarkLocked && !remarkEditable ? `<p class="mt-3 text-xs font-medium text-slate-500">เลยกำหนดแก้ไข Remark แล้ว (แก้ไขย้อนหลังได้ภายใน 45 วัน)</p>` : ""}
+                  </div>
+                ` : `
+                  <div class="flex flex-wrap items-center gap-4">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-slate-400 text-[18px]">schedule</span>
+                      <span class="text-body-sm font-medium">${formatTime(record.checkinAt)} - ${formatTime(record.checkoutAt)}</span>
+                    </div>
+                    <div class="bg-surface-container-low px-4 py-2 rounded-xl">
+                      <span class="text-xs text-secondary block">Working Hours</span>
+                      <span class="font-bold text-on-surface">${formatHours(getNetWorkingMs(record.checkinAt, record.checkoutAt))}</span>
+                    </div>
+                  </div>
+                `}
               </div>
-              <h3 class="font-thai text-[17px] leading-6 font-semibold text-slate-900 mb-2 line-clamp-2">${escapeHtml(item.link_name || "ไม่ระบุชื่อ")}</h3>
-              <p class="text-body-sm text-slate-500 mb-4 line-clamp-3">${escapeHtml(desc)}</p>
+              ${remote && record.fieldPoints?.length ? `
+                <div class="mt-5 bg-slate-50 rounded-xl p-4">
+                  <div class="flex items-center gap-3 mb-4">
+                    <span class="material-symbols-outlined text-slate-400 text-[18px]">location_on</span>
+                    <span class="font-label-uppercase text-secondary">Visit Points & Distance (${distance.toFixed(1)} km)</span>
+                  </div>
+                  <div class="space-y-4">
+                    ${record.fieldPoints.map((point) => `
+                      <div class="flex items-center justify-between border-l-2 border-slate-200 ml-2 pl-4">
+                        <div class="flex flex-col">
+                          <span class="font-semibold text-on-surface">${escapeHtml(point.locationName)}</span>
+                          <span class="text-xs text-secondary">Arrived at ${formatTime(point.time)}</span>
+                        </div>
+                        <span class="text-sm font-medium text-slate-500">${Number(point.distanceKm || 0).toFixed(1)} km</span>
+                      </div>
+                    `).join("")}
+                  </div>
+                </div>
+              ` : ""}
             </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <button class="edit-btn w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center hover:bg-blue-100 transition-colors" data-id="${escapeAttr(item.id)}" title="แก้ไข" type="button">
-                <span class="material-symbols-outlined text-base">edit</span>
-              </button>
-              <button class="delete-btn w-8 h-8 rounded-lg bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-100 transition-colors" data-id="${escapeAttr(item.id)}" title="ลบ" type="button">
-                <span class="material-symbols-outlined text-base">delete</span>
-              </button>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function getPrintEmployeeName() {
+      return ["currentName", "name", "Name", "fullName", "FullName", "employeeName", "EmployeeName"]
+        .map((key) => localStorage.getItem(key))
+        .find(Boolean) || getNickname() || getUserId() || "-";
+    }
+
+    function getPrintDepartment() {
+      return getDepartment() || "-";
+    }
+
+    function getPrintWorkMode(record) {
+      if (!record.checkinAt) return "No Check-in";
+      const remote = String(record.type || "").toLowerCase().includes("wfh") || String(record.type || "").toLowerCase().includes("on-site");
+      return remote ? "WFH / On-site" : "Office";
+    }
+
+    function getPrintStatus(record) {
+      if (!record.checkinAt) {
+        return record.remarkType ? getRemarkLabel(record.remarkType) : "No Check-in";
+      }
+      return record.checkoutAt ? "Completed" : "Checked-in";
+    }
+
+    function renderPrintReportLegacy(records) {
+      const stats = getHistoryStats(records);
+      const printedAt = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(new Date());
+      const rangeText = `${$("start-date").value || "-"} - ${$("end-date").value || "-"}`;
+      const remarkSummary = Object.entries(stats.remarkTypes)
+        .map(([type, count]) => `${getRemarkLabel(type)} ${count} วัน`)
+        .join(", ") || "-";
+
+      $("print-report").innerHTML = `
+        <section class="print-page">
+          <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; border-bottom:2px solid #004ac6; padding-bottom:12px; margin-bottom:16px;">
+            <div>
+              <div class="print-title">Attendance Monthly Report</div>
+              <div style="margin-top:4px; color:#475569;">DataNest Attendance System</div>
+            </div>
+            <div style="text-align:right; color:#475569;">
+              <div><strong>Period:</strong> ${escapeHtml(rangeText)}</div>
+              <div><strong>Printed:</strong> ${escapeHtml(printedAt)}</div>
             </div>
           </div>
-          <div class="flex items-center justify-between mt-auto pt-4">
-            <span class="text-[10px] font-label-uppercase text-slate-400 bg-slate-50 px-2 py-1 rounded">${escapeHtml(item.department || "GENERAL")}</span>
-            <span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+
+          <div class="print-section-title">Employee Information</div>
+          <table class="print-table" style="margin-bottom:14px;">
+            <tbody>
+              <tr>
+                <th style="width:18%;">Employee</th>
+                <td>${escapeHtml(getPrintEmployeeName())}</td>
+                <th style="width:18%;">User ID</th>
+                <td>${escapeHtml(getUserId() || "-")}</td>
+              </tr>
+              <tr>
+                <th>Department</th>
+                <td>${escapeHtml(getPrintDepartment())}</td>
+                <th>Selected Period</th>
+                <td>${escapeHtml(rangeText)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="print-section-title">Period Summary - Overall</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Selected Days</span><span class="print-card-value">${stats.selectedDays}</span><span class="print-card-desc">จำนวนวันทั้งหมดในช่วงวันที่ที่เลือก</span></div>
+            <div class="print-card"><span class="print-card-label">Check-in Days</span><span class="print-card-value">${stats.checkins}</span><span class="print-card-desc">จำนวนวันที่มีการเช็คอินในระบบ</span></div>
+            <div class="print-card"><span class="print-card-label">Missed Days</span><span class="print-card-value">${stats.missed}</span><span class="print-card-desc">จำนวนวันที่ไม่มีข้อมูลเช็คอิน</span></div>
+            <div class="print-card"><span class="print-card-label">Total Distance</span><span class="print-card-value">${escapeHtml(formatKm(stats.distance))}</span><span class="print-card-desc">ระยะทางรวมจากจุดเช็คอินนอกสถานที่</span></div>
           </div>
-        </div>
+
+          <div class="print-section-title">Period Summary - Work Mode & Remark</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Office</span><span class="print-card-value">${stats.office}</span><span class="print-card-desc">จำนวนวันที่เช็คอินเป็น Office</span></div>
+            <div class="print-card"><span class="print-card-label">WFH / On-site</span><span class="print-card-value">${stats.remote}</span><span class="print-card-desc">วันที่เช็คอินเป็น WFH หรือ Onsite</span></div>
+            <div class="print-card"><span class="print-card-label">Remark Days</span><span class="print-card-value">${stats.remarks}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและมี Remark</span></div>
+            <div class="print-card"><span class="print-card-label">Unmarked Missed</span><span class="print-card-value">${Math.max(0, stats.missed - stats.remarks)}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและยังไม่มี Remark</span></div>
+            <div class="print-card"><span class="print-card-label">Normal Before Launch</span><span class="print-card-value">${stats.normalBeforeLaunch}</span><span class="print-card-desc">วันที่ทำงานปกติ แต่ระบบยังไม่ประกาศใช้</span></div>
+          </div>
+
+          <div class="print-section-title">Period Summary - Leave & Late</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Personal Leave</span><span class="print-card-value">${stats.personalLeaveSummary}</span><span class="print-card-desc">ลากิจจาก Remark และการเช็คอินสาย</span></div>
+            <div class="print-card"><span class="print-card-label">Sick Leave</span><span class="print-card-value">${stats.sickLeave}</span><span class="print-card-desc">วันที่ระบุ Remark เป็นลาป่วย</span></div>
+            <div class="print-card"><span class="print-card-label">Annual Leave</span><span class="print-card-value">${stats.annualLeave}</span><span class="print-card-desc">วันที่ระบุ Remark เป็นลาพักร้อน</span></div>
+            <div class="print-card"><span class="print-card-label">Late</span><span class="print-card-value">${stats.late}</span><span class="print-card-desc">วันที่เช็คอินหลัง 09:00</span></div>
+          </div>
+
+          <div class="print-section-title">Remark Summary</div>
+          <div class="print-card" style="margin-bottom:18px;">${escapeHtml(remarkSummary)}</div>
+
+          <div class="print-section-title">Employee Confirmation</div>
+          <p style="color:#475569; margin-bottom:34px;">ข้าพเจ้าตรวจสอบข้อมูลการเข้างานในช่วงวันที่ที่เลือกแล้ว และรับรองว่าข้อมูลถูกต้องตามที่บันทึกไว้ในระบบ</p>
+          <div class="print-signature">
+            <div class="print-signature-line">Employee Signature / Date</div>
+            <div class="print-signature-line">HR Received / Date</div>
+          </div>
+        </section>
+
+        <section class="print-page">
+          <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-end; border-bottom:2px solid #004ac6; padding-bottom:10px; margin-bottom:14px;">
+            <div>
+              <div class="print-title">Attendance Timeline</div>
+              <div style="color:#475569;">${escapeHtml(getPrintEmployeeName())} | ${escapeHtml(rangeText)}</div>
+            </div>
+            <div style="text-align:right; color:#475569;">${stats.selectedDays} days</div>
+          </div>
+          ${records.map((record) => {
+            const fieldDistance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
+            const fieldDetails = (record.fieldPoints || []).map((point) => `${point.locationName || "Point"} ${formatTime(point.time)} (${formatKm(point.distanceKm)})`).join("; ");
+            return `
+              <article class="print-timeline-item">
+                <table class="print-table">
+                  <tbody>
+                    <tr>
+                      <th style="width:18%;">Date</th>
+                      <td style="width:32%;"><strong>${escapeHtml(formatThaiDate(record.date))}</strong></td>
+                      <th style="width:18%;">Status</th>
+                      <td>${escapeHtml(getPrintStatus(record))}</td>
+                    </tr>
+                    <tr>
+                      <th>Work Mode</th>
+                      <td>${escapeHtml(getPrintWorkMode(record))}</td>
+                      <th>Time</th>
+                      <td>${escapeHtml(formatTime(record.checkinAt))} - ${escapeHtml(formatTime(record.checkoutAt))}</td>
+                    </tr>
+                    <tr>
+                      <th>Working Hours</th>
+                      <td>${escapeHtml(formatHours(getNetWorkingMs(record.checkinAt, record.checkoutAt)))}</td>
+                      <th>Distance</th>
+                      <td>${escapeHtml(formatKm(fieldDistance))}</td>
+                    </tr>
+                    <tr>
+                      <th>Location / Remark</th>
+                      <td colspan="3">${escapeHtml(record.checkinAt ? (record.address || "-") : `${getRemarkLabel(record.remarkType)}${record.remarkNote ? ` - ${record.remarkNote}` : ""}`)}</td>
+                    </tr>
+                    ${fieldDetails ? `<tr><th>Field Points</th><td colspan="3">${escapeHtml(fieldDetails)}</td></tr>` : ""}
+                  </tbody>
+                </table>
+              </article>
+            `;
+          }).join("")}
+        </section>
       `;
     }
 
-    function attachCardEvents() {
-      document.querySelectorAll("[data-id].card-elevation").forEach((card) => {
-        card.addEventListener("click", () => {
-          const item = allData.find((entry) => String(entry.id) === String(card.dataset.id));
-          if (!item?.url) return;
+    function renderPrintReport(records) {
+      const stats = getHistoryStats(records);
+      const missedRecords = records.filter((record) => !record.checkinAt);
+      const printedAt = new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(new Date());
+      const rangeText = `${$("start-date").value || "-"} - ${$("end-date").value || "-"}`;
+      const remarkSummary = Object.entries(stats.remarkTypes)
+        .map(([type, count]) => `${getRemarkLabel(type)} ${count} วัน`)
+        .join(", ") || "-";
+      const missedRows = missedRecords.length
+        ? missedRecords.map((record) => `
+          <tr>
+            <td>${escapeHtml(formatThaiDate(record.date))}</td>
+            <td>${escapeHtml(getRemarkLabel(record.remarkType))}</td>
+            <td>${escapeHtml(record.remarkNote || "-")}</td>
+          </tr>
+        `).join("")
+        : `<tr><td colspan="3" style="text-align:center; color:#64748b;">ไม่มีวันที่ไม่ได้เช็คอินในช่วงที่เลือก</td></tr>`;
 
-          window.open(item.url, "_blank", "noopener,noreferrer");
+      $("print-report").innerHTML = `
+        <section class="print-page">
+          <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; border-bottom:2px solid #004ac6; padding-bottom:12px; margin-bottom:16px;">
+            <div>
+              <div class="print-title">Attendance History Report</div>
+              <div style="margin-top:4px; color:#475569;">DataNest Attendance System</div>
+            </div>
+            <div style="text-align:right; color:#475569;">
+              <div><strong>Period:</strong> ${escapeHtml(rangeText)}</div>
+              <div><strong>Printed:</strong> ${escapeHtml(printedAt)}</div>
+            </div>
+          </div>
 
-          logStory("WebPortal-Link-Open", {
-            webportal_id: item.id,
-            link_name: item.link_name,
-            url: item.url,
-            department: item.department
-          }).catch((error) => {
-            console.error("StoryLine log failed:", error);
-          });
-        });
-      });
+          <div class="print-section-title">Employee Information</div>
+          <table class="print-table" style="margin-bottom:14px;">
+            <tbody>
+              <tr>
+                <th style="width:18%;">Employee</th>
+                <td>${escapeHtml(getPrintEmployeeName())}</td>
+                <th style="width:18%;">User ID</th>
+                <td>${escapeHtml(getUserId() || "-")}</td>
+              </tr>
+              <tr>
+                <th>Department</th>
+                <td>${escapeHtml(getPrintDepartment())}</td>
+                <th>Selected Period</th>
+                <td>${escapeHtml(rangeText)}</td>
+              </tr>
+            </tbody>
+          </table>
 
-      document.querySelectorAll(".edit-btn").forEach((btn) => {
-        btn.addEventListener("click", (event) => {
-          event.stopPropagation();
-          const item = allData.find((entry) => String(entry.id) === String(btn.dataset.id));
-          if (item) openEditModal(item);
-        });
-      });
+          <div class="print-section-title">Period Summary - Overall</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Selected Days</span><span class="print-card-value">${stats.selectedDays}</span><span class="print-card-desc">จำนวนวันทั้งหมดในช่วงวันที่ที่เลือก</span></div>
+            <div class="print-card"><span class="print-card-label">Check-in Days</span><span class="print-card-value">${stats.checkins}</span><span class="print-card-desc">จำนวนวันที่มีการเช็คอินในระบบ</span></div>
+            <div class="print-card"><span class="print-card-label">Missed Days</span><span class="print-card-value">${stats.missed}</span><span class="print-card-desc">จำนวนวันที่ไม่มีข้อมูลเช็คอิน</span></div>
+            <div class="print-card"><span class="print-card-label">Total Distance</span><span class="print-card-value">${escapeHtml(formatKm(stats.distance))}</span><span class="print-card-desc">ระยะทางรวมจากจุดเช็คอินนอกสถานที่</span></div>
+          </div>
 
-      document.querySelectorAll(".delete-btn").forEach((btn) => {
-        btn.addEventListener("click", (event) => {
-          event.stopPropagation();
-          showDeleteConfirm(btn, btn.dataset.id);
-        });
-      });
+          <div class="print-section-title">Period Summary - Work Mode & Remark</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Office</span><span class="print-card-value">${stats.office}</span><span class="print-card-desc">จำนวนวันที่เช็คอินเป็น Office</span></div>
+            <div class="print-card"><span class="print-card-label">WFH / On-site</span><span class="print-card-value">${stats.remote}</span><span class="print-card-desc">วันที่เช็คอินเป็น WFH หรือ Onsite</span></div>
+            <div class="print-card"><span class="print-card-label">Remark Days</span><span class="print-card-value">${stats.remarks}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและมี Remark</span></div>
+            <div class="print-card"><span class="print-card-label">Unmarked Missed</span><span class="print-card-value">${Math.max(0, stats.missed - stats.remarks)}</span><span class="print-card-desc">วันที่ไม่ได้เช็คอินและยังไม่มี Remark</span></div>
+            <div class="print-card"><span class="print-card-label">Normal Before Launch</span><span class="print-card-value">${stats.normalBeforeLaunch}</span><span class="print-card-desc">วันที่ทำงานปกติ แต่ระบบยังไม่ประกาศใช้</span></div>
+          </div>
+
+          <div class="print-section-title">Period Summary - Leave & Late</div>
+          <div class="print-grid" style="margin-bottom:14px;">
+            <div class="print-card"><span class="print-card-label">Personal Leave</span><span class="print-card-value">${stats.personalLeaveSummary}</span><span class="print-card-desc">ลากิจจาก Remark และการเช็คอินสาย</span></div>
+            <div class="print-card"><span class="print-card-label">Sick Leave</span><span class="print-card-value">${stats.sickLeave}</span><span class="print-card-desc">วันที่ระบุ Remark เป็นลาป่วย</span></div>
+            <div class="print-card"><span class="print-card-label">Annual Leave</span><span class="print-card-value">${stats.annualLeave}</span><span class="print-card-desc">วันที่ระบุ Remark เป็นลาพักร้อน</span></div>
+            <div class="print-card"><span class="print-card-label">Late</span><span class="print-card-value">${stats.late}</span><span class="print-card-desc">วันที่เช็คอินหลัง 09:00</span></div>
+          </div>
+
+          <div class="print-section-title">Remark Summary</div>
+          <div class="print-card" style="margin-bottom:18px;">${escapeHtml(remarkSummary)}</div>
+
+          <div class="print-section-title">Missed Check-in Details</div>
+          <table class="print-table" style="margin-bottom:18px;">
+            <thead>
+              <tr>
+                <th style="width:32%;">Date</th>
+                <th style="width:24%;">Remark Type</th>
+                <th>Remark</th>
+              </tr>
+            </thead>
+            <tbody>${missedRows}</tbody>
+          </table>
+
+          <div class="print-section-title">Employee Confirmation</div>
+          <p style="color:#475569; margin-bottom:34px;">ข้าพเจ้าได้ตรวจสอบข้อมูลการเช็คอินในช่วงวันที่ที่เลือกแล้ว และรับรองว่าข้อมูลถูกต้องตามที่บันทึกไว้ในระบบ</p>
+          <div class="print-signature">
+            <div class="print-signature-line">Employee Signature / Date</div>
+            <div class="print-signature-line">HR Received / Date</div>
+          </div>
+        </section>
+
+        <section class="print-page">
+          <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-end; border-bottom:2px solid #004ac6; padding-bottom:10px; margin-bottom:14px;">
+            <div>
+              <div class="print-title">Attendance Timeline</div>
+              <div style="color:#475569;">${escapeHtml(getPrintEmployeeName())} | ${escapeHtml(rangeText)}</div>
+            </div>
+            <div style="text-align:right; color:#475569;">${stats.selectedDays} days</div>
+          </div>
+          ${records.map((record) => {
+            const fieldDistance = (record.fieldPoints || []).reduce((sum, point) => sum + (Number(point.distanceKm) || 0), 0);
+            const fieldDetails = (record.fieldPoints || []).map((point) => `
+              <li>
+                <strong>${escapeHtml(point.locationName || "Point")}</strong>
+                <span>${escapeHtml(formatTime(point.time))}</span>
+                <span>(${escapeHtml(formatKm(point.distanceKm))})</span>
+                ${point.address ? `<div style="color:#475569;">${escapeHtml(point.address)}</div>` : ""}
+              </li>
+            `).join("");
+            return `
+              <article class="print-timeline-item">
+                <table class="print-table">
+                  <tbody>
+                    <tr>
+                      <th style="width:18%;">Date</th>
+                      <td style="width:32%;"><strong>${escapeHtml(formatThaiDate(record.date))}</strong></td>
+                      <th style="width:18%;">Status</th>
+                      <td>${escapeHtml(getPrintStatus(record))}</td>
+                    </tr>
+                    <tr>
+                      <th>Work Mode</th>
+                      <td>${escapeHtml(getPrintWorkMode(record))}</td>
+                      <th>Time</th>
+                      <td>${escapeHtml(formatTime(record.checkinAt))} - ${escapeHtml(formatTime(record.checkoutAt))}</td>
+                    </tr>
+                    <tr>
+                      <th>Working Hours</th>
+                      <td>${escapeHtml(formatHours(getNetWorkingMs(record.checkinAt, record.checkoutAt)))}</td>
+                      <th>Distance</th>
+                      <td>${escapeHtml(formatKm(fieldDistance))}</td>
+                    </tr>
+                    <tr>
+                      <th>Location / Remark</th>
+                      <td colspan="3">${escapeHtml(record.checkinAt ? (record.address || "-") : `${getRemarkLabel(record.remarkType)}${record.remarkNote ? ` - ${record.remarkNote}` : ""}`)}</td>
+                    </tr>
+                    ${fieldDetails ? `<tr><th>Field Points</th><td colspan="3"><ul class="print-field-list">${fieldDetails}</ul></td></tr>` : ""}
+                  </tbody>
+                </table>
+              </article>
+            `;
+          }).join("")}
+        </section>
+      `;
     }
 
-    function showDeleteConfirm(btn, id) {
-      const originalContent = btn.innerHTML;
-      btn.innerHTML = `<span class="text-xs font-semibold">ลบ?</span>`;
-      btn.classList.add("bg-red-500", "text-white", "px-3");
-      btn.classList.remove("bg-red-50", "text-red-400");
-
-      const confirmHandler = async (event) => {
-        event.stopPropagation();
-        await deleteItem(id);
-      };
-
-      const cancelHandler = (event) => {
-        if (!btn.contains(event.target)) {
-          btn.innerHTML = originalContent;
-          btn.classList.remove("bg-red-500", "text-white", "px-3");
-          btn.classList.add("bg-red-50", "text-red-400");
-          btn.removeEventListener("click", confirmHandler);
-          document.removeEventListener("click", cancelHandler);
-        }
-      };
-
-      setTimeout(() => {
-        btn.addEventListener("click", confirmHandler, { once: true });
-        document.addEventListener("click", cancelHandler);
-      }, 10);
+    function render() {
+      renderSummary(state.records);
+      renderTimeline(state.records);
+      renderPrintReport(state.records);
     }
 
-    async function deleteItem(id) {
-      const { error } = await supabaseClient
-        .from("webportal")
-        .update({
-          status: "inactive",
-          updated_by: getUserId(),
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", id);
-
-      if (error) {
-        console.error("DELETE ERROR:", error);
-        showToast("ลบข้อมูลไม่สำเร็จ", "error");
-        return;
-      }
-
-      await logStory("WebPortal-Delete", { id });
-      showToast("ลบข้อมูลเรียบร้อยแล้ว", "success");
-      loadWebPortal();
-    }
-
-    function openModal(mode = "add") {
-      const modal = document.getElementById("modal");
-      const title = document.getElementById("modal-title");
-      const submitText = document.getElementById("submit-text");
-
+    function openRemarkConfirmMsbox({ workDate, remarkType, remarkNote }) {
+      const modal = $("remark-confirm-modal");
+      $("remark-confirm-date").textContent = formatThaiDate(workDate);
+      $("remark-confirm-type").textContent = getRemarkLabel(remarkType);
+      $("remark-confirm-note").textContent = remarkNote || "-";
       modal.classList.remove("hidden");
-      document.body.style.overflow = "hidden";
+      modal.classList.add("flex");
 
-      if (mode === "add") {
-        title.textContent = "เพิ่มข้อมูลใหม่";
-        submitText.textContent = "บันทึก";
-        document.getElementById("data-form").reset();
-        document.getElementById("edit-id").value = "";
-        document.getElementById("icon-name").value = "link";
-        updateIconPreview();
-      } else {
-        title.textContent = "แก้ไขข้อมูล";
-        submitText.textContent = "อัปเดต";
-      }
-    }
+      return new Promise((resolve) => {
+        const cleanup = (result) => {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          $("remark-confirm-save").removeEventListener("click", onSave);
+          $("remark-confirm-cancel").removeEventListener("click", onCancel);
+          modal.removeEventListener("click", onBackdrop);
+          document.removeEventListener("keydown", onKeydown);
+          resolve(result);
+        };
+        const onSave = () => cleanup(true);
+        const onCancel = () => cleanup(false);
+        const onBackdrop = (event) => {
+          if (event.target === modal) cleanup(false);
+        };
+        const onKeydown = (event) => {
+          if (event.key === "Escape") cleanup(false);
+        };
 
-    function openEditModal(item) {
-      openModal("edit");
-      document.getElementById("edit-id").value = item.id;
-      document.getElementById("department").value = item.department || "";
-      document.getElementById("link-name").value = item.link_name || "";
-      document.getElementById("link-url").value = item.url || "";
-      document.getElementById("icon-name").value = item.icon_name || "link";
-      document.getElementById("description").value = item.description || "";
-      updateIconPreview();
-    }
-
-    function closeModal() {
-      document.getElementById("modal").classList.add("hidden");
-      document.body.style.overflow = "";
-    }
-
-    async function handleSubmit(event) {
-      event.preventDefault();
-      if (isSubmitting) return;
-
-      const submitBtn = document.getElementById("submit-btn");
-      const submitText = document.getElementById("submit-text");
-      const editId = document.getElementById("edit-id").value;
-
-      const formData = {
-        department: document.getElementById("department").value.trim(),
-        link_name: document.getElementById("link-name").value.trim(),
-        url: document.getElementById("link-url").value.trim(),
-        icon_name: document.getElementById("icon-name").value,
-        description: document.getElementById("description").value.trim()
-      };
-
-      if (!formData.department || !formData.link_name || !formData.url) {
-        showToast("กรุณากรอกข้อมูลที่จำเป็นให้ครบ", "error");
-        return;
-      }
-
-      isSubmitting = true;
-      submitBtn.disabled = true;
-      submitText.textContent = "กำลังบันทึก...";
-
-      if (editId) {
-        const { error } = await supabaseClient
-          .from("webportal")
-          .update({
-            department: formData.department,
-            link_name: formData.link_name,
-            url: formData.url,
-            icon_name: formData.icon_name,
-            description: formData.description,
-            updated_by: getUserId(),
-            updated_at: new Date().toISOString()
-          })
-          .eq("id", editId);
-
-        if (error) {
-          console.error("UPDATE ERROR:", error);
-          showToast(`อัปเดตไม่สำเร็จ: ${getErrorMessage(error)}`, "error");
-          resetSubmit();
-          return;
-        }
-
-        await logStory("WebPortal-Update", {
-          id: editId,
-          department: formData.department,
-          link_name: formData.link_name,
-          url: formData.url,
-          icon_name: formData.icon_name
-        });
-        showToast("อัปเดตข้อมูลเรียบร้อยแล้ว", "success");
-      } else {
-        const { data, error } = await supabaseClient
-          .from("webportal")
-          .insert([{
-            department: formData.department,
-            link_name: formData.link_name,
-            url: formData.url,
-            icon_name: formData.icon_name,
-            description: formData.description,
-            created_by: getUserId(),
-            status: "active"
-          }])
-          .select("id, url, link_name, department, icon_name")
-          .single();
-
-        if (error) {
-          console.error("CREATE ERROR:", error);
-          showToast(`เพิ่มข้อมูลไม่สำเร็จ: ${getErrorMessage(error)}`, "error");
-          resetSubmit();
-          return;
-        }
-
-        await logStory("WebPortal-Create", {
-          id: data.id,
-          url: data.url,
-          link_name: data.link_name,
-          department: data.department,
-          icon_name: data.icon_name
-        });
-        showToast("เพิ่มข้อมูลเรียบร้อยแล้ว", "success");
-      }
-
-      closeModal();
-      await loadWebPortal();
-      resetSubmit();
-
-      function resetSubmit() {
-        isSubmitting = false;
-        submitBtn.disabled = false;
-        submitText.textContent = editId ? "อัปเดต" : "บันทึก";
-      }
-    }
-
-    function getErrorMessage(error) {
-      return [error?.code, error?.message, error?.details, error?.hint]
-        .filter(Boolean)
-        .join(" | ") || "ไม่ทราบสาเหตุ";
-    }
-
-    function isInvalidSessionError(error) {
-      return error?.code === "28000" || String(error?.message || "").includes("INVALID_SESSION");
-    }
-
-    function handleInvalidSession() {
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = "Index.html";
-    }
-
-    function showToast(message, type = "info") {
-      const container = document.getElementById("toast-container");
-      const toast = document.createElement("div");
-      const colors = {
-        success: "bg-emerald-500",
-        error: "bg-red-500",
-        info: "bg-sky-500"
-      };
-
-      toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl text-white text-sm card-elevation animate-slideUp ${colors[type]}`;
-      toast.innerHTML = `<span class="material-symbols-outlined text-lg">${type === "success" ? "check_circle" : type === "error" ? "error" : "info"}</span><span>${escapeHtml(message)}</span>`;
-      container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transform = "translateX(100px)";
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    function updateIconPreview() {
-      const iconName = document.getElementById("icon-name").value || "link";
-      document.getElementById("icon-preview").textContent = iconName;
-    }
-
-    function iconForDept(dept = "") {
-      const value = dept.toLowerCase();
-      if (value.includes("it") || value.includes("เทค")) return "terminal";
-      if (value.includes("hr") || value.includes("บุคคล")) return "groups";
-      if (value.includes("sale") || value.includes("ขาย")) return "trending_up";
-      if (value.includes("market")) return "campaign";
-      if (value.includes("admin")) return "admin_panel_settings";
-      return "link";
-    }
-
-    function escapeHtml(value = "") {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function escapeAttr(value = "") {
-      return escapeHtml(value);
-    }
-
-    function bindAddButtons() {
-      ["stats-add-btn", "empty-add-btn"].forEach((id) => {
-        const btn = document.getElementById(id);
-        if (btn) btn.addEventListener("click", () => openModal("add"));
+        $("remark-confirm-save").addEventListener("click", onSave);
+        $("remark-confirm-cancel").addEventListener("click", onCancel);
+        modal.addEventListener("click", onBackdrop);
+        document.addEventListener("keydown", onKeydown);
+        $("remark-confirm-save").focus();
       });
     }
 
-    document.getElementById("cancel-btn").addEventListener("click", closeModal);
-    document.getElementById("modal-backdrop").addEventListener("click", closeModal);
-    document.getElementById("data-form").addEventListener("submit", handleSubmit);
-    document.getElementById("icon-name").addEventListener("change", updateIconPreview);
-    document.getElementById("search-input").addEventListener("input", (event) => {
-      searchQuery = event.target.value;
-      renderCards();
+    async function loadHistory() {
+      const sessionToken = getAppSessionToken();
+      if (!sessionToken) {
+        window.location.href = "Login.html";
+        return;
+      }
+
+      const searchButton = $("search-btn");
+      searchButton.disabled = true;
+      searchButton.classList.add("opacity-70", "cursor-wait");
+
+      try {
+        const { data, error } = await supabase.rpc("get_my_attendance_history", {
+          p_session_token: sessionToken,
+          p_start_date: $("start-date").value,
+          p_end_date: $("end-date").value
+        });
+
+        if (error) throw error;
+
+        state.records = (data || []).map(normalizeHistoryRecord);
+        render();
+      } catch (error) {
+        console.error("Load attendance history failed", error);
+        alert(`โหลดประวัติการเช็คอินไม่สำเร็จ: ${error.message || error}`);
+      } finally {
+        searchButton.disabled = false;
+        searchButton.classList.remove("opacity-70", "cursor-wait");
+      }
+    }
+
+    async function saveHistoryRemark(workDate) {
+      const sessionToken = getAppSessionToken();
+      const typeEl = document.querySelector(`.history-remark-type[data-date="${workDate}"]`);
+      const noteEl = document.querySelector(`.history-remark-note[data-date="${workDate}"]`);
+      const saveButton = document.querySelector(`.history-remark-save[data-date="${workDate}"]`);
+      const remarkType = typeEl?.value || "";
+      const remarkNote = noteEl?.value || "";
+
+      if (!sessionToken) {
+        window.location.href = "Login.html";
+        return;
+      }
+
+      if (!remarkType) {
+        alert("กรุณาเลือกเหตุผลก่อนบันทึก Remark");
+        return;
+      }
+
+      const existingRecord = state.records.find((item) => item.date === workDate);
+      if (existingRecord?.remarkType) {
+        alert("Remark นี้ถูกบันทึกแล้ว ไม่สามารถแก้ไขได้");
+        return;
+      }
+
+      if (!isRemarkEditable(workDate)) {
+        alert("เลยกำหนดแก้ไข Remark แล้ว สามารถแก้ไขย้อนหลังได้ภายใน 45 วันเท่านั้น");
+        return;
+      }
+
+      const confirmed = await openRemarkConfirmMsbox({ workDate, remarkType, remarkNote });
+      if (!confirmed) {
+        return;
+      }
+
+      saveButton.disabled = true;
+      saveButton.classList.add("opacity-70", "cursor-wait");
+
+      try {
+        const { error } = await supabase.rpc("save_my_attendance_day_remark", {
+          p_session_token: sessionToken,
+          p_work_date: workDate,
+          p_remark_type: remarkType,
+          p_remark_note: remarkNote
+        });
+
+        if (error) throw error;
+
+        const record = state.records.find((item) => item.date === workDate);
+        if (record) {
+          record.remarkType = remarkType;
+          record.remarkNote = remarkNote;
+          record.remarkUpdatedAt = new Date().toISOString();
+        }
+        render();
+      } catch (error) {
+        console.error("Save attendance remark failed", error);
+        alert(`บันทึก Remark ไม่สำเร็จ: ${error.message || error}`);
+      } finally {
+        saveButton.disabled = false;
+        saveButton.classList.remove("opacity-70", "cursor-wait");
+      }
+    }
+
+    function setAttendanceNavCollapsed(collapsed) {
+      document.body.classList.toggle("attendance-nav-collapsed", collapsed);
+      localStorage.setItem("attendanceNavCollapsed", collapsed ? "true" : "false");
+      $("attendance-nav-toggle")?.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      if ($("attendance-nav-toggle-icon")) {
+        $("attendance-nav-toggle-icon").textContent = collapsed ? "chevron_right" : "chevron_left";
+      }
+    }
+
+    const today = new Date();
+    const start = new Date(today);
+    start.setDate(today.getDate() - 30);
+    $("start-date").value = formatDateInput(start);
+    $("end-date").value = formatDateInput(today);
+    $("search-btn").addEventListener("click", loadHistory);
+    $("print-btn").addEventListener("click", () => {
+      renderPrintReport(state.records);
+      window.print();
     });
-    document.getElementById("dept-filter").addEventListener("click", (event) => {
-      const target = event.target.closest("[data-dept]");
-      if (!target) return;
-      selectDept(target.dataset.dept);
+    $("pdf-btn").addEventListener("click", () => {
+      renderPrintReport(state.records);
+      const originalTitle = document.title;
+      document.title = `Attendance History ${$("start-date").value || ""} to ${$("end-date").value || ""}`.trim();
+      window.print();
+      setTimeout(() => {
+        document.title = originalTitle;
+      }, 1000);
     });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeModal();
+    $("history-timeline").addEventListener("click", (event) => {
+      const saveButton = event.target.closest(".history-remark-save");
+      if (saveButton?.dataset.date) {
+        saveHistoryRemark(saveButton.dataset.date);
+      }
+    });
+    setAttendanceNavCollapsed(localStorage.getItem("attendanceNavCollapsed") === "true");
+    $("attendance-nav-toggle")?.addEventListener("click", () => {
+      setAttendanceNavCollapsed(!document.body.classList.contains("attendance-nav-collapsed"));
     });
 
-    renderUserHeader("userIdText", "userInfo");
-    bindAddButtons();
-    applyConfig();
-    loadWebPortal();
+    $("mobile-attendance-menu-button")?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setMobileAttendanceMenuOpen($("mobile-attendance-menu")?.classList.contains("hidden"));
+    });
+    document.addEventListener("click", (event) => {
+      if (!$("mobile-attendance-menu")?.contains(event.target) && !$("mobile-attendance-menu-button")?.contains(event.target)) {
+        setMobileAttendanceMenuOpen(false);
+      }
+    });
+    window.addEventListener("resize", renderAttendanceUserHeader);
+
+    await loadHistory();
   </script>
 </body>
 </html>

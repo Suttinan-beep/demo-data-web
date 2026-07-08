@@ -181,12 +181,49 @@
     }
 
     @media (max-width: 767px) {
+      body {
+        background: #f7f9fb;
+      }
+
+      header {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+
       .attendance-sidebar {
         display: none;
       }
 
       .attendance-main {
         margin-left: 0;
+        padding: 16px 16px 28px;
+      }
+
+      #attendance-main > div {
+        max-width: 480px;
+      }
+
+      #attendance-main .grid {
+        gap: 12px;
+      }
+
+      #attendance-main section {
+        border-color: #e8eef6;
+      }
+
+      #attendance-main .space-y-6 > section:first-child {
+        border-radius: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      #attendance-main .space-y-6 > section:first-child h1 {
+        font-size: 22px;
+        line-height: 30px;
+      }
+
+      #attendance-main .space-y-6 > section:first-child .text-\[28px\] {
+        font-size: 24px;
+        line-height: 32px;
       }
 
       #user-summary {
@@ -207,7 +244,150 @@
 
     @media (max-width: 767px) {
       .attendance-card {
-        grid-template-rows: 80px auto auto auto;
+        grid-template-columns: 48px minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        justify-items: stretch;
+        align-items: center;
+        text-align: left;
+        gap: 4px 10px;
+        padding: 16px !important;
+        border-radius: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      .attendance-card:hover {
+        transform: none;
+      }
+
+      .attendance-card > div:first-child {
+        grid-row: 1 / span 2;
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: transparent !important;
+      }
+
+      .attendance-card > div:first-child .material-symbols-outlined {
+        font-size: 28px;
+        color: #2563eb;
+      }
+
+      .attendance-card h2 {
+        justify-content: flex-start;
+        font-size: 17px;
+        line-height: 24px;
+      }
+
+      .attendance-title-subline {
+        display: block;
+      }
+
+      .attendance-field-title {
+        display: block !important;
+        text-align: left;
+      }
+
+      .attendance-card p {
+        justify-content: flex-start;
+        max-width: none;
+        font-size: 12px;
+        line-height: 18px;
+      }
+
+      .attendance-card > div:last-child {
+        grid-column: 1 / -1;
+        margin-top: 10px;
+      }
+
+      .attendance-card button {
+        min-height: 48px;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+        border-radius: 14px;
+      }
+
+      #field-checkout-btn {
+        margin-top: 10px;
+      }
+
+      #summary-status,
+      #hours-label {
+        font-size: 15px;
+      }
+
+      #camera-panel {
+        border-radius: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      #camera-panel > div:first-child {
+        padding: 14px 16px;
+      }
+
+      #camera-panel > div:last-child > div:last-child {
+        padding: 14px;
+      }
+
+      .camera-capture-frame {
+        aspect-ratio: 3 / 4 !important;
+        height: min(68vh, 520px);
+        min-height: 360px;
+        max-height: calc(100vh - 210px);
+      }
+
+      #stamp-overlay {
+        left: 12px;
+        right: 12px;
+        bottom: 86px;
+        padding: 10px;
+      }
+
+      .mobile-camera-actions {
+        display: flex;
+      }
+
+      .desktop-camera-actions {
+        display: none;
+      }
+
+      #stamp-time {
+        font-size: 13px;
+        line-height: 18px;
+      }
+
+      #stamp-address,
+      #stamp-gps {
+        font-size: 11px;
+        line-height: 16px;
+      }
+
+      #daily-timeline {
+        padding: 14px;
+      }
+
+      aside section,
+      section.mt-6 > div {
+        border-radius: 16px !important;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      section.mt-6 {
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      section.mt-6 > div:first-child > div:first-child {
+        background: transparent !important;
+        padding: 0 !important;
+      }
+
+      section.mt-6 > div:first-child > div:first-child .material-symbols-outlined {
+        font-size: 28px;
+      }
+
+      #last-checkin-label {
+        font-size: 24px;
+        line-height: 32px;
       }
     }
   </style>
@@ -227,6 +407,11 @@
         <a data-menu-code="HR_MONITOR" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRMonitor.html">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">monitoring</span>
           <span class="flex-1">HR Monitor</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
+        </a>
+        <a data-menu-code="HR_SUMMARY" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRSummary.html">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">summarize</span>
+          <span class="flex-1">HR Summary</span>
           <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
         </a>
         <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="AttendanceHistory.html">
@@ -269,6 +454,10 @@
         <a id="hr-monitor-nav-link" data-menu-code="HR_MONITOR" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html">
           <span class="material-symbols-outlined text-[18px]">monitoring</span>
           <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
+        </a>
+        <a id="hr-summary-nav-link" data-menu-code="HR_SUMMARY" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRSummary.html">
+          <span class="material-symbols-outlined text-[18px]">summarize</span>
+          <span class="attendance-nav-label transition-all duration-200">HR Summary</span>
         </a>
         <a class="attendance-nav-link flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
           <span class="material-symbols-outlined text-[18px]">history</span>
@@ -341,7 +530,7 @@
           <div class="w-20 h-20 rounded-2xl bg-tertiary-container flex items-center justify-center">
             <span class="material-symbols-outlined text-on-tertiary-container text-[40px]">distance</span>
           </div>
-          <h2 class="font-headline-md text-headline-md text-on-surface flex items-center justify-center">เช็คอินนอกสถานที่ (WFH / On-site)</h2>
+          <h2 class="attendance-field-title font-headline-md text-headline-md text-on-surface flex items-center justify-center">เช็คอินนอกสถานที่ <span class="attendance-title-subline">(WFH / On-site)</span></h2>
           <p class="text-body-sm text-secondary max-w-xs flex items-start justify-center">ยืนยันตัวตนด้วยกล้องและระบุตำแหน่ง GPS แบบเรียลไทม์ก่อนบันทึกเวลา</p>
           <div class="w-full self-start">
             <button id="field-checkin-btn" class="gradient-primary text-on-primary w-full py-4 rounded-xl font-body-base font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group" type="button">
@@ -372,7 +561,7 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-0">
           <div class="bg-slate-950">
-            <div class="aspect-video min-h-[220px] max-h-[420px] flex items-center justify-center relative overflow-hidden">
+            <div class="camera-capture-frame aspect-video min-h-[220px] max-h-[420px] flex items-center justify-center relative overflow-hidden">
               <video id="camera-preview" class="hidden w-full h-full object-cover" autoplay playsinline muted></video>
               <img id="captured-photo" class="hidden w-full h-full object-cover" alt="Captured attendance timestamp"/>
               <div id="stamp-overlay" class="hidden absolute left-4 right-4 bottom-4 rounded-lg bg-black/65 p-3 text-left text-white shadow-lg">
@@ -383,6 +572,16 @@
               <div id="camera-empty" class="text-center text-white/70 p-8">
                 <span class="material-symbols-outlined text-[56px] mb-3">photo_camera</span>
                 <p class="text-body-sm">กล้องจะแสดงที่นี่หลังจากอนุญาตการใช้งาน</p>
+              </div>
+              <div class="mobile-camera-actions hidden absolute left-4 right-4 bottom-4 z-10">
+                <button id="capture-photo-mobile-btn" class="bg-white/95 text-primary w-full py-md rounded-xl font-body-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-sm shadow-lg shadow-black/20 backdrop-blur" type="button" disabled>
+                  <span class="material-symbols-outlined">camera</span>
+                  ถ่ายรูปพร้อมไทม์สแตมป์
+                </button>
+                <button id="retake-photo-mobile-btn" class="hidden bg-white/95 text-slate-700 w-full py-md rounded-xl font-body-base font-semibold items-center justify-center gap-sm shadow-lg shadow-black/20 backdrop-blur" type="button">
+                  <span class="material-symbols-outlined">refresh</span>
+                  ถ่ายใหม่
+                </button>
               </div>
             </div>
           </div>
@@ -422,7 +621,7 @@
                 <textarea id="field-note" class="w-full min-h-24 rounded-lg border-slate-200 bg-white text-body-sm text-slate-700 focus:border-primary focus:ring-primary/20" placeholder="ระบุรายละเอียด เช่น WFH, พบลูกค้า, หรือสถานที่ปฏิบัติงาน"></textarea>
               </label>
             </div>
-            <div class="space-y-3">
+            <div class="desktop-camera-actions space-y-3">
               <button id="capture-photo-btn" class="bg-secondary-container text-primary w-full py-md rounded-xl font-body-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-sm" type="button" disabled>
                 <span class="material-symbols-outlined">camera</span>
                 ถ่ายรูปพร้อมไทม์สแตมป์
@@ -431,6 +630,8 @@
                 <span class="material-symbols-outlined">refresh</span>
                 ถ่ายใหม่
               </button>
+            </div>
+            <div class="space-y-3">
               <button id="confirm-field-btn" class="gradient-primary text-white w-full py-md rounded-xl font-body-base font-semibold shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed" type="button" disabled>
                 Save Field Check-in
               </button>
@@ -515,6 +716,94 @@
     </div>
   </div>
 
+  <div id="checkout-confirm-modal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="checkout-confirm-title">
+    <div class="w-full max-w-md rounded-xl border border-slate-100 bg-white p-6 shadow-2xl shadow-slate-900/20">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-fixed text-primary">
+          <span class="material-symbols-outlined text-[22px]">logout</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h3 id="checkout-confirm-title" class="font-headline-md text-lg font-bold text-slate-900">ยืนยันการเช็คเอาท์</h3>
+          <p class="mt-1 text-sm text-slate-500">กรุณาตรวจสอบรายละเอียดก่อนบันทึกเวลาออกงาน</p>
+        </div>
+      </div>
+      <div class="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-700">
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">ประเภท</span>
+          <span id="checkout-confirm-type" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">วันที่</span>
+          <span id="checkout-confirm-date" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">เวลา</span>
+          <span id="checkout-confirm-time" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">ชั่วโมงทำงาน</span>
+          <span id="checkout-confirm-working-hours" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="mt-3 border-t border-slate-200 pt-3">
+          <p class="font-semibold text-slate-500">สถานที่ออกงาน</p>
+          <p id="checkout-confirm-location" class="mt-1 whitespace-pre-line text-slate-900">-</p>
+        </div>
+        <div class="mt-3 border-t border-slate-200 pt-3">
+          <p class="font-semibold text-slate-500">หมายเหตุ</p>
+          <p id="checkout-confirm-note" class="mt-1 whitespace-pre-line text-slate-900">-</p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="checkout-confirm-cancel" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 active:scale-[0.98]" type="button">ยกเลิก</button>
+        <button id="checkout-confirm-ok" class="gradient-primary rounded-xl px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 active:scale-[0.98]" type="button">ตกลง</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="field-visit-confirm-modal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="field-visit-confirm-title">
+    <div class="w-full max-w-md rounded-xl border border-slate-100 bg-white p-6 shadow-2xl shadow-slate-900/20">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-fixed text-primary">
+          <span class="material-symbols-outlined text-[22px]">add_location_alt</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h3 id="field-visit-confirm-title" class="font-headline-md text-lg font-bold text-slate-900">ยืนยันการเพิ่มจุดนอกสถานที่</h3>
+          <p class="mt-1 text-sm text-slate-500">กรุณาตรวจสอบรายละเอียดก่อนบันทึกจุดนี้</p>
+        </div>
+      </div>
+      <div class="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-700">
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">จุด</span>
+          <span id="field-visit-confirm-name" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">วันที่</span>
+          <span id="field-visit-confirm-date" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">เวลา</span>
+          <span id="field-visit-confirm-time" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex justify-between gap-4 py-1">
+          <span class="font-semibold text-slate-500">ระยะจากจุดก่อนหน้า</span>
+          <span id="field-visit-confirm-distance" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="mt-3 border-t border-slate-200 pt-3">
+          <p class="font-semibold text-slate-500">สถานที่</p>
+          <p id="field-visit-confirm-location" class="mt-1 whitespace-pre-line text-slate-900">-</p>
+        </div>
+        <div class="mt-3 border-t border-slate-200 pt-3">
+          <p class="font-semibold text-slate-500">หมายเหตุ</p>
+          <p id="field-visit-confirm-note" class="mt-1 whitespace-pre-line text-slate-900">-</p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="field-visit-confirm-cancel" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 active:scale-[0.98]" type="button">ยกเลิก</button>
+        <button id="field-visit-confirm-ok" class="gradient-primary rounded-xl px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 active:scale-[0.98]" type="button">ตกลง</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast-container" class="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-6 z-50 space-y-3"></div>
 
   <script type="module">
@@ -522,6 +811,22 @@
     import { getAppSessionToken, getDepartment, getNickname, getUserId, hasMenuAccess, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
 
     const $ = (id) => document.getElementById(id);
+    const setButtonHidden = (id, hidden) => {
+      const element = $(id);
+      if (!element) return;
+      element.classList.toggle("hidden", hidden);
+      if (id === "retake-photo-mobile-btn") {
+        element.classList.toggle("flex", !hidden);
+      }
+    };
+    const setPhotoButtonState = ({ captureHidden, retakeHidden, captureDisabled }) => {
+      setButtonHidden("capture-photo-btn", captureHidden);
+      setButtonHidden("capture-photo-mobile-btn", captureHidden);
+      setButtonHidden("retake-photo-btn", retakeHidden);
+      setButtonHidden("retake-photo-mobile-btn", retakeHidden);
+      if ($("capture-photo-btn")) $("capture-photo-btn").disabled = captureDisabled;
+      if ($("capture-photo-mobile-btn")) $("capture-photo-mobile-btn").disabled = captureDisabled;
+    };
 
     if (!requireLogin()) {
       throw new Error("NOT_LOGIN");
@@ -533,6 +838,9 @@
 
     if (await hasMenuAccess("HR_MONITOR")) {
       document.querySelectorAll('[data-menu-code="HR_MONITOR"]').forEach((link) => link.classList.remove("hidden"));
+    }
+    if (await hasMenuAccess("HR_SUMMARY")) {
+      document.querySelectorAll('[data-menu-code="HR_SUMMARY"]').forEach((link) => link.classList.remove("hidden"));
     }
 
     const initialStorageDateKey = new Intl.DateTimeFormat("en-CA", {
@@ -556,6 +864,8 @@
       serverTimeReady: false,
       attendanceMode: "checkin",
       verificationMode: "checkin",
+      isSavingVerification: false,
+      isCheckingOut: false,
       fieldVisits: JSON.parse(localStorage.getItem(fieldVisitStorageKey) || "[]"),
       lastCheckin: JSON.parse(localStorage.getItem("attendanceLastCheckin") || "null")
     };
@@ -989,7 +1299,8 @@
     function showCheckoutSummary(payload) {
       const checkinDate = new Date(payload.time);
       const checkoutDate = new Date(payload.checkoutAt);
-      const checkoutPlace = payload.type === "Office" ? "Office" : payload.checkoutAddress || payload.address || state.address || "-";
+      const checkoutType = payload.checkoutType || (payload.checkoutAddress === "Office" ? "Office" : payload.type);
+      const checkoutPlace = checkoutType === "Office" ? "Office" : payload.checkoutAddress || payload.address || state.address || "-";
       const dateText = new Intl.DateTimeFormat("th-TH", {
         timeZone: "Asia/Bangkok",
         year: "numeric",
@@ -1052,6 +1363,78 @@
     function closeAttendanceAlert() {
       $("attendance-alert-modal").classList.add("hidden");
       $("attendance-alert-modal").classList.remove("flex");
+    }
+
+    function openCheckoutConfirmMsbox({ checkoutType = "Office", checkoutAt = getServerNow(), checkoutLocation = "Office", checkoutNote = "" } = {}) {
+      const modal = $("checkout-confirm-modal");
+      const checkinDate = state.lastCheckin?.time ? new Date(state.lastCheckin.time) : null;
+      const workingMs = checkinDate && !Number.isNaN(checkinDate.getTime())
+        ? getNetWorkingMs(checkinDate, checkoutAt)
+        : 0;
+      $("checkout-confirm-type").textContent = checkoutType;
+      $("checkout-confirm-date").textContent = formatCaptureDate(checkoutAt);
+      $("checkout-confirm-time").textContent = formatCaptureTime(checkoutAt);
+      $("checkout-confirm-working-hours").textContent = formatDuration(workingMs);
+      $("checkout-confirm-location").textContent = checkoutLocation || "-";
+      $("checkout-confirm-note").textContent = checkoutNote || "-";
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+
+      return new Promise((resolve) => {
+        const cleanup = (confirmed) => {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          $("checkout-confirm-ok").removeEventListener("click", onOk);
+          $("checkout-confirm-cancel").removeEventListener("click", onCancel);
+          modal.removeEventListener("click", onBackdrop);
+          resolve(confirmed);
+        };
+
+        const onOk = () => cleanup(true);
+        const onCancel = () => cleanup(false);
+        const onBackdrop = (event) => {
+          if (event.target === modal) cleanup(false);
+        };
+
+        $("checkout-confirm-ok").addEventListener("click", onOk);
+        $("checkout-confirm-cancel").addEventListener("click", onCancel);
+        modal.addEventListener("click", onBackdrop);
+        $("checkout-confirm-ok").focus();
+      });
+    }
+
+    function openFieldVisitConfirmMsbox({ locationName, checkedAt = getServerNow(), distanceKm = null, address = "", note = "" } = {}) {
+      const modal = $("field-visit-confirm-modal");
+      $("field-visit-confirm-name").textContent = locationName || getNextFieldPointName();
+      $("field-visit-confirm-date").textContent = formatCaptureDate(checkedAt);
+      $("field-visit-confirm-time").textContent = formatCaptureTime(checkedAt);
+      $("field-visit-confirm-distance").textContent = formatDistance(distanceKm);
+      $("field-visit-confirm-location").textContent = address || "-";
+      $("field-visit-confirm-note").textContent = note || "-";
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+
+      return new Promise((resolve) => {
+        const cleanup = (confirmed) => {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          $("field-visit-confirm-ok").removeEventListener("click", onOk);
+          $("field-visit-confirm-cancel").removeEventListener("click", onCancel);
+          modal.removeEventListener("click", onBackdrop);
+          resolve(confirmed);
+        };
+
+        const onOk = () => cleanup(true);
+        const onCancel = () => cleanup(false);
+        const onBackdrop = (event) => {
+          if (event.target === modal) cleanup(false);
+        };
+
+        $("field-visit-confirm-ok").addEventListener("click", onOk);
+        $("field-visit-confirm-cancel").addEventListener("click", onCancel);
+        modal.addEventListener("click", onBackdrop);
+        $("field-visit-confirm-ok").focus();
+      });
     }
 
     function dataUrlToBlob(dataUrl) {
@@ -1176,6 +1559,10 @@
     }
 
     async function recordCheckout(photoDataUrl = null, note = "", checkoutType = "Office") {
+      if (state.isCheckingOut) {
+        return false;
+      }
+
       if (!state.lastCheckin?.id) {
         showAttendanceAlert({
           eyebrow: "Check-out",
@@ -1185,56 +1572,73 @@
         return;
       }
 
+      state.isCheckingOut = true;
       const capturedAt = state.capturedAt || getServerNow();
-      const isOffice = checkoutType === "Office";
-      const sessionToken = getAppSessionToken();
-      if (!sessionToken) {
-        showToast("ไม่พบ session กรุณาเข้าสู่ระบบใหม่", "error");
-        return;
-      }
-
-      let photoUrl = null;
       try {
-        photoUrl = isOffice ? null : await uploadAttendancePhoto(photoDataUrl, "checkout", capturedAt);
-      } catch (error) {
-        showToast(error.message, "error");
-        return false;
-      }
-
-      const { data, error } = await supabase.rpc("record_attendance_checkout", {
-        p_session_token: sessionToken,
-        p_attendance_id: state.lastCheckin.id,
-        p_checkout_note: note.trim() || null,
-        p_checkout_captured_at: formatBangkokSqlDateTime(capturedAt),
-        p_checkout_capture_date: formatCaptureDate(capturedAt),
-        p_checkout_capture_time: formatCaptureTime(capturedAt),
-        p_checkout_latitude: isOffice ? null : state.position?.coords?.latitude ?? null,
-        p_checkout_longitude: isOffice ? null : state.position?.coords?.longitude ?? null,
-        p_checkout_address: isOffice ? "Office" : state.address || null,
-        p_checkout_photo_data_url: photoUrl
-      });
-
-      if (error) {
-        console.error("Attendance check-out error:", error);
-        showAttendanceAlert({
-          eyebrow: "Check-out",
-          title: "บันทึกเวลาออกงานไม่สำเร็จ",
-          message: "ระบบไม่สามารถบันทึกเวลาออกงานได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง"
+        const isOffice = checkoutType === "Office";
+        const checkoutAddress = isOffice ? "Office" : state.address || null;
+        const confirmed = await openCheckoutConfirmMsbox({
+          checkoutType,
+          checkoutAt: capturedAt,
+          checkoutLocation: checkoutAddress,
+          checkoutNote: note.trim()
         });
-        return;
-      }
+        if (!confirmed) {
+          return false;
+        }
 
-      const savedRecord = Array.isArray(data) ? data[0] : data;
-      state.lastCheckin.checkoutAt = savedRecord?.checkout_at || formatBangkokSqlDateTime();
-      state.lastCheckin.checkoutNote = note.trim() || null;
-      state.lastCheckin.checkoutAddress = isOffice ? "Office" : state.address || null;
-      state.lastCheckin.checkoutPhotoDataUrl = photoUrl;
-      localStorage.setItem("attendanceLastCheckin", JSON.stringify(state.lastCheckin));
-      renderLastCheckin();
-      renderDailyTimeline();
-      setAttendanceMode("completed");
-      showCheckoutSummary(state.lastCheckin);
-      return true;
+        const sessionToken = getAppSessionToken();
+        if (!sessionToken) {
+          showToast("ไม่พบ session กรุณาเข้าสู่ระบบใหม่", "error");
+          return false;
+        }
+
+        let photoUrl = null;
+        try {
+          photoUrl = isOffice ? null : await uploadAttendancePhoto(photoDataUrl, "checkout", capturedAt);
+        } catch (error) {
+          showToast(error.message, "error");
+          return false;
+        }
+
+        const { data, error } = await supabase.rpc("record_attendance_checkout", {
+          p_session_token: sessionToken,
+          p_attendance_id: state.lastCheckin.id,
+          p_checkout_note: note.trim() || null,
+          p_checkout_captured_at: formatBangkokSqlDateTime(capturedAt),
+          p_checkout_capture_date: formatCaptureDate(capturedAt),
+          p_checkout_capture_time: formatCaptureTime(capturedAt),
+          p_checkout_latitude: isOffice ? null : state.position?.coords?.latitude ?? null,
+          p_checkout_longitude: isOffice ? null : state.position?.coords?.longitude ?? null,
+          p_checkout_address: checkoutAddress,
+          p_checkout_photo_data_url: photoUrl
+        });
+
+        if (error) {
+          console.error("Attendance check-out error:", error);
+          showAttendanceAlert({
+            eyebrow: "Check-out",
+            title: "บันทึกเวลาออกงานไม่สำเร็จ",
+            message: "ระบบไม่สามารถบันทึกเวลาออกงานได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง"
+          });
+          return false;
+        }
+
+        const savedRecord = Array.isArray(data) ? data[0] : data;
+        state.lastCheckin.checkoutAt = savedRecord?.checkout_at || formatBangkokSqlDateTime();
+        state.lastCheckin.checkoutType = checkoutType;
+        state.lastCheckin.checkoutNote = note.trim() || null;
+        state.lastCheckin.checkoutAddress = checkoutAddress;
+        state.lastCheckin.checkoutPhotoDataUrl = photoUrl;
+        localStorage.setItem("attendanceLastCheckin", JSON.stringify(state.lastCheckin));
+        renderLastCheckin();
+        renderDailyTimeline();
+        setAttendanceMode("completed");
+        showCheckoutSummary(state.lastCheckin);
+        return true;
+      } finally {
+        state.isCheckingOut = false;
+      }
     }
 
     function renderLastCheckin() {
@@ -1282,7 +1686,10 @@
         longitude: record.longitude ?? null,
         address: record.address || null,
         note: record.note || null,
-        checkoutAt: record.checkout_at || null
+        checkoutAt: record.checkout_at || null,
+        checkoutType: record.checkout_address === "Office" ? "Office" : record.checkout_at ? "WFH / On-site" : null,
+        checkoutAddress: record.checkout_address || null,
+        checkoutNote: record.checkout_note || null
       };
     }
 
@@ -1354,10 +1761,61 @@
 
         navigator.geolocation.getCurrentPosition(resolve, reject, {
           enableHighAccuracy: true,
-          timeout: 12000,
+          timeout: 20000,
           maximumAge: 0
         });
       });
+    }
+
+    function requestPositionRelaxed() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("อุปกรณ์นี้ไม่รองรับ GPS"));
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: false,
+          timeout: 30000,
+          maximumAge: 120000
+        });
+      });
+    }
+
+    async function getCurrentPositionWithFallback() {
+      try {
+        return await requestPosition();
+      } catch (error) {
+        console.warn("High accuracy GPS failed, retrying with relaxed options:", error);
+        return requestPositionRelaxed();
+      }
+    }
+
+    async function requestCameraStream() {
+      if (!window.isSecureContext) {
+        throw new Error("Safari ต้องเปิดผ่านลิงก์ HTTPS จึงจะใช้กล้องและตำแหน่งได้");
+      }
+
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error("เบราว์เซอร์นี้ไม่รองรับกล้อง");
+      }
+
+      const constraints = [
+        { video: { facingMode: "user" }, audio: false },
+        { video: true, audio: false }
+      ];
+
+      let lastError = null;
+      for (const constraint of constraints) {
+        try {
+          return await navigator.mediaDevices.getUserMedia(constraint);
+        } catch (error) {
+          lastError = error;
+          console.warn("Camera constraint failed, retrying:", error);
+        }
+      }
+
+      throw lastError || new Error("ไม่สามารถเปิดกล้องได้");
     }
 
     function formatStampTime(date = getServerNow()) {
@@ -1461,10 +1919,17 @@
       setGpsStatus("กำลังตรวจสอบตำแหน่ง...");
 
       try {
-        const position = forceRefresh || !state.position ? await requestPosition() : state.position;
+        const position = forceRefresh || !state.position ? await getCurrentPositionWithFallback() : state.position;
         state.position = position;
         setGpsStatus("กำลังค้นหาสถานที่จริง...");
-        state.address = await resolveAddress(position);
+        try {
+          state.address = await resolveAddress(position);
+        } catch (addressError) {
+          console.warn("Reverse geocoding failed, using coordinates instead:", addressError);
+          state.address = position?.coords
+            ? `Lat ${position.coords.latitude.toFixed(6)}, Lng ${position.coords.longitude.toFixed(6)}`
+            : "";
+        }
         setGpsStatus(getPlaceText());
         renderFieldLockPreview();
         renderLocationStamp();
@@ -1546,8 +2011,7 @@
       $("captured-photo").classList.remove("hidden");
       video.classList.add("hidden");
       $("stamp-overlay").classList.add("hidden");
-      $("capture-photo-btn").classList.add("hidden");
-      $("retake-photo-btn").classList.remove("hidden");
+      setPhotoButtonState({ captureHidden: true, retakeHidden: false, captureDisabled: false });
       $("confirm-field-btn").disabled = false;
       stopStampTimer();
       showToast("ถ่ายรูปพร้อมไทม์สแตมป์แล้ว", "success");
@@ -1560,8 +2024,7 @@
       $("captured-photo").classList.add("hidden");
       $("camera-preview").classList.remove("hidden");
       $("stamp-overlay").classList.remove("hidden");
-      $("capture-photo-btn").classList.remove("hidden");
-      $("retake-photo-btn").classList.add("hidden");
+      setPhotoButtonState({ captureHidden: false, retakeHidden: true, captureDisabled: false });
       $("confirm-field-btn").disabled = true;
       startStampTimer();
     }
@@ -1571,9 +2034,7 @@
       $("camera-panel").classList.remove("hidden");
       $("location-label").textContent = "กำลังตรวจสอบตำแหน่ง";
       $("captured-photo").classList.add("hidden");
-      $("capture-photo-btn").classList.remove("hidden");
-      $("retake-photo-btn").classList.add("hidden");
-      $("capture-photo-btn").disabled = true;
+      setPhotoButtonState({ captureHidden: false, retakeHidden: true, captureDisabled: true });
       $("confirm-field-btn").disabled = true;
       $("field-location-panel").classList.toggle("hidden", mode !== "field-visit");
       $("confirm-field-btn").textContent = mode === "checkout"
@@ -1584,14 +2045,19 @@
       try {
         const [position, stream] = await Promise.all([
           loadCurrentLocation(mode === "field-visit"),
-          navigator.mediaDevices?.getUserMedia
-            ? navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-            : Promise.reject(new Error("เบราว์เซอร์นี้ไม่รองรับกล้อง"))
+          requestCameraStream()
         ]);
 
         state.position = position;
         if (!state.address) {
-          state.address = await resolveAddress(position);
+          try {
+            state.address = await resolveAddress(position);
+          } catch (addressError) {
+            console.warn("Reverse geocoding failed after camera ready:", addressError);
+            state.address = position?.coords
+              ? `Lat ${position.coords.latitude.toFixed(6)}, Lng ${position.coords.longitude.toFixed(6)}`
+              : "";
+          }
           setGpsStatus(getPlaceText());
         }
         renderFieldLockPreview();
@@ -1601,7 +2067,7 @@
         $("camera-empty").classList.add("hidden");
         $("stamp-overlay").classList.remove("hidden");
 
-        $("capture-photo-btn").disabled = false;
+        setPhotoButtonState({ captureHidden: false, retakeHidden: true, captureDisabled: false });
         startStampTimer();
         showToast("กล้องและ GPS พร้อมใช้งาน", "success");
       } catch (error) {
@@ -1627,8 +2093,7 @@
       $("camera-preview").classList.add("hidden");
       $("captured-photo").classList.add("hidden");
       $("stamp-overlay").classList.add("hidden");
-      $("capture-photo-btn").classList.remove("hidden");
-      $("retake-photo-btn").classList.add("hidden");
+      setPhotoButtonState({ captureHidden: false, retakeHidden: true, captureDisabled: true });
       $("capture-date-detail").textContent = "วันที่ถ่ายรูป: -";
       $("capture-time-detail").textContent = "เวลาถ่ายรูป: -";
       $("confirm-field-btn").textContent = "Save Field Check-in";
@@ -1659,6 +2124,16 @@
       const now = getServerNow();
       const locationName = getNextFieldPointName();
       const distanceKm = getDistanceFromPreviousPoint();
+      const confirmed = await openFieldVisitConfirmMsbox({
+        locationName,
+        checkedAt: now,
+        distanceKm,
+        address: state.address,
+        note: note.trim()
+      });
+      if (!confirmed) {
+        return false;
+      }
 
       const sessionToken = getAppSessionToken();
       if (!sessionToken) {
@@ -1751,10 +2226,12 @@
 
       openCameraAndGps("checkin");
     });
-    $("field-checkout-btn").addEventListener("click", () => recordCheckout(null, "", "Office"));
+    $("field-checkout-btn").addEventListener("click", () => openCameraAndGps("checkout"));
     $("close-camera-btn").addEventListener("click", closeCamera);
     $("capture-photo-btn").addEventListener("click", captureStampedPhoto);
+    $("capture-photo-mobile-btn").addEventListener("click", captureStampedPhoto);
     $("retake-photo-btn").addEventListener("click", retakePhoto);
+    $("retake-photo-mobile-btn").addEventListener("click", retakePhoto);
     $("checkout-btn").addEventListener("click", () => recordCheckout(null, "", "Office"));
     $("close-summary-modal-btn").addEventListener("click", closeCheckinSummary);
     $("summary-modal-ok-btn").addEventListener("click", closeCheckinSummary);
@@ -1771,19 +2248,32 @@
       }
     });
     $("confirm-field-btn").addEventListener("click", async () => {
+      if (state.isSavingVerification) {
+        return;
+      }
+
       if (!state.capturedPhoto) {
         showToast("กรุณาถ่ายรูปพร้อมไทม์สแตมป์ก่อนบันทึก", "error");
         return;
       }
 
       state.fieldNote = $("field-note").value;
-      const saved = state.verificationMode === "checkout"
-        ? await recordCheckout(state.capturedPhoto, state.fieldNote, "WFH / On-site")
-        : state.verificationMode === "field-visit"
-          ? await recordFieldVisit(state.capturedPhoto, state.fieldNote)
-          : await recordCheckin("WFH / On-site", state.capturedPhoto, state.fieldNote);
-      if (saved) {
-        closeCamera();
+      state.isSavingVerification = true;
+      $("confirm-field-btn").disabled = true;
+
+      try {
+        const saved = state.verificationMode === "checkout"
+          ? await recordCheckout(state.capturedPhoto, state.fieldNote, "WFH / On-site")
+          : state.verificationMode === "field-visit"
+            ? await recordFieldVisit(state.capturedPhoto, state.fieldNote)
+            : await recordCheckin("WFH / On-site", state.capturedPhoto, state.fieldNote);
+        if (saved) {
+          closeCamera();
+        } else {
+          $("confirm-field-btn").disabled = false;
+        }
+      } finally {
+        state.isSavingVerification = false;
       }
     });
 

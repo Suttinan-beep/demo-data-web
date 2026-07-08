@@ -97,6 +97,7 @@
     .primary-gradient { background: linear-gradient(135deg, #004ac6 0%, #0074a6 100%); }
     .stat-card { min-height: 118px; }
     .thai-label { letter-spacing: 0; text-transform: none; }
+    .mobile-result-list { display: none; }
     .attendance-sidebar {
       width: 190px;
       transition: width 0.25s ease;
@@ -145,12 +146,46 @@
     }
 
     @media (max-width: 767px) {
+      body {
+        background: #f7f9fb;
+      }
+
+      header {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+
       .attendance-sidebar {
         display: none;
       }
 
       .main-shell {
         margin-left: 0;
+        padding: 16px 16px 28px;
+      }
+
+      .main-shell > header {
+        border-radius: 16px;
+        border: 1px solid #e8eef6;
+        background: #ffffff;
+        padding: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      .main-shell > header h1 {
+        font-size: 24px;
+        line-height: 32px;
+      }
+
+      .main-shell > header > div:last-child {
+        width: 100%;
+      }
+
+      #refresh-btn {
+        width: 100%;
+        min-height: 44px;
+        justify-content: center;
+        border-radius: 14px;
       }
 
       #user-summary {
@@ -166,6 +201,176 @@
 
       #user-summary > div {
         align-items: flex-end;
+      }
+
+      .main-shell > section {
+        margin-bottom: 16px;
+      }
+
+      .main-shell > section:nth-of-type(1) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        border-radius: 16px;
+        border: 1px solid #e8eef6;
+        padding: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      .main-shell > section:nth-of-type(1) > div,
+      .main-shell > section:nth-of-type(1) > label {
+        min-width: 0;
+        width: 100%;
+        padding-top: 0;
+      }
+
+      .main-shell > section:nth-of-type(1) > div:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .main-shell > section:nth-of-type(1) > label {
+        grid-column: 1 / -1;
+        min-height: 44px;
+        border-radius: 14px;
+        background: #f2f4f6;
+        padding: 0 12px;
+      }
+
+      .main-shell > section:nth-of-type(1) input,
+      .main-shell > section:nth-of-type(1) select {
+        min-height: 44px;
+        border-radius: 14px;
+      }
+
+      .main-shell > section:nth-of-type(2) {
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .main-shell > section:nth-of-type(2) > div:first-child {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .main-shell > section:nth-of-type(2) button {
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      #stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .stat-card {
+        min-height: 78px;
+        border-radius: 16px;
+        padding: 14px !important;
+        gap: 10px !important;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      .stat-card .material-symbols-outlined {
+        font-size: 28px !important;
+      }
+
+      .stat-card span:last-child {
+        font-size: 28px !important;
+        line-height: 32px !important;
+        margin-top: 2px !important;
+      }
+
+      .main-shell > section:nth-of-type(3) {
+        gap: 16px;
+      }
+
+      .main-shell > section:nth-of-type(3) > div > div {
+        border-radius: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      .main-shell > section:nth-of-type(3) h3 {
+        font-size: 20px;
+        line-height: 28px;
+      }
+
+      .main-shell table {
+        display: none;
+      }
+
+      .main-shell > section:nth-of-type(3) .overflow-auto {
+        max-height: min(62vh, 520px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+
+      .mobile-result-list {
+        display: grid;
+        gap: 10px;
+        padding: 12px;
+      }
+
+      .mobile-employee-card {
+        border: 1px solid #e8eef6;
+        border-radius: 14px;
+        background: #ffffff;
+        padding: 12px;
+      }
+
+      .mobile-employee-card .employee-avatar {
+        height: 36px;
+        width: 36px;
+        border-radius: 9999px;
+        background: #dbe1ff;
+        color: #004ac6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .mobile-employee-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .mobile-employee-meta > div {
+        border-radius: 12px;
+        background: #f2f4f6;
+        padding: 9px 10px;
+      }
+
+      .mobile-employee-meta span {
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+      }
+
+      .mobile-employee-meta strong {
+        display: block;
+        margin-top: 2px;
+        font-size: 13px;
+        line-height: 18px;
+        color: #0f172a;
+      }
+
+      .main-shell > section:nth-of-type(4) {
+        margin-top: 16px;
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 10px 28px rgba(0, 74, 198, 0.08);
+      }
+
+      #footer-attention-btn,
+      #footer-remote-btn {
+        border-radius: 16px;
       }
     }
   </style>
@@ -186,6 +391,11 @@
         <a class="flex items-center gap-3 rounded-xl border border-primary/15 bg-primary px-3 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20" href="HRMonitor.html" aria-current="page">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-[24px]">monitoring</span>
           <span class="flex-1">HR Monitor</span>
+        </a>
+        <a id="mobile-hr-summary-nav-link" data-menu-code="HR_SUMMARY" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="HRSummary.html">
+          <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">summarize</span>
+          <span class="flex-1">HR Summary</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-300">chevron_right</span>
         </a>
         <a id="mobile-attendance-history-nav-link" data-menu-code="ATTENDANCE" class="hidden flex items-center gap-3 rounded-xl border border-primary/15 bg-white px-3 py-3 text-sm font-semibold text-slate-700 shadow-lg shadow-primary/10 hover:border-primary/25 hover:bg-primary-fixed/40 hover:text-primary" href="AttendanceHistory.html">
           <span class="material-symbols-outlined flex h-9 w-9 items-center justify-center text-primary text-[24px]">history</span>
@@ -227,6 +437,10 @@
         <a id="hr-monitor-nav-link" class="attendance-nav-link active flex items-center gap-3 rounded-full bg-primary text-white px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRMonitor.html" aria-current="page">
           <span class="material-symbols-outlined text-[18px]">monitoring</span>
           <span class="attendance-nav-label transition-all duration-200">HR Monitor</span>
+        </a>
+        <a id="hr-summary-nav-link" data-menu-code="HR_SUMMARY" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="HRSummary.html">
+          <span class="material-symbols-outlined text-[18px]">summarize</span>
+          <span class="attendance-nav-label transition-all duration-200">HR Summary</span>
         </a>
         <a id="attendance-history-nav-link" class="attendance-nav-link hidden flex items-center gap-3 rounded-full text-slate-500 hover:bg-slate-50 hover:text-primary px-3 py-2 text-sm font-semibold transition-all duration-200" href="AttendanceHistory.html">
           <span class="material-symbols-outlined text-[18px]">history</span>
@@ -343,23 +557,26 @@
           <div class="max-h-[620px] overflow-auto">
             <table class="min-w-[720px] w-full table-fixed text-left">
               <colgroup>
-                <col class="w-[28%]"/>
+                <col class="w-[26%]"/>
+                <col class="w-[16%]"/>
+                <col class="w-[14%]"/>
+                <col class="w-[14%]"/>
                 <col class="w-[18%]"/>
-                <col class="w-[15%]"/>
-                <col class="w-[15%]"/>
-                <col class="w-[24%]"/>
+                <col class="w-[12%]"/>
               </colgroup>
-              <thead class="bg-primary-fixed/30 border-y border-primary-fixed-dim/40">
+              <thead class="sticky top-0 z-10 bg-primary-fixed/95 border-y border-primary-fixed-dim/40 shadow-sm">
                 <tr>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Employee</th>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Department</th>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Check-in</th>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Check-out</th>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold text-center">Status</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold text-center">Action</th>
                 </tr>
               </thead>
               <tbody id="office-table-body" class="divide-y divide-slate-50"></tbody>
             </table>
+            <div id="office-mobile-list" class="mobile-result-list"></div>
           </div>
         </div>
       </div>
@@ -376,21 +593,24 @@
           <div class="max-h-[420px] overflow-auto">
             <table class="min-w-[700px] w-full table-fixed text-left">
               <colgroup>
-                <col class="w-[28%]"/>
-                <col class="w-[16%]"/>
-                <col class="w-[16%]"/>
-                <col class="w-[40%]"/>
+                <col class="w-[25%]"/>
+                <col class="w-[15%]"/>
+                <col class="w-[15%]"/>
+                <col class="w-[32%]"/>
+                <col class="w-[13%]"/>
               </colgroup>
-              <thead class="bg-primary-fixed/30 border-y border-primary-fixed-dim/40">
+              <thead class="sticky top-0 z-10 bg-primary-fixed/95 border-y border-primary-fixed-dim/40 shadow-sm">
                 <tr>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Employee</th>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Department</th>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold text-center">Status</th>
                   <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold">Latest Location</th>
+                  <th class="thai-label px-4 py-3 text-label-uppercase text-on-surface-variant font-semibold text-center">Action</th>
                 </tr>
               </thead>
               <tbody id="remote-list" class="divide-y divide-slate-50"></tbody>
             </table>
+            <div id="remote-mobile-list" class="mobile-result-list"></div>
           </div>
         </div>
       </div>
@@ -434,6 +654,82 @@
     </section>
   </main>
 
+  <div id="employee-detail-modal" class="hidden fixed inset-0 z-[80] bg-slate-900/45 p-4">
+    <div class="mx-auto mt-8 flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 p-5">
+        <div class="min-w-0">
+          <h2 id="detail-title" class="font-headline-md text-xl font-bold text-slate-900">Employee timeline</h2>
+          <p id="detail-subtitle" class="mt-1 text-sm text-slate-500">-</p>
+        </div>
+        <button id="detail-close-btn" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100" type="button" aria-label="Close">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+      <form id="employee-edit-form" class="hidden border-b border-slate-100 bg-slate-50/70 p-5">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="thai-label text-[11px] font-bold text-slate-500">Check-in</span>
+            <input id="edit-checkin-time" class="mt-1 w-full rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary/20" type="time"/>
+          </label>
+          <label class="block">
+            <span class="thai-label text-[11px] font-bold text-slate-500">Check-out</span>
+            <input id="edit-checkout-time" class="mt-1 w-full rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary/20" type="time"/>
+          </label>
+        </div>
+        <label class="mt-4 block">
+          <span class="thai-label text-[11px] font-bold text-slate-500">Remark <span class="text-error">*</span></span>
+          <textarea id="edit-note" class="mt-1 min-h-[76px] w-full rounded-lg border-slate-200 text-sm focus:border-primary focus:ring-primary/20" maxlength="500" placeholder="Required every time attendance time is edited"></textarea>
+        </label>
+        <div class="mt-4 flex flex-wrap items-center justify-end gap-2">
+          <button id="edit-clear-checkout-btn" class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50" type="button">Clear check-out</button>
+          <button class="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-container" type="submit">Save</button>
+        </div>
+      </form>
+      <div class="overflow-auto p-5">
+        <ol id="detail-timeline" class="space-y-4"></ol>
+      </div>
+    </div>
+  </div>
+
+  <div id="hr-edit-confirm-modal" class="fixed inset-0 z-[90] hidden items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="hr-edit-confirm-title">
+    <div class="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div class="flex items-start gap-3 border-b border-slate-100 p-5">
+        <span id="hr-edit-confirm-icon" class="material-symbols-outlined mt-0.5 text-primary text-[28px]">edit_calendar</span>
+        <div>
+          <p id="hr-edit-confirm-eyebrow" class="text-label-uppercase text-primary">HR Monitor</p>
+          <h3 id="hr-edit-confirm-title" class="font-headline-md text-lg font-bold text-slate-900">ยืนยันการแก้ไขเวลา</h3>
+          <p id="hr-edit-confirm-message" class="mt-1 text-sm leading-6 text-slate-500">กรุณาตรวจสอบข้อมูลก่อนบันทึก</p>
+        </div>
+      </div>
+      <div class="space-y-3 p-5 text-sm">
+        <div class="flex items-center justify-between gap-4">
+          <span class="text-slate-500">พนักงาน</span>
+          <span id="hr-edit-confirm-employee" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex items-center justify-between gap-4">
+          <span class="text-slate-500">วันที่</span>
+          <span id="hr-edit-confirm-date" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex items-center justify-between gap-4">
+          <span class="text-slate-500">Check-in</span>
+          <span id="hr-edit-confirm-checkin" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div class="flex items-center justify-between gap-4">
+          <span class="text-slate-500">Check-out</span>
+          <span id="hr-edit-confirm-checkout" class="text-right font-semibold text-slate-900">-</span>
+        </div>
+        <div>
+          <span class="text-slate-500">Remark</span>
+          <p id="hr-edit-confirm-note" class="mt-1 whitespace-pre-line rounded-xl bg-slate-50 p-3 font-semibold text-slate-900">-</p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 border-t border-slate-100 bg-slate-50 px-5 py-4">
+        <button id="hr-edit-confirm-cancel" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 active:scale-[0.98]" type="button">ยกเลิก</button>
+        <button id="hr-edit-confirm-ok" class="rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/20 hover:bg-primary-container active:scale-[0.98]" type="button">ตกลง</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { supabase } from "./supabase-client.js";
     import { getAppSessionToken, getDepartment, getNickname, getUserId, hasMenuAccess, renderUserHeader, requireLogin, requireMenuAccess } from "./app-helpers.js";
@@ -452,6 +748,9 @@
       $("attendance-checkin-nav-link")?.classList.remove("hidden");
       $("attendance-history-nav-link")?.classList.remove("hidden");
       document.querySelectorAll('[data-menu-code="ATTENDANCE"]').forEach((link) => link.classList.remove("hidden"));
+    }
+    if (await hasMenuAccess("HR_SUMMARY")) {
+      document.querySelectorAll('[data-menu-code="HR_SUMMARY"]').forEach((link) => link.classList.remove("hidden"));
     }
 
     function renderAttendanceUserHeader() {
@@ -492,7 +791,9 @@
       status: "all",
       type: "all",
       search: "",
-      attentionOnly: false
+      attentionOnly: false,
+      canEdit: false,
+      selectedEmployeeId: null
     };
 
     function formatDateInput(date = new Date()) {
@@ -566,6 +867,7 @@
           : [];
       return {
         id: record.employee_id || record.id || "-",
+        attendanceId: record.attendance_id || record.attendanceId || null,
         name: record.employee_name || record.name || "-",
         department: record.department || "-",
         role: record.role || record.position || "-",
@@ -590,6 +892,245 @@
           photoDataUrl: point.photo_data_url || point.photoDataUrl || null
         }))
       };
+    }
+
+    function toTimeInputValue(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(date);
+    }
+
+    function buildBangkokDateTime(dateKey, timeValue) {
+      return timeValue ? `${dateKey}T${timeValue}:00+07:00` : null;
+    }
+
+    function formatDateLabel(dateKey) {
+      const date = new Date(`${dateKey}T00:00:00+07:00`);
+      if (Number.isNaN(date.getTime())) return dateKey || "-";
+      return new Intl.DateTimeFormat("th-TH", {
+        timeZone: "Asia/Bangkok",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      }).format(date);
+    }
+
+    function getEmployeeTimeline(record) {
+      const points = [
+        record.checkinAt ? { label: "Check-in", time: record.checkinAt, detail: record.address || record.type || "-" } : null,
+        ...(record.fieldPoints || []).map((point) => ({
+          label: point.locationName || `Field point ${point.sequenceNo || ""}`.trim(),
+          time: point.time,
+          detail: point.address || point.note || "-"
+        })),
+        record.checkoutAt ? { label: "Check-out", time: record.checkoutAt, detail: record.address || record.type || "-" } : null
+      ].filter(Boolean);
+      return points.sort((a, b) => new Date(a.time) - new Date(b.time));
+    }
+
+    function getActionButtons(record) {
+      return `
+        <div class="flex items-center justify-center gap-1.5">
+          <button class="inline-flex h-8 w-8 items-center justify-center rounded-full text-primary hover:bg-primary-fixed" type="button" data-view-employee="${escapeHtml(record.id)}" aria-label="View timeline">
+            <span class="material-symbols-outlined text-[18px]">timeline</span>
+          </button>
+          ${state.canEdit ? `
+            <button class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-35" type="button" data-edit-employee="${escapeHtml(record.id)}" aria-label="Edit time" ${record.attendanceId ? "" : "disabled"}>
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+          ` : ""}
+        </div>
+      `;
+    }
+
+    function getSelectedEmployee() {
+      return state.employees.find((item) => item.id === state.selectedEmployeeId);
+    }
+
+    function renderEmployeeDetail(record, editMode = false) {
+      state.selectedEmployeeId = record.id;
+      $("detail-title").textContent = record.name || "-";
+      $("detail-subtitle").textContent = `${record.id || "-"} | ${record.department || "-"} | ${$("date-filter").value || formatDateInput()}`;
+      $("employee-edit-form").classList.toggle("hidden", !(editMode && state.canEdit && record.attendanceId));
+      $("edit-checkin-time").value = toTimeInputValue(record.checkinAt);
+      $("edit-checkout-time").value = toTimeInputValue(record.checkoutAt);
+      $("edit-note").value = "";
+
+      const timeline = getEmployeeTimeline(record);
+      $("detail-timeline").innerHTML = timeline.length ? timeline.map((item) => `
+        <li class="relative pl-8">
+          <span class="absolute left-0 top-1.5 h-3 w-3 rounded-full bg-primary"></span>
+          <span class="absolute left-[5px] top-5 h-[calc(100%+0.5rem)] w-px bg-slate-200"></span>
+          <div class="rounded-lg border border-slate-100 bg-white p-3">
+            <div class="flex items-start justify-between gap-3">
+              <p class="font-semibold text-slate-900">${escapeHtml(item.label)}</p>
+              <span class="shrink-0 text-sm font-bold text-primary">${formatThaiTime(item.time)}</span>
+            </div>
+            <p class="mt-1 text-sm text-slate-500">${escapeHtml(item.detail)}</p>
+          </div>
+        </li>
+      `).join("") : `<li class="rounded-lg bg-slate-50 p-4 text-center text-sm text-slate-400">No timeline for this date.</li>`;
+
+      $("employee-detail-modal").classList.remove("hidden");
+    }
+
+    function openHrEditConfirmMsbox({
+      title = "ยืนยันการแก้ไขเวลา",
+      message = "กรุณาตรวจสอบข้อมูลก่อนบันทึก",
+      icon = "edit_calendar",
+      confirmLabel = "ตกลง",
+      showCancel = true,
+      record,
+      workDate,
+      checkinAt,
+      checkoutAt,
+      editNote,
+      isClearCheckout = false
+    }) {
+      const modal = $("hr-edit-confirm-modal");
+      $("hr-edit-confirm-icon").textContent = icon;
+      $("hr-edit-confirm-title").textContent = title;
+      $("hr-edit-confirm-message").textContent = message;
+      $("hr-edit-confirm-ok").textContent = confirmLabel;
+      $("hr-edit-confirm-cancel").classList.toggle("hidden", !showCancel);
+      $("hr-edit-confirm-employee").textContent = record?.name || "-";
+      $("hr-edit-confirm-date").textContent = formatDateLabel(workDate);
+      $("hr-edit-confirm-checkin").textContent = formatThaiTime(checkinAt);
+      $("hr-edit-confirm-checkout").textContent = checkoutAt ? formatThaiTime(checkoutAt) : isClearCheckout ? "Clear Check-out" : "-";
+      $("hr-edit-confirm-note").textContent = editNote || "-";
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+
+      return new Promise((resolve) => {
+        const cleanup = (confirmed) => {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          $("hr-edit-confirm-ok").removeEventListener("click", onOk);
+          $("hr-edit-confirm-cancel").removeEventListener("click", onCancel);
+          modal.removeEventListener("click", onBackdrop);
+          resolve(confirmed);
+        };
+        const onOk = () => cleanup(true);
+        const onCancel = () => cleanup(false);
+        const onBackdrop = (event) => {
+          if (event.target === modal) cleanup(false);
+        };
+
+        $("hr-edit-confirm-ok").addEventListener("click", onOk);
+        $("hr-edit-confirm-cancel").addEventListener("click", onCancel);
+        modal.addEventListener("click", onBackdrop);
+        $("hr-edit-confirm-ok").focus();
+      });
+    }
+
+    function openHrEditAlertMsbox({
+      title = "กรุณากรอก Remark",
+      message = "กรุณากรอก Remark เพื่อบันทึกเหตุผลการแก้ไขเวลา",
+      icon = "info",
+      confirmLabel = "ตกลง"
+    } = {}) {
+      const record = getSelectedEmployee();
+      const workDate = $("date-filter").value || formatDateInput();
+      return openHrEditConfirmMsbox({
+        title,
+        message,
+        icon,
+        confirmLabel,
+        showCancel: false,
+        record,
+        workDate,
+        checkinAt: buildBangkokDateTime(workDate, $("edit-checkin-time").value),
+        checkoutAt: buildBangkokDateTime(workDate, $("edit-checkout-time").value),
+        editNote: "-"
+      });
+    }
+
+    async function updateEmployeeTimes({ checkinTime, checkoutTime, editNote, isClearCheckout = false, confirmOptions }) {
+      const record = getSelectedEmployee();
+      if (!record?.attendanceId || !state.canEdit) return;
+
+      const cleanNote = String(editNote || "").trim();
+      if (!cleanNote) {
+        await openHrEditAlertMsbox({
+          title: "กรุณากรอก Remark",
+          message: "กรุณากรอก Remark เพื่อบันทึกเหตุผลการแก้ไขเวลา ก่อนดำเนินการต่อ",
+          icon: "edit_note",
+          confirmLabel: "ตกลง"
+        });
+        $("edit-note").focus();
+        return;
+      }
+
+      const workDate = $("date-filter").value || formatDateInput();
+      const checkinAt = buildBangkokDateTime(workDate, checkinTime);
+      const checkoutAt = buildBangkokDateTime(workDate, checkoutTime);
+      const confirmed = await openHrEditConfirmMsbox({
+        record,
+        workDate,
+        checkinAt,
+        checkoutAt,
+        editNote: cleanNote,
+        isClearCheckout,
+        ...confirmOptions
+      });
+      if (!confirmed) return;
+
+      const sessionToken = getAppSessionToken();
+      const { error } = await supabase.rpc("update_hr_attendance_time", {
+        p_session_token: sessionToken,
+        p_attendance_id: record.attendanceId,
+        p_checkin_at: checkinAt,
+        p_checkout_at: checkoutAt,
+        p_edit_note: cleanNote
+      });
+
+      if (error) {
+        console.error("Update HR attendance time error:", error);
+        alert("Cannot update attendance time. Please check HR_MONITOR_EDIT permission.");
+        return;
+      }
+
+      await loadMonitorData();
+      $("employee-detail-modal").classList.add("hidden");
+      state.selectedEmployeeId = null;
+    }
+
+    async function saveEmployeeTimes(event) {
+      event.preventDefault();
+      await updateEmployeeTimes({
+        checkinTime: $("edit-checkin-time").value,
+        checkoutTime: $("edit-checkout-time").value,
+        editNote: $("edit-note").value,
+        confirmOptions: {
+          title: "ยืนยันการแก้ไขเวลา",
+          message: "ระบบจะบันทึกเวลา Check-in / Check-out ตามข้อมูลนี้",
+          icon: "edit_calendar",
+          confirmLabel: "บันทึก"
+        }
+      });
+    }
+
+    async function clearEmployeeCheckout() {
+      const record = getSelectedEmployee();
+      if (!record?.attendanceId || !state.canEdit) return;
+      await updateEmployeeTimes({
+        checkinTime: $("edit-checkin-time").value || toTimeInputValue(record.checkinAt),
+        checkoutTime: "",
+        editNote: $("edit-note").value,
+        isClearCheckout: true,
+        confirmOptions: {
+          title: "ยืนยันการเคลียร์ Check-out",
+          message: "ระบบจะลบเวลา Check-out ของพนักงานคนนี้ และสถานะจะกลับเป็นกำลังทำงาน",
+          icon: "event_busy",
+          confirmLabel: "เคลียร์"
+        }
+      });
     }
 
     async function loadMonitorData() {
@@ -685,6 +1226,32 @@
       `).join("");
     }
 
+    function renderMobileEmployeeCard(record, details = []) {
+      return `
+        <article class="mobile-employee-card">
+          <div class="flex items-start justify-between gap-3">
+            <button class="flex min-w-0 items-center gap-3 text-left" type="button" data-view-employee="${escapeHtml(record.id)}">
+              <div class="employee-avatar">${escapeHtml(getInitials(record.name))}</div>
+              <div class="min-w-0">
+                <p class="font-body-base font-bold text-slate-900 truncate">${escapeHtml(formatEmployeeName(record.name))}</p>
+                <p class="mt-0.5 text-xs text-slate-500 truncate">${escapeHtml(record.department || "-")}</p>
+              </div>
+            </button>
+            <div class="shrink-0">${getStatusBadge(record)}</div>
+          </div>
+          <div class="mobile-employee-meta">
+            ${details.map(([label, value]) => `
+              <div>
+                <span>${escapeHtml(label)}</span>
+                <strong>${escapeHtml(value)}</strong>
+              </div>
+            `).join("")}
+          </div>
+          <div class="mt-3 flex justify-end">${getActionButtons(record)}</div>
+        </article>
+      `;
+    }
+
     function renderOfficeTable() {
       const rows = state.filtered.filter((record) => record.type === "Office");
       $("office-count-pill").textContent = `${rows.filter((item) => item.checkinAt && !item.checkoutAt).length} Active`;
@@ -694,7 +1261,7 @@
             <div class="flex items-center gap-3 min-w-0">
               <div class="h-8 w-8 shrink-0 rounded-full bg-primary-fixed text-primary text-xs font-bold flex items-center justify-center">${escapeHtml(getInitials(record.name))}</div>
               <div class="min-w-0">
-                <p class="font-body-base font-semibold whitespace-nowrap">${escapeHtml(formatEmployeeName(record.name))}</p>
+                <button class="font-body-base font-semibold whitespace-nowrap text-left hover:text-primary" type="button" data-view-employee="${escapeHtml(record.id)}">${escapeHtml(formatEmployeeName(record.name))}</button>
               </div>
             </div>
           </td>
@@ -702,10 +1269,17 @@
           <td class="px-4 py-3 text-body-sm font-medium">${formatThaiTime(record.checkinAt)}</td>
           <td class="px-4 py-3 text-body-sm font-medium">${formatThaiTime(record.checkoutAt)}</td>
           <td class="px-4 py-3 text-center align-middle"><div class="flex justify-center">${getStatusBadge(record)}</div></td>
+          <td class="px-4 py-3 text-center align-middle">${getActionButtons(record)}</td>
         </tr>
       `).join("") : `
-        <tr><td class="px-5 py-8 text-center text-slate-400" colspan="5">No Office records match the current filters.</td></tr>
+        <tr><td class="px-5 py-8 text-center text-slate-400" colspan="6">No Office records match the current filters.</td></tr>
       `;
+      $("office-mobile-list").innerHTML = rows.length ? rows.map((record) => renderMobileEmployeeCard(record, [
+        ["Check-in", formatThaiTime(record.checkinAt)],
+        ["Check-out", formatThaiTime(record.checkoutAt)],
+        ["Location", record.address || "Office"],
+        ["Type", record.type || "-"]
+      ])).join("") : `<div class="rounded-xl bg-slate-50 p-4 text-center text-sm text-slate-400">No Office records match the current filters.</div>`;
     }
 
     function renderRemoteCards() {
@@ -720,7 +1294,7 @@
               <div class="flex items-center gap-3 min-w-0">
                 <div class="h-8 w-8 shrink-0 rounded-full bg-primary-fixed text-primary text-xs font-bold flex items-center justify-center">${escapeHtml(getInitials(record.name))}</div>
                 <div class="min-w-0">
-                  <p class="font-body-base font-semibold truncate">${escapeHtml(formatEmployeeName(record.name))}</p>
+                  <button class="font-body-base font-semibold truncate text-left hover:text-primary" type="button" data-view-employee="${escapeHtml(record.id)}">${escapeHtml(formatEmployeeName(record.name))}</button>
                 </div>
               </div>
             </td>
@@ -729,9 +1303,20 @@
             <td class="px-4 py-3">
               <p class="text-body-sm font-medium text-slate-700">${escapeHtml(latestLabel)} <span class="text-xs text-slate-400">(${formatThaiTime(latestPoint?.time || record.checkinAt)})</span></p>
             </td>
+            <td class="px-4 py-3 text-center align-middle">${getActionButtons(record)}</td>
           </tr>
         `;
-      }).join("") : `<tr><td class="px-5 py-8 text-center text-slate-400" colspan="4">No WFH / On-site records match the current filters.</td></tr>`;
+      }).join("") : `<tr><td class="px-5 py-8 text-center text-slate-400" colspan="5">No WFH / On-site records match the current filters.</td></tr>`;
+      $("remote-mobile-list").innerHTML = rows.length ? rows.map((record) => {
+        const latestPoint = record.fieldPoints?.at(-1);
+        const latestLabel = latestPoint?.address || record.address || latestPoint?.locationName || record.type || "-";
+        return renderMobileEmployeeCard(record, [
+          ["Type", record.type || "WFH / On-site"],
+          ["Time", formatThaiTime(latestPoint?.time || record.checkinAt)],
+          ["Latest Location", latestLabel],
+          ["Field Points", `${record.fieldPoints?.length || 0}`]
+        ]);
+      }).join("") : `<div class="rounded-xl bg-slate-50 p-4 text-center text-sm text-slate-400">No WFH / On-site records match the current filters.</div>`;
     }
 
     function renderFooter(stats) {
@@ -837,6 +1422,28 @@
       });
     });
 
+    document.addEventListener("click", (event) => {
+      const viewButton = event.target.closest("[data-view-employee]");
+      const editButton = event.target.closest("[data-edit-employee]");
+      const employeeId = viewButton?.dataset.viewEmployee || editButton?.dataset.editEmployee;
+      if (!employeeId) return;
+      const record = state.employees.find((item) => item.id === employeeId);
+      if (record) renderEmployeeDetail(record, Boolean(editButton));
+    });
+
+    $("detail-close-btn").addEventListener("click", () => {
+      $("employee-detail-modal").classList.add("hidden");
+      state.selectedEmployeeId = null;
+    });
+    $("employee-detail-modal").addEventListener("click", (event) => {
+      if (event.target === $("employee-detail-modal")) {
+        $("employee-detail-modal").classList.add("hidden");
+        state.selectedEmployeeId = null;
+      }
+    });
+    $("edit-clear-checkout-btn").addEventListener("click", clearEmployeeCheckout);
+    $("employee-edit-form").addEventListener("submit", saveEmployeeTimes);
+
     function setAttendanceNavCollapsed(collapsed) {
       document.body.classList.toggle("attendance-nav-collapsed", collapsed);
       localStorage.setItem("attendanceNavCollapsed", collapsed ? "true" : "false");
@@ -864,6 +1471,7 @@
 
     updateClock();
     setInterval(updateClock, 1000);
+    state.canEdit = await hasMenuAccess("HR_MONITOR_EDIT");
     await loadMonitorData();
   </script>
 </body>
