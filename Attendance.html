@@ -129,8 +129,23 @@
 
     .attendance-card {
       display: grid;
-      grid-template-rows: 80px 72px 96px auto;
+      grid-template-rows: 80px minmax(72px, auto) minmax(96px, auto) auto;
       justify-items: center;
+    }
+
+    .attendance-card h2 {
+      min-height: 72px;
+      text-wrap: balance;
+    }
+
+    .attendance-field-title {
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .attendance-title-subline {
+      display: block;
+      white-space: nowrap;
     }
 
     #camera-panel .camera-capture-frame {
