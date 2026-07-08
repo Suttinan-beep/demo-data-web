@@ -133,6 +133,80 @@
       justify-items: center;
     }
 
+    #camera-panel .camera-capture-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9 !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      background: #000;
+    }
+
+    #camera-panel .camera-media-column {
+      align-self: start;
+      background: transparent;
+    }
+
+    #camera-panel #camera-preview,
+    #camera-panel #captured-photo {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      object-position: center center;
+    }
+
+    #camera-panel .mobile-camera-actions {
+      display: none !important;
+    }
+
+    #camera-panel .desktop-camera-actions {
+      display: block;
+    }
+
+    @media (min-width: 900px) {
+      #camera-panel > div:last-child {
+        display: grid;
+        grid-template-columns: minmax(520px, 1fr) 320px;
+        align-items: start;
+      }
+
+      #camera-panel .camera-capture-frame {
+        aspect-ratio: 16 / 9 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+      }
+
+      #camera-panel #camera-preview,
+      #camera-panel #captured-photo {
+        position: absolute;
+        inset: 0;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center center;
+      }
+    }
+
+    @media (max-width: 767px) and (hover: hover) and (pointer: fine) {
+      #camera-panel .camera-capture-frame {
+        aspect-ratio: 16 / 9 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+      }
+
+      #camera-panel .mobile-camera-actions {
+        display: none !important;
+      }
+
+      #camera-panel .desktop-camera-actions {
+        display: block !important;
+      }
+    }
+
     .attendance-sidebar {
       width: 190px;
       transition: width 0.25s ease;
@@ -328,11 +402,11 @@
         padding: 14px;
       }
 
-      .camera-capture-frame {
+      #camera-panel .camera-capture-frame {
         aspect-ratio: 3 / 4 !important;
-        height: min(68vh, 520px);
-        min-height: 360px;
-        max-height: calc(100vh - 210px);
+        height: min(62vh, 520px) !important;
+        min-height: 340px !important;
+        max-height: calc(100vh - 210px) !important;
       }
 
       #stamp-overlay {
@@ -342,12 +416,15 @@
         padding: 10px;
       }
 
-      .mobile-camera-actions {
-        display: flex;
+      #camera-panel .mobile-camera-actions {
+        display: flex !important;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
       }
 
-      .desktop-camera-actions {
-        display: none;
+      #camera-panel .desktop-camera-actions {
+        display: none !important;
       }
 
       #stamp-time {
@@ -559,9 +636,9 @@
             <span class="material-symbols-outlined">close</span>
           </button>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-0">
-          <div class="bg-slate-950">
-            <div class="camera-capture-frame aspect-video min-h-[220px] max-h-[420px] flex items-center justify-center relative overflow-hidden">
+        <div class="grid grid-cols-1 gap-0">
+          <div class="camera-media-column">
+            <div class="camera-capture-frame flex items-center justify-center relative overflow-hidden">
               <video id="camera-preview" class="hidden w-full h-full object-cover" autoplay playsinline muted></video>
               <img id="captured-photo" class="hidden w-full h-full object-cover" alt="Captured attendance timestamp"/>
               <div id="stamp-overlay" class="hidden absolute left-4 right-4 bottom-4 rounded-lg bg-black/65 p-3 text-left text-white shadow-lg">
@@ -573,7 +650,7 @@
                 <span class="material-symbols-outlined text-[56px] mb-3">photo_camera</span>
                 <p class="text-body-sm">กล้องจะแสดงที่นี่หลังจากอนุญาตการใช้งาน</p>
               </div>
-              <div class="mobile-camera-actions hidden absolute left-4 right-4 bottom-4 z-10">
+              <div class="mobile-camera-actions hidden absolute z-10">
                 <button id="capture-photo-mobile-btn" class="bg-white/95 text-primary w-full py-md rounded-xl font-body-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-sm shadow-lg shadow-black/20 backdrop-blur" type="button" disabled>
                   <span class="material-symbols-outlined">camera</span>
                   ถ่ายรูปพร้อมไทม์สแตมป์
@@ -605,11 +682,11 @@
                   </div>
                 </div>
               </div>
-              <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
+              <div id="capture-date-row" class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
                 <span class="material-symbols-outlined text-primary">event</span>
                 <span id="capture-date-detail" class="text-body-sm text-slate-600">วันที่ถ่ายรูป: -</span>
               </div>
-              <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
+              <div id="capture-time-row" class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
                 <span class="material-symbols-outlined text-primary">schedule</span>
                 <span id="capture-time-detail" class="text-body-sm text-slate-600">เวลาถ่ายรูป: -</span>
               </div>
@@ -1791,7 +1868,7 @@
       }
     }
 
-    async function requestCameraStream() {
+    async function requestCameraStream(mode = state.verificationMode) {
       if (!window.isSecureContext) {
         throw new Error("Safari ต้องเปิดผ่านลิงก์ HTTPS จึงจะใช้กล้องและตำแหน่งได้");
       }
@@ -1800,8 +1877,25 @@
         throw new Error("เบราว์เซอร์นี้ไม่รองรับกล้อง");
       }
 
+      const isMobileCamera = window.matchMedia("(max-width: 767px) and (hover: none) and (pointer: coarse)").matches;
+      const usePortraitCamera = isMobileCamera;
+      const preferredVideo = usePortraitCamera
+        ? {
+            facingMode: "user",
+            width: { ideal: 720 },
+            height: { ideal: 960 },
+            aspectRatio: { ideal: 0.75 }
+          }
+        : {
+            facingMode: "user",
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            aspectRatio: { ideal: 16 / 9 }
+          };
+
       const constraints = [
-        { video: { facingMode: "user" }, audio: false },
+        { video: preferredVideo, audio: false },
+        { video: { facingMode: "user", aspectRatio: { ideal: usePortraitCamera ? 0.75 : 16 / 9 } }, audio: false },
         { video: true, audio: false }
       ];
 
@@ -1984,11 +2078,26 @@
       $("capture-date-detail").textContent = `วันที่ถ่ายรูป: ${formatCaptureDate(state.capturedAt)}`;
       $("capture-time-detail").textContent = `เวลาถ่ายรูป: ${formatCaptureTime(state.capturedAt)}`;
 
+      const targetRatio = window.matchMedia("(max-width: 767px) and (hover: none) and (pointer: coarse)").matches ? 3 / 4 : 16 / 9;
+      const sourceRatio = video.videoWidth / video.videoHeight;
+      let sourceX = 0;
+      let sourceY = 0;
+      let sourceWidth = video.videoWidth;
+      let sourceHeight = video.videoHeight;
+
+      if (sourceRatio > targetRatio) {
+        sourceWidth = Math.round(video.videoHeight * targetRatio);
+        sourceX = Math.round((video.videoWidth - sourceWidth) / 2);
+      } else if (sourceRatio < targetRatio) {
+        sourceHeight = Math.round(video.videoWidth / targetRatio);
+        sourceY = Math.round((video.videoHeight - sourceHeight) / 2);
+      }
+
       const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      canvas.width = sourceWidth;
+      canvas.height = sourceHeight;
       const context = canvas.getContext("2d");
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      context.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
 
       const padding = Math.max(20, Math.round(canvas.width * 0.035));
       const lineHeight = Math.max(28, Math.round(canvas.width * 0.035));
@@ -2031,12 +2140,16 @@
 
     async function openCameraAndGps(mode = "checkin") {
       state.verificationMode = mode;
+      $("camera-panel").classList.toggle("camera-field-visit", mode === "field-visit");
+      $("camera-panel").classList.toggle("camera-attendance-verify", mode !== "field-visit");
       $("camera-panel").classList.remove("hidden");
       $("location-label").textContent = "กำลังตรวจสอบตำแหน่ง";
       $("captured-photo").classList.add("hidden");
       setPhotoButtonState({ captureHidden: false, retakeHidden: true, captureDisabled: true });
       $("confirm-field-btn").disabled = true;
       $("field-location-panel").classList.toggle("hidden", mode !== "field-visit");
+      $("capture-date-row").classList.toggle("hidden", mode === "field-visit");
+      $("capture-time-row").classList.toggle("hidden", mode === "field-visit");
       $("confirm-field-btn").textContent = mode === "checkout"
         ? "Save On-site Check-out"
         : mode === "field-visit" ? "Save Field Visit" : "Save Field Check-in";
@@ -2045,7 +2158,7 @@
       try {
         const [position, stream] = await Promise.all([
           loadCurrentLocation(mode === "field-visit"),
-          requestCameraStream()
+          requestCameraStream(mode)
         ]);
 
         state.position = position;
@@ -2087,8 +2200,11 @@
       state.stream = null;
       state.fieldNote = "";
       state.verificationMode = "checkin";
+      $("camera-panel").classList.remove("camera-field-visit", "camera-attendance-verify");
       $("field-note").value = "";
       $("field-location-panel").classList.add("hidden");
+      $("capture-date-row").classList.remove("hidden");
+      $("capture-time-row").classList.remove("hidden");
       $("camera-preview").srcObject = null;
       $("camera-preview").classList.add("hidden");
       $("captured-photo").classList.add("hidden");
