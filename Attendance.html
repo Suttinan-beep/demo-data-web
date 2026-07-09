@@ -141,11 +141,19 @@
     .attendance-field-title {
       gap: 2px;
       white-space: nowrap;
+      text-wrap: nowrap;
     }
 
     .attendance-title-subline {
       display: inline;
       white-space: nowrap;
+    }
+
+    @media (min-width: 768px) and (max-width: 1279px) {
+      .attendance-field-title {
+        font-size: 20px;
+        line-height: 28px;
+      }
     }
 
     #camera-panel .camera-capture-frame {
@@ -378,6 +386,7 @@
         display: block !important;
         text-align: left;
         white-space: normal;
+        text-wrap: wrap;
       }
 
       .attendance-card p {
